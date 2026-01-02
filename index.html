@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorichalAI - Sprint 2 Assessment Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --primary-dark: #0d5d56;
+            --success: #22c55e;
+            --success-light: #dcfce7;
+            --accent: #f59e0b;
+            --accent-light: #fef3c7;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 50px 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(15, 118, 110, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--primary-light);
+        }
+
+        .header-content h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-content p {
+            font-size: 18px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 30px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .meta-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Executive Summary */
+        .summary-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .summary-card h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-card h2 svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+        }
+
+        .summary-text {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .summary-text strong {
+            color: var(--dark);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .metric-card.highlight {
+            background: linear-gradient(135deg, var(--success-light) 0%, #f0fdf4 100%);
+            border-color: var(--success);
+        }
+
+        .metric-card.active {
+            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+            border-color: #3b82f6;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .metric-card.highlight .metric-value {
+            color: var(--success);
+        }
+
+        .metric-card.active .metric-value {
+            color: #3b82f6;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Roadmap Preview */
+        .roadmap-preview {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .roadmap-preview h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .roadmap-preview h3 svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+        }
+
+        .roadmap-thumbnail {
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+            position: relative;
+        }
+
+        .roadmap-thumbnail:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .roadmap-thumbnail img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .roadmap-thumbnail .zoom-hint {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .roadmap-thumbnail:hover .zoom-hint {
+            opacity: 1;
+        }
+
+        /* Platform Access */
+        .platform-access {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 16px;
+            padding: 30px 35px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(15, 118, 110, 0.25);
+        }
+
+        .platform-info h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .platform-info p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .platform-url {
+            background: var(--white);
+            color: var(--primary);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 18px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .platform-url:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Notice Box */
+        .notice-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+            border: 1px solid #f59e0b;
+            border-left: 4px solid #f59e0b;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+        }
+
+        .notice-box h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notice-box p {
+            font-size: 14px;
+            color: #78350f;
+            line-height: 1.7;
+        }
+
+        /* Progress Report Section */
+        .progress-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .progress-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .progress-title .icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--success) 0%, #16a34a 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-title .icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--success-light) 0%, #bbf7d0 100%);
+            border: 1px solid var(--success);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #166534;
+        }
+
+        .status-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .progress-intro {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .achievements-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px 18px;
+            background: var(--light);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .achievement-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .achievement-icon.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .achievement-icon.in-progress {
+            background: var(--accent);
+            color: white;
+        }
+
+        .achievement-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .achievement-content h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .achievement-content p {
+            font-size: 13px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .achievement-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .achievement-status.completed {
+            background: var(--success-light);
+            color: #166534;
+        }
+
+        .achievement-status.in-progress {
+            background: var(--accent-light);
+            color: #92400e;
+        }
+
+        .demo-announcement {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #3b82f6;
+            border-left: 4px solid #3b82f6;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+        }
+
+        .demo-announcement-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .demo-announcement-header svg {
+            width: 20px;
+            height: 20px;
+            color: #2563eb;
+        }
+
+        .demo-announcement-header h5 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .demo-announcement p {
+            font-size: 14px;
+            color: #1e3a8a;
+            line-height: 1.6;
+        }
+
+        .screenshots-note {
+            font-size: 13px;
+            color: var(--gray);
+            font-style: italic;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Roadmap Section */
+        .roadmap-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .section-title .icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .roadmap-sprint {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .roadmap-sprint:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .roadmap-sprint.launch-phase {
+            background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);
+            border: 1px solid #e9d5ff;
+            border-left: 3px solid #a855f7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .roadmap-sprint.launch-phase:last-child {
+            border-bottom: 1px solid #e9d5ff;
+        }
+
+        .roadmap-sprint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .roadmap-sprint-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .roadmap-sprint-title span {
+            font-weight: 400;
+            color: var(--gray);
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .roadmap-status {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .roadmap-status.completed {
+            background: var(--success-light);
+            color: #16a34a;
+        }
+
+        .roadmap-status.in-progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .roadmap-status.planned {
+            background: var(--light);
+            color: var(--gray);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .roadmap-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 10px;
+        }
+
+        .roadmap-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--light);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--dark);
+        }
+
+        .roadmap-feature.completed {
+            background: #f0fdf4;
+        }
+
+        .roadmap-feature .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .roadmap-feature .feature-icon.done {
+            background: var(--success);
+            color: white;
+        }
+
+        .roadmap-feature .feature-icon.pending {
+            background: var(--border);
+            color: var(--gray);
+        }
+
+        .roadmap-feature .feature-icon.progress {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .roadmap-feature .feature-icon svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Upgraded/Replacement indicator */
+        .roadmap-feature.upgraded {
+            background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+            border: 1px solid var(--accent);
+            position: relative;
+        }
+
+        .roadmap-feature.upgraded .feature-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .roadmap-feature.upgraded .replaced-from {
+            font-size: 10px;
+            color: var(--gray);
+            text-decoration: line-through;
+        }
+
+        .roadmap-feature.upgraded .replaced-to {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .upgraded-badge {
+            position: absolute;
+            top: -8px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bonus Section Styling */
+        .bonus-section {
+            background: linear-gradient(135deg, var(--accent-light) 0%, #fffbeb 100%);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .bonus-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .bonus-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .bonus-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bonus-item {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .bonus-item .feature-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--success);
+            color: white;
+        }
+
+        .bonus-item .feature-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .bonus-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .bonus-content p {
+            font-size: 12px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .footer-logo span {
+            color: var(--primary-light);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 95%;
+            max-height: 95%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--primary);
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--primary-dark);
+        }
+
+        .modal-close svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Password Protection */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f766e 0%, #0d5d56 100%);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .password-overlay.hidden {
+            display: none;
+        }
+
+        .password-box {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .password-box .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .password-box .logo span {
+            color: var(--primary-light);
+        }
+
+        .password-box h2 {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .password-box p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .password-input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .password-input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .password-input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .password-input-group input.error {
+            border-color: #ef4444;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .password-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
+        }
+
+        .password-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.visible {
+            display: block;
+        }
+
+        /* Timeline Carousel */
+        .timeline-showcase {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 2px solid var(--success);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .timeline-showcase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timeline-showcase-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-showcase-title .icon {
+            width: 36px;
+            height: 36px;
+            background: var(--success);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .timeline-showcase-title .icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .timeline-badge {
+            background: var(--success);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .carousel-slide img:hover {
+            opacity: 0.9;
+        }
+
+        /* Negotiations showcase - allow larger image for portrait orientation */
+        .negotiations-showcase .carousel-slide img {
+            max-height: none;
+        }
+
+        .carousel-slide-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.95);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .carousel-nav svg {
+            width: 24px;
+            height: 24px;
+            color: var(--dark);
+        }
+
+        .carousel-nav.prev {
+            left: 15px;
+        }
+
+        .carousel-nav.next {
+            right: 15px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid var(--border);
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0;
+        }
+
+        .carousel-dot:hover {
+            background: var(--gray);
+        }
+
+        .carousel-dot.active {
+            background: var(--success);
+            transform: scale(1.2);
+        }
+
+        .carousel-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--light);
+            border-top: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .carousel-progress-text {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 25px;
+            }
+
+            .header-content h1 {
+                font-size: 28px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-meta {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .platform-access {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .roadmap-section {
+                padding: 25px 20px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .header, .roadmap-section, .summary-card {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Protection Overlay -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-box">
+            <div class="logo">Morichal<span>AI</span></div>
+            <h2>Sprint 2 Assessment Report</h2>
+            <p>Please enter the access password to view this document</p>
+            <form onsubmit="return checkPassword(event)">
+                <div class="password-input-group">
+                    <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off">
+                </div>
+                <button type="submit" class="password-submit">Access Report</button>
+            </form>
+            <div class="password-error" id="passwordError">Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">Morichal<span>AI</span></div>
+            </div>
+            <div class="header-content">
+                <h1>Sprint 2 Assessment Report</h1>
+                <p>Document Verification & Compliance Core</p>
+            </div>
+            <div class="header-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Timeline</span>
+                    <span class="meta-value">Dec 3 - Dec 23, 2025</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Duration</span>
+                    <span class="meta-value">3 Weeks</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Assessment Date</span>
+                    <span class="meta-value">January 2, 2026</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <div class="summary-card">
+            <h2>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Executive Summary
+            </h2>
+            <p class="summary-text">
+                <strong>Sprint 2 has been successfully delivered</strong> with all 14 items completed (13 planned + 1 bonus).
+                <strong>Sprint 3 is now in progress</strong> with 7 of 10 items completed. After January 13, 2026, the remaining development time will be dedicated exclusively to <strong>quality assurance, bug fixing, and platform stabilization</strong> to ensure a 100% operational, bug-free launch. The platform is live at dev.morichalai.com for preview and feedback.
+                Overall project completion: <strong>82%</strong> (41 of 50 total items across all sprints).
+            </p>
+            <div class="metrics-grid">
+                <div class="metric-card highlight">
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">Sprint 2 Complete</div>
+                </div>
+                <div class="metric-card active">
+                    <div class="metric-value">Active</div>
+                    <div class="metric-label">Sprint 3 In Progress</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">41/50</div>
+                    <div class="metric-label">Items Completed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">82%</div>
+                    <div class="metric-label">Overall Progress</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Roadmap Visual -->
+        <div class="roadmap-preview">
+            <h3>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                </svg>
+                Project Roadmap Overview
+            </h3>
+            <div class="roadmap-thumbnail" onclick="openModal()">
+                <img src="assets/images/roadmap.png" alt="MorichalAI Project Roadmap">
+                <div class="zoom-hint">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                    </svg>
+                    Click to enlarge
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Access -->
+        <div class="platform-access">
+            <div class="platform-info">
+                <h3>Platform Access</h3>
+                <p>Your MorichalAI platform is live and ready for review</p>
+            </div>
+            <a href="https://dev.morichalai.com" target="_blank" class="platform-url">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+                dev.morichalai.com
+            </a>
+        </div>
+
+        <!-- Development Progress Update -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <div class="progress-title">
+                    <div class="icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    Development Progress Update
+                </div>
+                <div class="status-badge">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    On Schedule
+                </div>
+            </div>
+
+            <p class="progress-intro">
+                We are pleased to report that development is <strong>on schedule</strong> and progressing well. Sprint 3 completion remains on track for January 13, 2026. Since our last review, we have implemented and upgraded several key features:
+            </p>
+
+            <div class="achievements-grid">
+                <div class="achievement-item">
+                    <div class="achievement-icon completed">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div class="achievement-content">
+                        <h5>CRM Zoho Integration</h5>
+                        <p>Complete porting of Zoho CRM into the MorichalAI platform</p>
+                    </div>
+                    <span class="achievement-status completed">Completed</span>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-icon in-progress">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </div>
+                    <div class="achievement-content">
+                        <h5>Data Backfilling</h5>
+                        <p>Importing historical data from previous systems into the platform</p>
+                    </div>
+                    <span class="achievement-status in-progress">In Progress</span>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-icon completed">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div class="achievement-content">
+                        <h5>Negotiations Screen</h5>
+                        <p>Implementation of negotiations screen for Suppliers RFQ workflow</p>
+                    </div>
+                    <span class="achievement-status completed">Completed</span>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-icon completed">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div class="achievement-content">
+                        <h5>Orders Timeline</h5>
+                        <p>Independent order timeline for each user based on their responsibilities</p>
+                    </div>
+                    <span class="achievement-status completed">Completed</span>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-icon completed">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div class="achievement-content">
+                        <h5>Backend Integration</h5>
+                        <p>Most of the platform is now connected to backend services</p>
+                    </div>
+                    <span class="achievement-status completed">Completed</span>
+                </div>
+            </div>
+
+            <div class="demo-announcement">
+                <div class="demo-announcement-header">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h5>January 14, 2026 - Live Demo Meeting</h5>
+                </div>
+                <p>We will be presenting a comprehensive demonstration of all implemented features. A detailed walkthrough of the platform's capabilities and workflows will be provided during this session.</p>
+            </div>
+
+            <p class="screenshots-note">
+                This review includes key screenshots of new features. The full functionality is best experienced during the upcoming demo meeting.
+            </p>
+        </div>
+
+        <!-- Complete Project Roadmap -->
+        <div class="roadmap-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <div class="icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                    </div>
+                    Complete Project Roadmap
+                </div>
+            </div>
+
+            <!-- Sprint 1 -->
+            <div class="roadmap-sprint">
+                <div class="roadmap-sprint-header">
+                    <div class="roadmap-sprint-title">
+                        Sprint 1: Operational Foundation Core
+                        <span>Nov 6 - Dec 2, 2025</span>
+                    </div>
+                    <div class="roadmap-status completed">Completed</div>
+                </div>
+                <div class="roadmap-features">
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Email Intake Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Specification Extraction Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Supplier Matching Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Supplier Management
+                    </div>
+                    <div class="roadmap-feature upgraded">
+                        <span class="upgraded-badge">Upgraded</span>
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        <div class="feature-content">
+                            <span class="replaced-from">CRM Sync Agent</span>
+                            <span class="replaced-to">Full CRM Migration</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        RFQ Management
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Realtime API Orchestrator
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Negotiations
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Order Management
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Quote Management
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        User Management
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Role Management
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Purchase Order / Split PO
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Email Tracking
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        DevOps Environments
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        OCR
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprint 2 -->
+            <div class="roadmap-sprint">
+                <div class="roadmap-sprint-header">
+                    <div class="roadmap-sprint-title">
+                        Sprint 2: Document Verification & Compliance Core
+                        <span>Dec 3 - Dec 23, 2025</span>
+                    </div>
+                    <div class="roadmap-status completed">Completed</div>
+                </div>
+                <div class="roadmap-features">
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Document Verification Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Compliance Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Pricing and Margin Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Document Generation
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Document Status Board
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Realtime Orchestrator
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Variance Detection
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Freight Shipping Integration
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Container Tracking
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Language and Translation
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        WhatsApp Notification System
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        OCR (Enhanced)
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Email Notification System
+                    </div>
+                </div>
+
+                <!-- Bonus Section -->
+                <div class="bonus-section">
+                    <div class="bonus-header">
+                        <span class="bonus-title">Bonus Deliverable</span>
+                        <span class="bonus-badge">Upgraded</span>
+                    </div>
+                    <div class="bonus-item">
+                        <div class="feature-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div class="bonus-content">
+                            <h4>Complete Zoho CRM Migration</h4>
+                            <p>Full migration of all Zoho CRM capabilities into the MorichalAI platform, eliminating the need for dual-system operations. This comprehensive integration includes Customer & Account Management, Lead Generation & Tracking, Order Processing & History, Contact Management, Pipeline Visualization, and Activity Logging. Your team can now manage the entire customer lifecycle from a single, unified interface.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Negotiations Screen Showcase -->
+                <div class="timeline-showcase negotiations-showcase">
+                    <div class="timeline-showcase-header">
+                        <div class="timeline-showcase-title">
+                            <div class="icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                                </svg>
+                            </div>
+                            Negotiations Screen Preview
+                        </div>
+                        <span class="timeline-badge">Suppliers RFQ</span>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-slide">
+                            <img src="screenshots/negotiation.jpg?v=2" alt="Negotiations Screen - Suppliers RFQ" onclick="openCarouselModal(this.src)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprint 3 -->
+            <div class="roadmap-sprint">
+                <div class="roadmap-sprint-header">
+                    <div class="roadmap-sprint-title">
+                        Sprint 3: Financial Operations Core
+                        <span>Dec 24, 2025 - Jan 13, 2026</span>
+                    </div>
+                    <div class="roadmap-status in-progress">
+                        <span class="status-dot"></span>
+                        In Progress
+                    </div>
+                </div>
+                <div class="roadmap-features">
+                    <div class="roadmap-feature upgraded">
+                        <span class="upgraded-badge">Upgraded</span>
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        <div class="feature-content">
+                            <span class="replaced-from">Logistics Milestone Agent</span>
+                            <span class="replaced-to">Orders Timeline</span>
+                        </div>
+                    </div>
+                    <div class="roadmap-feature">
+                        <div class="feature-icon progress"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Analytics & Internal Control Agent
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Alert Management
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Platform Settings
+                    </div>
+                    <div class="roadmap-feature">
+                        <div class="feature-icon progress"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Report Generator
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Realtime Orchestrator
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Template Management
+                    </div>
+                    <div class="roadmap-feature">
+                        <div class="feature-icon progress"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Country By Country Doc Generation
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Documents Comparison
+                    </div>
+                    <div class="roadmap-feature completed">
+                        <div class="feature-icon done"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        Document Management
+                    </div>
+                </div>
+
+                <!-- Orders Timeline Showcase -->
+                <div class="timeline-showcase">
+                    <div class="timeline-showcase-header">
+                        <div class="timeline-showcase-title">
+                            <div class="icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                </svg>
+                            </div>
+                            Orders Timeline Feature Preview
+                        </div>
+                        <span class="timeline-badge">6 Steps</span>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carouselTrack">
+                            <div class="carousel-slide">
+                                <span class="carousel-slide-number">Screen 1 of 6</span>
+                                <img src="screenshots/timeline-1.jpg" alt="Orders Timeline - Screen 1" onclick="openCarouselModal(this.src)">
+                            </div>
+                            <div class="carousel-slide">
+                                <span class="carousel-slide-number">Screen 2 of 6</span>
+                                <img src="screenshots/timeline-2.jpg" alt="Orders Timeline - Screen 2" onclick="openCarouselModal(this.src)">
+                            </div>
+                            <div class="carousel-slide">
+                                <span class="carousel-slide-number">Screen 3 of 6</span>
+                                <img src="screenshots/timeline-3.jpg" alt="Orders Timeline - Screen 3" onclick="openCarouselModal(this.src)">
+                            </div>
+                            <div class="carousel-slide">
+                                <span class="carousel-slide-number">Screen 4 of 6</span>
+                                <img src="screenshots/timeline-4.jpg" alt="Orders Timeline - Screen 4" onclick="openCarouselModal(this.src)">
+                            </div>
+                            <div class="carousel-slide">
+                                <span class="carousel-slide-number">Screen 5 of 6</span>
+                                <img src="screenshots/timeline-5.jpg" alt="Orders Timeline - Screen 5" onclick="openCarouselModal(this.src)">
+                            </div>
+                            <div class="carousel-slide">
+                                <span class="carousel-slide-number">Screen 6 of 6</span>
+                                <img src="screenshots/timeline-6.jpg" alt="Orders Timeline - Screen 6" onclick="openCarouselModal(this.src)">
+                            </div>
+                        </div>
+                        <button class="carousel-nav prev" onclick="moveCarousel(-1)">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button class="carousel-nav next" onclick="moveCarousel(1)">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                        <div class="carousel-dots" id="carouselDots">
+                            <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+                            <button class="carousel-dot" onclick="goToSlide(1)"></button>
+                            <button class="carousel-dot" onclick="goToSlide(2)"></button>
+                            <button class="carousel-dot" onclick="goToSlide(3)"></button>
+                            <button class="carousel-dot" onclick="goToSlide(4)"></button>
+                            <button class="carousel-dot" onclick="goToSlide(5)"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprint 4 -->
+            <div class="roadmap-sprint launch-phase">
+                <div class="roadmap-sprint-header">
+                    <div class="roadmap-sprint-title">
+                        Sprint 4: Production Go-Live
+                        <span>Jan 14 - Feb 5, 2026</span>
+                    </div>
+                    <div class="roadmap-status planned">Planned</div>
+                </div>
+                <div class="roadmap-features">
+                    <div class="roadmap-feature">
+                        <div class="feature-icon pending"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Quality Assurance (QA)
+                    </div>
+                    <div class="roadmap-feature">
+                        <div class="feature-icon pending"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Feedback & Change Requests
+                    </div>
+                </div>
+            </div>
+
+            <!-- Launch -->
+            <div class="roadmap-sprint launch-phase">
+                <div class="roadmap-sprint-header">
+                    <div class="roadmap-sprint-title">
+                        Launch: Stakeholder Rollout
+                        <span>February 9, 2026</span>
+                    </div>
+                    <div class="roadmap-status planned">Planned</div>
+                </div>
+                <div class="roadmap-features">
+                    <div class="roadmap-feature">
+                        <div class="feature-icon pending"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Production Deployment
+                    </div>
+                    <div class="roadmap-feature">
+                        <div class="feature-icon pending"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Stakeholder Training
+                    </div>
+                    <div class="roadmap-feature">
+                        <div class="feature-icon pending"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        Go-Live Support
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-logo">Morichal<span>AI</span></div>
+            <p>AI-Powered Trade & Supply Chain Platform</p>
+            <p style="margin-top: 15px; font-size: 12px; color: #94a3b8;">
+                Document Version 2.0 | Generated January 2, 2026 | This document accompanies Sprint 2 Invoice
+            </p>
+        </footer>
+    </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal-overlay" id="imageModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Close (ESC)
+            </button>
+            <img src="assets/images/roadmap.png" alt="MorichalAI Project Roadmap - Full View">
+        </div>
+    </div>
+
+    <script>
+        // Password Protection
+        const CORRECT_PASSWORD = 'morichal2025!';
+
+        // Check if already authenticated this session
+        if (sessionStorage.getItem('morichal_auth') === 'true') {
+            document.getElementById('passwordOverlay').classList.add('hidden');
+            document.getElementById('mainContent').classList.add('visible');
+        }
+
+        function checkPassword(event) {
+            event.preventDefault();
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('passwordError');
+
+            if (input.value === CORRECT_PASSWORD) {
+                sessionStorage.setItem('morichal_auth', 'true');
+                document.getElementById('passwordOverlay').classList.add('hidden');
+                document.getElementById('mainContent').classList.add('visible');
+            } else {
+                input.classList.add('error');
+                error.classList.add('show');
+                setTimeout(() => {
+                    input.classList.remove('error');
+                }, 500);
+            }
+            return false;
+        }
+
+        // Image Modal Functions
+        function openModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = modal.querySelector('.modal-content img');
+            modalImg.src = 'assets/images/roadmap.png';
+            modalImg.alt = 'MorichalAI Project Roadmap - Full View';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openCarouselModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = modal.querySelector('.modal-content img');
+            modalImg.src = imgSrc;
+            modalImg.alt = 'Orders Timeline - Full View';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            // Arrow keys for carousel
+            if (e.key === 'ArrowLeft') {
+                moveCarousel(-1);
+            }
+            if (e.key === 'ArrowRight') {
+                moveCarousel(1);
+            }
+        });
+
+        // Carousel Functions
+        let currentSlide = 0;
+        const totalSlides = 6;
+
+        function moveCarousel(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = totalSlides - 1;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('carouselTrack');
+            const dots = document.querySelectorAll('.carousel-dot');
+
+            if (track) {
+                track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Touch/swipe support for carousel
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        const carouselContainer = document.querySelector('.carousel-container');
+        if (carouselContainer) {
+            carouselContainer.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            carouselContainer.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    moveCarousel(1); // Swipe left = next
+                } else {
+                    moveCarousel(-1); // Swipe right = prev
+                }
+            }
+        }
+    </script>
+</body>
+</html>
