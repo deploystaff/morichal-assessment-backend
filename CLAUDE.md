@@ -1,5 +1,33 @@
 # Project Instructions
 
+## Project Context - MorichalAI
+
+> **ALWAYS READ**: See `DOCS/PROJECT-CONTEXT.md` for full project details.
+
+**Platform**: MorichalAI - AI-Powered Trade & Supply Chain Platform
+**Client**: Morichal (paper trading company)
+**Live URL**: https://dev.morichalai.com
+**Proposal**: https://morichal-proposal.deploystaff.com (pass: MorichalAI-Thierry2025)
+
+### 10 AI Agents Being Delivered:
+1. Email Intake Agent
+2. Specification Extraction Agent
+3. Supplier Matching Agent
+4. Pricing & Margin Agent
+5. Document Verification Agent
+6. Compliance Agent
+7. CRM Sync Agent (→ Full CRM Migration)
+8. Logistics Milestone Agent (→ Orders Timeline)
+9. Analytics & Internal Control Agent
+10. Real-time Processing Orchestrator
+
+### Current Progress: 82% Complete (41/50 items)
+- Sprint 1: ✅ Complete
+- Sprint 2: ✅ Complete
+- Sprint 3: 🔄 In Progress (7/10)
+
+---
+
 ## Mandatory Workflow
 
 **CRITICAL: For EVERY user request, you MUST follow this workflow in order:**
