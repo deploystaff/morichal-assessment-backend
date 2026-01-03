@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceptance Agreement - MorichalAI Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --primary-dark: #0d5d56;
+            --success: #22c55e;
+            --success-light: #dcfce7;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px 40px;
+            background: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background: white; font-size: 11pt; }
+            .container { max-width: 100%; padding: 20px; box-shadow: none; }
+            .page-break { page-break-before: always; }
+            .section { page-break-inside: avoid; }
+            .signature-block { page-break-inside: avoid; }
+            .no-print, .form-actions, .progress-bar { display: none !important; }
+            .signature-pad { border: 1px solid #ccc !important; }
+            input[type="text"], input[type="date"] { border: none !important; border-bottom: 1px solid #333 !important; }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+            z-index: 100;
+        }
+
+        .progress-items {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: var(--light);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .progress-item.complete {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .progress-item.incomplete {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .progress-count {
+            font-weight: 700;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            position: sticky;
+            bottom: 0;
+            background: var(--white);
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            z-index: 100;
+        }
+
+        .form-actions button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--border) !important;
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            text-align: center;
+            padding: 50px 40px;
+            border: 3px solid var(--primary);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .cover-page::before,
+        .cover-page::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--primary);
+        }
+
+        .cover-page::before {
+            top: 10px; left: 10px;
+            border-right: none; border-bottom: none;
+        }
+
+        .cover-page::after {
+            bottom: 10px; right: 10px;
+            border-left: none; border-top: none;
+        }
+
+        .doc-type {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .doc-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .doc-subtitle {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 25px;
+        }
+
+        .doc-tagline {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .doc-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            font-size: 14px;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-meta-label { color: var(--gray); }
+        .doc-meta-value { font-weight: 600; color: var(--dark); }
+
+        .confidential {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            margin-top: 15px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin: 25px 0 12px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        /* Business Context Box */
+        .business-context {
+            background: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 100%);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .business-context .problem {
+            margin-bottom: 12px;
+        }
+
+        .business-context .problem-label,
+        .business-context .solution-label {
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Capability Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        td {
+            color: var(--dark);
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        tr.checked {
+            background: var(--success-light) !important;
+        }
+
+        .capability {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .benefit {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .accept-col {
+            width: 70px;
+            text-align: center;
+        }
+
+        /* Interactive Checkboxes */
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-complete {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .badge-progress {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        /* Signature Blocks */
+        .signature-block {
+            background: var(--light);
+            border: 2px solid var(--border);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .signature-block.complete {
+            border-color: var(--success);
+            background: linear-gradient(135deg, var(--success-light) 0%, #f0fdf4 100%);
+        }
+
+        .signature-block-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .confirmation-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding: 12px;
+            background: var(--white);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .signature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 700px) {
+            .signature-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .signature-party {
+            padding: 18px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .party-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .signature-field {
+            margin-bottom: 12px;
+        }
+
+        .signature-field label {
+            display: block;
+            font-size: 11px;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--white);
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        /* Signature Canvas */
+        .signature-canvas-container {
+            position: relative;
+        }
+
+        .signature-pad {
+            width: 100%;
+            height: 80px;
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            background: var(--white);
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .signature-pad.signed {
+            border-style: solid;
+            border-color: var(--primary);
+        }
+
+        .clear-sig {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 4px 10px;
+            font-size: 11px;
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .clear-sig:hover {
+            background: var(--danger-light);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .summary-box h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .summary-item {
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* What's Next */
+        .whats-next {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .whats-next h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .whats-next ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .whats-next li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .whats-next li:last-child {
+            border-bottom: none;
+        }
+
+        .whats-next li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Final Acceptance */
+        .final-acceptance {
+            border: 3px solid var(--primary);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .final-acceptance .title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .acceptance-statement {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .acceptance-statement ul {
+            margin: 12px 0;
+            padding-left: 25px;
+        }
+
+        .acceptance-statement li {
+            margin-bottom: 6px;
+        }
+
+        /* Footer */
+        .doc-footer {
+            text-align: center;
+            padding: 25px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+            color: var(--gray);
+            font-size: 12px;
+        }
+
+        /* Auto-save indicator */
+        .save-indicator {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            padding: 8px 15px;
+            background: var(--success);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PROGRESS BAR -->
+        <div class="progress-bar no-print">
+            <div class="progress-items">
+                <div class="progress-item" id="progress-phase1">
+                    <span>Phase 1:</span>
+                    <span class="progress-count" id="count-phase1">0/7</span>
+                </div>
+                <div class="progress-item" id="progress-phase2">
+                    <span>Phase 2:</span>
+                    <span class="progress-count" id="count-phase2">0/8</span>
+                </div>
+                <div class="progress-item" id="progress-phase3">
+                    <span>Phase 3:</span>
+                    <span class="progress-count" id="count-phase3">0/7</span>
+                </div>
+                <div class="progress-item" id="progress-sigs">
+                    <span>Signatures:</span>
+                    <span class="progress-count" id="count-sigs">0/8</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COVER PAGE -->
+        <div class="cover-page">
+            <div class="doc-type">Interactive Acceptance Agreement</div>
+            <h1 class="doc-title">MorichalAI Platform</h1>
+            <h2 class="doc-subtitle">Your AI-Powered Trading Partner</h2>
+            <p class="doc-tagline">Transforming manual operations into intelligent automation</p>
+
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <span class="doc-meta-label">Document</span>
+                    <span class="doc-meta-value">UAP-2026-001</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="doc-meta-label">Version</span>
+                    <span class="doc-meta-value">3.0 Interactive</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="doc-meta-label">Date</span>
+                    <span class="doc-meta-value">January 2026</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="doc-meta-label">Go-Live</span>
+                    <span class="doc-meta-value">February 9, 2026</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="doc-meta-label">Client</span>
+                    <span class="doc-meta-value">Morichal</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="doc-meta-label">Provider</span>
+                    <span class="doc-meta-value">DeployStaff.com</span>
+                </div>
+            </div>
+
+            <div class="confidential">Confidential</div>
+        </div>
+
+        <!-- WHAT YOU'RE GETTING -->
+        <div class="section">
+            <h2 class="section-title">What You're Getting</h2>
+
+            <p>The MorichalAI platform is a complete, AI-powered system designed specifically for your paper trading business. It works 24/7 to automate the manual tasks that currently consume your team's time.</p>
+
+            <div class="summary-box">
+                <h3>Platform at a Glance</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-value">24/7</span>
+                        <span class="summary-label">Automated Operations</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-value">45</span>
+                        <span class="summary-label">Suppliers Connected</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-value">13</span>
+                        <span class="summary-label">Countries Tracked</span>
+                    </div>
+                </div>
+            </div>
+
+            <p><strong>Check each capability you've tested and accept, then sign at the bottom of each section.</strong></p>
+        </div>
+
+        <!-- PHASE 1: ORDER PROCESSING -->
+        <div class="section" id="section-phase1">
+            <h2 class="section-title">
+                Phase 1: Order Processing & Supplier Management
+                <span class="status-badge badge-complete">Complete</span>
+            </h2>
+
+            <div class="business-context">
+                <div class="problem">
+                    <span class="problem-label">The Problem</span>
+                    <span class="problem-text">Manually processing customer emails, re-typing specifications, and searching for suppliers wastes hours every day and leads to costly errors.</span>
+                </div>
+                <div class="solution">
+                    <span class="solution-label">What We Built</span>
+                    <span class="solution-text">Automated order intake that reads customer emails, understands paper specifications, and matches them to the best suppliers instantly.</span>
+                </div>
+            </div>
+
+            <table id="table-phase1">
+                <thead>
+                    <tr>
+                        <th>What You Can Do</th>
+                        <th>How It Helps Your Business</th>
+                        <th class="accept-col">Accept</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="capability">Receive customer orders automatically</td>
+                        <td class="benefit">No more manually reading emails - orders captured 24/7</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Paper specifications understood correctly</td>
+                        <td class="benefit">Dimensions, grammage, brightness - all extracted automatically</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Find the best supplier for each order</td>
+                        <td class="benefit">Matches requirements to 45 suppliers, ranked by performance</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Manage supplier negotiations in one place</td>
+                        <td class="benefit">Track all RFQs, compare quotes, record outcomes</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Generate quotes and purchase orders</td>
+                        <td class="benefit">Professional documents created instantly</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Access all your Zoho data inside the platform</td>
+                        <td class="benefit">Complete CRM migration - always in sync</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Manage users and permissions</td>
+                        <td class="benefit">Role-based access control for your team</td>
+                        <td class="accept-col"><input type="checkbox" class="phase1-check" data-phase="1"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="signature-block" id="sig-block-phase1">
+                <div class="signature-block-title">Phase 1 Acceptance</div>
+                <div class="confirmation-text">
+                    I confirm that the Order Processing & Supplier Management capabilities work correctly for my business.
+                </div>
+                <div class="signature-row">
+                    <div class="signature-party">
+                        <div class="party-title">Client</div>
+                        <div class="signature-field">
+                            <label>Name</label>
+                            <input type="text" id="p1-client-name" placeholder="Type your full name">
+                        </div>
+                        <div class="signature-field">
+                            <label>Signature (draw below)</label>
+                            <div class="signature-canvas-container">
+                                <canvas class="signature-pad" id="p1-client-sig"></canvas>
+                                <button class="clear-sig" onclick="clearSignature('p1-client-sig')">Clear</button>
+                            </div>
+                        </div>
+                        <div class="signature-field">
+                            <label>Date</label>
+                            <input type="date" id="p1-client-date">
+                        </div>
+                    </div>
+                    <div class="signature-party">
+                        <div class="party-title">Provider</div>
+                        <div class="signature-field">
+                            <label>Name</label>
+                            <input type="text" id="p1-provider-name" placeholder="Type your full name">
+                        </div>
+                        <div class="signature-field">
+                            <label>Signature (draw below)</label>
+                            <div class="signature-canvas-container">
+                                <canvas class="signature-pad" id="p1-provider-sig"></canvas>
+                                <button class="clear-sig" onclick="clearSignature('p1-provider-sig')">Clear</button>
+                            </div>
+                        </div>
+                        <div class="signature-field">
+                            <label>Date</label>
+                            <input type="date" id="p1-provider-date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 2: DOCUMENT CONTROL -->
+        <div class="section" id="section-phase2">
+            <h2 class="section-title">
+                Phase 2: Document Control & Compliance
+                <span class="status-badge badge-complete">Complete</span>
+            </h2>
+
+            <div class="business-context">
+                <div class="problem">
+                    <span class="problem-label">The Problem</span>
+                    <span class="problem-text">Invoice errors, missed customs deadlines, and document discrepancies cost money and damage relationships.</span>
+                </div>
+                <div class="solution">
+                    <span class="solution-label">What We Built</span>
+                    <span class="solution-text">Automated document verification that catches errors before you pay, tracks compliance for 13 countries, and alerts you before deadlines.</span>
+                </div>
+            </div>
+
+            <table id="table-phase2">
+                <thead>
+                    <tr>
+                        <th>What You Can Do</th>
+                        <th>How It Helps Your Business</th>
+                        <th class="accept-col">Accept</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="capability">Verify all trade documents automatically</td>
+                        <td class="benefit">Cross-check invoices, packing lists, BLs for discrepancies</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Track compliance for 13 destination countries</td>
+                        <td class="benefit">Know which certificates are needed for each shipment</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Never miss a customs deadline</td>
+                        <td class="benefit">Get alerts 48 hours before vessel arrival if docs are missing</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Protect your profit margins</td>
+                        <td class="benefit">Automatic margin rules - bad deals are flagged instantly</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Generate required documents</td>
+                        <td class="benefit">Professional invoices, packing lists from templates</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Get notified via WhatsApp and email</td>
+                        <td class="benefit">Stay informed wherever you are</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Compare documents side-by-side</td>
+                        <td class="benefit">Spot differences between versions instantly</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Track containers in real-time</td>
+                        <td class="benefit">Know where shipments are at any moment</td>
+                        <td class="accept-col"><input type="checkbox" class="phase2-check" data-phase="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="signature-block" id="sig-block-phase2">
+                <div class="signature-block-title">Phase 2 Acceptance</div>
+                <div class="confirmation-text">
+                    I confirm that the Document Control & Compliance capabilities work correctly for my business.
+                </div>
+                <div class="signature-row">
+                    <div class="signature-party">
+                        <div class="party-title">Client</div>
+                        <div class="signature-field">
+                            <label>Name</label>
+                            <input type="text" id="p2-client-name" placeholder="Type your full name">
+                        </div>
+                        <div class="signature-field">
+                            <label>Signature (draw below)</label>
+                            <div class="signature-canvas-container">
+                                <canvas class="signature-pad" id="p2-client-sig"></canvas>
+                                <button class="clear-sig" onclick="clearSignature('p2-client-sig')">Clear</button>
+                            </div>
+                        </div>
+                        <div class="signature-field">
+                            <label>Date</label>
+                            <input type="date" id="p2-client-date">
+                        </div>
+                    </div>
+                    <div class="signature-party">
+                        <div class="party-title">Provider</div>
+                        <div class="signature-field">
+                            <label>Name</label>
+                            <input type="text" id="p2-provider-name" placeholder="Type your full name">
+                        </div>
+                        <div class="signature-field">
+                            <label>Signature (draw below)</label>
+                            <div class="signature-canvas-container">
+                                <canvas class="signature-pad" id="p2-provider-sig"></canvas>
+                                <button class="clear-sig" onclick="clearSignature('p2-provider-sig')">Clear</button>
+                            </div>
+                        </div>
+                        <div class="signature-field">
+                            <label>Date</label>
+                            <input type="date" id="p2-provider-date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 3: VISIBILITY & CONTROL -->
+        <div class="section" id="section-phase3">
+            <h2 class="section-title">
+                Phase 3: Visibility & Control
+                <span class="status-badge badge-progress">In Progress</span>
+            </h2>
+
+            <div class="business-context">
+                <div class="problem">
+                    <span class="problem-label">The Problem</span>
+                    <span class="problem-text">Without real-time visibility, delays surprise you and you can't see how your business is performing.</span>
+                </div>
+                <div class="solution">
+                    <span class="solution-label">What We Built</span>
+                    <span class="solution-text">Complete visibility into every order's journey, real-time dashboards, and intelligent alerts.</span>
+                </div>
+            </div>
+
+            <table id="table-phase3">
+                <thead>
+                    <tr>
+                        <th>What You Can Do</th>
+                        <th>How It Helps Your Business</th>
+                        <th class="accept-col">Accept</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="capability">Track every shipment in real-time</td>
+                        <td class="benefit">Production → Origin Port → Transit → Destination</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Get delay alerts automatically</td>
+                        <td class="benefit">5+ days behind schedule? You'll know immediately</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">See business performance dashboards</td>
+                        <td class="benefit">KPIs and supplier scorecards at a glance</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Generate custom reports</td>
+                        <td class="benefit">The data you need, when you need it</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Configure alerts your way</td>
+                        <td class="benefit">Customize thresholds and notification channels</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Generate country-specific documents</td>
+                        <td class="benefit">Automatic docs based on destination requirements</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="capability">Manage document templates</td>
+                        <td class="benefit">Create, edit, and version your templates</td>
+                        <td class="accept-col"><input type="checkbox" class="phase3-check" data-phase="3"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="signature-block" id="sig-block-phase3">
+                <div class="signature-block-title">Phase 3 Acceptance</div>
+                <div class="confirmation-text">
+                    I confirm that the Visibility & Control capabilities work correctly for my business.
+                </div>
+                <div class="signature-row">
+                    <div class="signature-party">
+                        <div class="party-title">Client</div>
+                        <div class="signature-field">
+                            <label>Name</label>
+                            <input type="text" id="p3-client-name" placeholder="Type your full name">
+                        </div>
+                        <div class="signature-field">
+                            <label>Signature (draw below)</label>
+                            <div class="signature-canvas-container">
+                                <canvas class="signature-pad" id="p3-client-sig"></canvas>
+                                <button class="clear-sig" onclick="clearSignature('p3-client-sig')">Clear</button>
+                            </div>
+                        </div>
+                        <div class="signature-field">
+                            <label>Date</label>
+                            <input type="date" id="p3-client-date">
+                        </div>
+                    </div>
+                    <div class="signature-party">
+                        <div class="party-title">Provider</div>
+                        <div class="signature-field">
+                            <label>Name</label>
+                            <input type="text" id="p3-provider-name" placeholder="Type your full name">
+                        </div>
+                        <div class="signature-field">
+                            <label>Signature (draw below)</label>
+                            <div class="signature-canvas-container">
+                                <canvas class="signature-pad" id="p3-provider-sig"></canvas>
+                                <button class="clear-sig" onclick="clearSignature('p3-provider-sig')">Clear</button>
+                            </div>
+                        </div>
+                        <div class="signature-field">
+                            <label>Date</label>
+                            <input type="date" id="p3-provider-date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WHAT HAPPENS AFTER GO-LIVE -->
+        <div class="section">
+            <h2 class="section-title">What Happens After Go-Live</h2>
+
+            <div class="whats-next">
+                <h3>Your Support Package</h3>
+                <ul>
+                    <li><strong>30-day warranty</strong> - Any bugs fixed at no extra cost</li>
+                    <li><strong>Training sessions</strong> - Your team fully trained</li>
+                    <li><strong>Documentation</strong> - Complete user guides</li>
+                    <li><strong>Direct support</strong> - rafael@deploystaff.com</li>
+                    <li><strong>Platform monitoring</strong> - Proactive health checks</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Response Times</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Issue Type</th>
+                        <th>Response</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Critical</strong></td>
+                        <td>4 hours</td>
+                        <td>Platform down, all users affected</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Major</strong></td>
+                        <td>24 hours</td>
+                        <td>Feature broken, can't generate POs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Minor</strong></td>
+                        <td>5 days</td>
+                        <td>UI bug, formatting issue</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FINAL ACCEPTANCE -->
+        <div class="final-acceptance" id="final-acceptance">
+            <div class="title">Final Platform Acceptance</div>
+
+            <div class="acceptance-statement">
+                <p><strong>Go-Live Date:</strong> February 9, 2026</p>
+                <p><strong>Platform:</strong> MorichalAI - AI-Powered Trade & Supply Chain Platform</p>
+                <p><strong>URL:</strong> <a href="https://dev.morichalai.com" target="_blank">dev.morichalai.com</a></p>
+
+                <p style="margin-top: 15px;">By signing below, I confirm that:</p>
+                <ul>
+                    <li>I have reviewed all three phases of the platform</li>
+                    <li>The capabilities work correctly for my business needs</li>
+                    <li>I have received adequate training</li>
+                    <li>I understand the support and warranty terms</li>
+                    <li>I accept the platform for production use</li>
+                </ul>
+            </div>
+
+            <div class="signature-row">
+                <div class="signature-party" style="border: 2px solid var(--primary);">
+                    <div class="party-title">Client Acceptance</div>
+                    <div class="signature-field">
+                        <label>Authorized Representative</label>
+                        <input type="text" id="final-client-name" placeholder="Type your full name">
+                    </div>
+                    <div class="signature-field">
+                        <label>Title</label>
+                        <input type="text" id="final-client-title" placeholder="Your title">
+                    </div>
+                    <div class="signature-field">
+                        <label>Signature (draw below)</label>
+                        <div class="signature-canvas-container">
+                            <canvas class="signature-pad" id="final-client-sig"></canvas>
+                            <button class="clear-sig" onclick="clearSignature('final-client-sig')">Clear</button>
+                        </div>
+                    </div>
+                    <div class="signature-field">
+                        <label>Date</label>
+                        <input type="date" id="final-client-date">
+                    </div>
+                </div>
+                <div class="signature-party" style="border: 2px solid var(--primary);">
+                    <div class="party-title">Provider Acknowledgment</div>
+                    <div class="signature-field">
+                        <label>Authorized Representative</label>
+                        <input type="text" id="final-provider-name" placeholder="Type your full name">
+                    </div>
+                    <div class="signature-field">
+                        <label>Title</label>
+                        <input type="text" id="final-provider-title" placeholder="Your title">
+                    </div>
+                    <div class="signature-field">
+                        <label>Signature (draw below)</label>
+                        <div class="signature-canvas-container">
+                            <canvas class="signature-pad" id="final-provider-sig"></canvas>
+                            <button class="clear-sig" onclick="clearSignature('final-provider-sig')">Clear</button>
+                        </div>
+                    </div>
+                    <div class="signature-field">
+                        <label>Date</label>
+                        <input type="date" id="final-provider-date">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="doc-footer">
+            <p>MorichalAI Platform Acceptance Agreement | UAP-2026-001 v3.0</p>
+            <p>Morichal & DeployStaff.com | January 2026</p>
+        </div>
+
+        <!-- FORM ACTIONS -->
+        <div class="form-actions no-print">
+            <button class="btn-primary" onclick="saveProgress()">Save Progress</button>
+            <button class="btn-secondary" onclick="window.print()">Print / Download PDF</button>
+            <button class="btn-danger" onclick="clearForm()">Clear All</button>
+        </div>
+    </div>
+
+    <!-- SAVE INDICATOR -->
+    <div class="save-indicator" id="save-indicator">Saved!</div>
+
+    <script>
+        // ========================================
+        // SIGNATURE PAD FUNCTIONALITY
+        // ========================================
+        const signaturePads = {};
+
+        function initSignaturePad(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            // Set canvas size
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            // Drawing style
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                if (e.touches) {
+                    return {
+                        x: e.touches[0].clientX - rect.left,
+                        y: e.touches[0].clientY - rect.top
+                    };
+                }
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+
+            function startDrawing(e) {
+                isDrawing = true;
+                const pos = getPos(e);
+                lastX = pos.x;
+                lastY = pos.y;
+                e.preventDefault();
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+
+                lastX = pos.x;
+                lastY = pos.y;
+
+                canvas.classList.add('signed');
+                signaturePads[canvasId] = true;
+                updateProgress();
+                autoSave();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            // Mouse events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function clearSignature(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.classList.remove('signed');
+            signaturePads[canvasId] = false;
+            updateProgress();
+            autoSave();
+        }
+
+        // ========================================
+        // PROGRESS TRACKING
+        // ========================================
+        function updateProgress() {
+            // Phase 1
+            const p1Checks = document.querySelectorAll('.phase1-check:checked').length;
+            const p1Total = document.querySelectorAll('.phase1-check').length;
+            document.getElementById('count-phase1').textContent = `${p1Checks}/${p1Total}`;
+            document.getElementById('progress-phase1').className = 'progress-item ' + (p1Checks === p1Total ? 'complete' : 'incomplete');
+
+            // Phase 2
+            const p2Checks = document.querySelectorAll('.phase2-check:checked').length;
+            const p2Total = document.querySelectorAll('.phase2-check').length;
+            document.getElementById('count-phase2').textContent = `${p2Checks}/${p2Total}`;
+            document.getElementById('progress-phase2').className = 'progress-item ' + (p2Checks === p2Total ? 'complete' : 'incomplete');
+
+            // Phase 3
+            const p3Checks = document.querySelectorAll('.phase3-check:checked').length;
+            const p3Total = document.querySelectorAll('.phase3-check').length;
+            document.getElementById('count-phase3').textContent = `${p3Checks}/${p3Total}`;
+            document.getElementById('progress-phase3').className = 'progress-item ' + (p3Checks === p3Total ? 'complete' : 'incomplete');
+
+            // Signatures
+            const sigIds = [
+                'p1-client-sig', 'p1-provider-sig',
+                'p2-client-sig', 'p2-provider-sig',
+                'p3-client-sig', 'p3-provider-sig',
+                'final-client-sig', 'final-provider-sig'
+            ];
+            const sigCount = sigIds.filter(id => signaturePads[id]).length;
+            document.getElementById('count-sigs').textContent = `${sigCount}/8`;
+            document.getElementById('progress-sigs').className = 'progress-item ' + (sigCount === 8 ? 'complete' : 'incomplete');
+
+            // Update row highlighting
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.closest('tr').classList.toggle('checked', cb.checked);
+            });
+
+            // Update signature block highlighting
+            updateSignatureBlockStatus();
+        }
+
+        function updateSignatureBlockStatus() {
+            const phases = ['phase1', 'phase2', 'phase3'];
+            phases.forEach((phase, idx) => {
+                const block = document.getElementById(`sig-block-${phase}`);
+                const clientSig = signaturePads[`p${idx+1}-client-sig`];
+                const providerSig = signaturePads[`p${idx+1}-provider-sig`];
+                const clientName = document.getElementById(`p${idx+1}-client-name`).value;
+                const providerName = document.getElementById(`p${idx+1}-provider-name`).value;
+
+                if (clientSig && providerSig && clientName && providerName) {
+                    block.classList.add('complete');
+                } else {
+                    block.classList.remove('complete');
+                }
+            });
+        }
+
+        // ========================================
+        // LOCAL STORAGE
+        // ========================================
+        const STORAGE_KEY = 'uap-morichal-2026';
+
+        function saveProgress() {
+            const data = {
+                checkboxes: {},
+                inputs: {},
+                signatures: {},
+                savedAt: new Date().toISOString()
+            };
+
+            // Save checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach((cb, idx) => {
+                data.checkboxes[idx] = cb.checked;
+            });
+
+            // Save text inputs
+            document.querySelectorAll('input[type="text"], input[type="date"]').forEach(input => {
+                if (input.id) {
+                    data.inputs[input.id] = input.value;
+                }
+            });
+
+            // Save signatures as base64
+            document.querySelectorAll('.signature-pad').forEach(canvas => {
+                if (signaturePads[canvas.id]) {
+                    data.signatures[canvas.id] = canvas.toDataURL();
+                }
+            });
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            showSaveIndicator();
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return;
+
+            try {
+                const data = JSON.parse(saved);
+
+                // Restore checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach((cb, idx) => {
+                    if (data.checkboxes && data.checkboxes[idx] !== undefined) {
+                        cb.checked = data.checkboxes[idx];
+                    }
+                });
+
+                // Restore text inputs
+                if (data.inputs) {
+                    Object.keys(data.inputs).forEach(id => {
+                        const input = document.getElementById(id);
+                        if (input) {
+                            input.value = data.inputs[id];
+                        }
+                    });
+                }
+
+                // Restore signatures
+                if (data.signatures) {
+                    Object.keys(data.signatures).forEach(id => {
+                        const canvas = document.getElementById(id);
+                        if (canvas && data.signatures[id]) {
+                            const img = new Image();
+                            img.onload = function() {
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0);
+                                canvas.classList.add('signed');
+                                signaturePads[id] = true;
+                                updateProgress();
+                            };
+                            img.src = data.signatures[id];
+                        }
+                    });
+                }
+
+                updateProgress();
+            } catch (e) {
+                console.error('Error loading saved data:', e);
+            }
+        }
+
+        function clearForm() {
+            if (!confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                return;
+            }
+
+            // Clear checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // Clear inputs
+            document.querySelectorAll('input[type="text"], input[type="date"]').forEach(input => {
+                input.value = '';
+            });
+
+            // Clear signatures
+            document.querySelectorAll('.signature-pad').forEach(canvas => {
+                clearSignature(canvas.id);
+            });
+
+            // Clear storage
+            localStorage.removeItem(STORAGE_KEY);
+
+            updateProgress();
+        }
+
+        function autoSave() {
+            clearTimeout(window.autoSaveTimer);
+            window.autoSaveTimer = setTimeout(saveProgress, 1000);
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.getElementById('save-indicator');
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all signature pads
+            const sigIds = [
+                'p1-client-sig', 'p1-provider-sig',
+                'p2-client-sig', 'p2-provider-sig',
+                'p3-client-sig', 'p3-provider-sig',
+                'final-client-sig', 'final-provider-sig'
+            ];
+            sigIds.forEach(initSignaturePad);
+
+            // Load saved progress
+            loadProgress();
+
+            // Add event listeners for auto-save
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    updateProgress();
+                    autoSave();
+                });
+            });
+
+            document.querySelectorAll('input[type="text"], input[type="date"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    updateProgress();
+                    autoSave();
+                });
+            });
+
+            // Initial progress update
+            updateProgress();
+
+            // Set today's date as default for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                if (!input.value) {
+                    input.value = today;
+                }
+            });
+        });
+
+        // Handle window resize for signature pads
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('.signature-pad').forEach(canvas => {
+                const rect = canvas.getBoundingClientRect();
+                // Only resize if significantly different
+                if (Math.abs(canvas.width - rect.width) > 10) {
+                    // Save current signature
+                    const dataUrl = canvas.toDataURL();
+
+                    // Resize
+                    canvas.width = rect.width;
+                    canvas.height = rect.height;
+
+                    // Restore signature
+                    if (signaturePads[canvas.id]) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                        };
+                        img.src = dataUrl;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

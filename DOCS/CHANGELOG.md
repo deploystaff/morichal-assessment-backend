@@ -7,6 +7,37 @@ All notable changes to this project are documented here.
 ## 2026-01-03
 
 ### Added
+- **Competitive Pricing Research** (`competitive-pricing-research.html`)
+  - Comprehensive market analysis for AI agent services
+  - 30+ verified industry sources cited
+  - Pricing comparisons across 8 categories:
+    - AI Agent Development ($5K-$500K+ by complexity)
+    - Email Automation ($30-$5,000+/mo)
+    - Document Processing/OCR ($1.50-$650 per 10K pages)
+    - Supply Chain AI ($200/mo SMB → $5M+ enterprise)
+    - CRM + AI Automation (€40-$150+/user/mo)
+    - Trade Compliance (custom enterprise pricing)
+    - Maintenance & Support (15-30% annually)
+  - MorichalAI value comparison:
+    - DIY/Multi-Vendor: €420K-€1.09M
+    - MorichalAI Platform: €104K-€119K (75-90% savings)
+  - Professional styling, no password protection
+  - Live at: https://morichalai.deploystaff.com/competitive-pricing-research.html
+
+- **User Acceptance Protocol v2.0** (`UAP-MORICHAL-2026.html`)
+  - Complete rewrite with customer-facing business language
+  - Organized by business phases (not technical sprints):
+    - Phase 1: Order Processing & Supplier Management
+    - Phase 2: Document Control & Compliance
+    - Phase 3: Visibility & Control
+  - "What You Can Do" + "Business Benefit" format
+  - Problem/Solution context for each phase
+  - Removed technical jargon (no more "95% OCR confidence")
+  - Simple acceptance checkboxes per capability
+  - Plain-language sign-off: "I confirm this works for my business"
+  - Post-acceptance: support package, response times, infrastructure costs
+  - Professional styling with print-friendly CSS
+
 - **Project Context Documentation** (`DOCS/PROJECT-CONTEXT.md`)
   - Full knowledge base with all 10 AI agents documented
   - Sprint progress tracking
