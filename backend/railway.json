@@ -1,7 +1,22 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "nixpacksPlan": {
+      "phases": {
+        "install": {
+          "dependsOn": ["setup"],
+          "cmds": ["pip install -r requirements.txt"]
+        },
+        "setup": {
+          "nixPkgs": ["python312", "libmagic"]
+        }
+      }
+    }
+  },
   "deploy": {
+    "startCommand": "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT",
     "healthcheckPath": "/api/health/",
-    "healthcheckTimeout": 60
+    "healthcheckTimeout": 30
   }
 }
