@@ -1270,74 +1270,9 @@
             }
         }
 
-        /* Global Nav */
-        .global-nav {
-            background: #1e293b;
-            padding: 12px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .global-nav .nav-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-        .global-nav .nav-home {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            opacity: 0.9;
-            white-space: nowrap;
-        }
-        .global-nav .nav-home:hover { opacity: 1; }
-        .global-nav .nav-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-        .global-nav .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 12px;
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-        .global-nav .nav-links a:hover { background: rgba(255,255,255,0.2); }
-        .global-nav .nav-links a.active { background: #0f766e; }
-        @media (max-width: 768px) {
-            .global-nav .nav-container { flex-direction: column; gap: 10px; }
-            .global-nav .nav-links { justify-content: center; }
-        }
-        @media print { .global-nav { display: none; } }
     </style>
 </head>
 <body>
-    <!-- Global Navigation -->
-    <nav class="global-nav">
-        <div class="nav-container">
-            <a href="deliverables.html" class="nav-home">← All Documents</a>
-            <div class="nav-links">
-                <a href="ai-operations-proposal.html">Operations</a>
-                <a href="proposal-recap.html">Proposal</a>
-                <a href="morichal-value-comparison.html">Value</a>
-                <a href="competitive-pricing-research.html">Pricing</a>
-                <a href="morichal-prd.html">PRD</a>
-                <a href="index.html" class="active">Sprint</a>
-                <a href="UAP-MORICHAL-2026.html">UAP</a>
-                <a href="internal-feature-requests.html">Phase 2</a>
-                <a href="meeting-portal.html">Meetings</a>
-            </div>
-        </div>
-    </nav>
-
     <!-- Password Protection Overlay -->
     <div class="password-overlay" id="passwordOverlay">
         <div class="password-box">
