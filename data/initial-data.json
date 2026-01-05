@@ -1,0 +1,135 @@
+{
+  "version": "1.1",
+  "lastUpdated": "2026-01-04T14:00:00Z",
+  "meetings": [
+    {
+      "id": "MTG-2026-001",
+      "date": "2026-01-10",
+      "title": "Thierry Meeting: Credit System & Operations",
+      "attendees": ["Thierry", "Rafael"],
+      "agenda": "Review credit system payment timing, bill of lading process, customer data requirements, and compliance rules for restricted countries",
+      "status": "scheduled",
+      "notes": "",
+      "questionsDiscussed": ["Q-001", "Q-002", "Q-003", "Q-004", "Q-005", "Q-006", "Q-007"],
+      "createdAt": "2026-01-04T12:00:00Z",
+      "updatedAt": "2026-01-04T12:00:00Z"
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q-001",
+      "category": "payment-timing",
+      "question": "How does the credit system work? If Morichal pays 30% for production to start when the PO is sent, when does Morichal pay the remaining 70%? Is it when production is finished or when it arrives at port?",
+      "status": "pending",
+      "priority": "high",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "Critical for understanding cash flow and payment scheduling in the platform",
+      "createdAt": "2026-01-04T12:00:00Z"
+    },
+    {
+      "id": "Q-002",
+      "category": "payment-timing",
+      "question": "If the client pays 30% to start the order, when does the client pay the remaining 70%?",
+      "status": "pending",
+      "priority": "high",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "Need to understand client payment milestones vs Morichal payment milestones",
+      "createdAt": "2026-01-04T12:00:00Z"
+    },
+    {
+      "id": "Q-003",
+      "category": "pricing",
+      "question": "Do we specify the freight cost on the proforma when payment is in credit?",
+      "status": "pending",
+      "priority": "medium",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "Affects how proforma invoices are generated for credit transactions",
+      "createdAt": "2026-01-04T12:00:00Z"
+    },
+    {
+      "id": "Q-004",
+      "category": "documents",
+      "question": "When is the Bill of Lading generated? After it's shipped, when it lands, or at another point?",
+      "status": "pending",
+      "priority": "medium",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "Important for the Logistics Milestone Agent timeline",
+      "createdAt": "2026-01-04T12:00:00Z"
+    },
+    {
+      "id": "Q-005",
+      "category": "customer-data",
+      "question": "Can you provide us a list of customers with their credit line amounts and remaining credit?",
+      "status": "pending",
+      "priority": "high",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "ACTION: Request data export from Morichal for initial system population",
+      "createdAt": "2026-01-04T12:00:00Z"
+    },
+    {
+      "id": "Q-006",
+      "category": "compliance",
+      "question": "Some countries are restricted by US (like Venezuela). When a user selects a company service for TRD for a Venezuela company, should it automatically convert to Morichal when generating the Commercial Invoice?",
+      "status": "pending",
+      "priority": "medium",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "Compliance Agent logic: auto-convert restricted country orders to Morichal entity",
+      "createdAt": "2026-01-04T12:00:00Z"
+    },
+    {
+      "id": "Q-007",
+      "category": "documents",
+      "question": "Every new customer needs documents, but old customers have docs already. Does Morichal have the old customers' documents so we can add them to the system? Or should we add a feature to manually verify old customers?",
+      "status": "pending",
+      "priority": "medium",
+      "askedInMeeting": null,
+      "answer": null,
+      "answeredBy": null,
+      "answeredDate": null,
+      "relatedBusinessRules": [],
+      "notes": "Document Verification Agent: need to handle legacy customer data migration",
+      "createdAt": "2026-01-04T12:00:00Z"
+    }
+  ],
+  "businessRules": [],
+  "decisions": [],
+  "actionItems": [
+    {
+      "id": "AI-001",
+      "title": "Request customer credit data export",
+      "description": "Ask Thierry to provide a list of customers with credit lines and remaining credit for initial system population",
+      "assignedTo": "Thierry",
+      "dueDate": null,
+      "status": "pending",
+      "priority": "high",
+      "fromMeeting": "MTG-2026-001",
+      "completedDate": null,
+      "notes": "Related to Q-005",
+      "createdAt": "2026-01-04T12:00:00Z"
+    }
+  ]
+}

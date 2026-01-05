@@ -1,6 +1,6 @@
 # Project Status
 
-**Last Updated**: 2026-01-03
+**Last Updated**: 2026-01-04
 **Project Health**: Active
 **Current Phase**: Sprint 3 - Analytics & Logistics
 
@@ -23,11 +23,89 @@ MorichalAI Sprint 2 Assessment Report website is live and operational. This is a
 
 ## Recent Activity
 
-- **Competitive Pricing Research** document created (1,244 lines)
-- Market analysis with 30+ sources across 8 pricing categories
+- **Meeting Portal AI Transcript Analysis** (2026-01-04)
+  - Transcript upload: .txt, .pdf, .json file support
+  - Claude AI analysis extracts answers, business rules, decisions, action items
+  - Suggestions modal with approve/reject workflow
+  - Source quotes included for verification
+  - New database tables for transcripts and ai_suggestions
+  - Backend endpoints for upload, analyze, and suggestion management
+- **Meeting Portal Edit Functionality** (2026-01-04)
+  - Full CRUD for meetings (create, read, update, delete)
+  - Full edit capability for questions (text, category, priority, notes)
+  - Edit buttons added to meeting cards and question items
+  - Backend DELETE endpoint added for meetings
+  - Edit Answer button for answered questions
+  - Deployed to Netlify and Railway
+- **Meeting Portal PostgreSQL Backend** (2026-01-04)
+  - Created Node.js/Express REST API in `/home/claude/claude_code/morichal-api/`
+  - Multi-tenant database schema with clients table for future expansion
+  - PostgreSQL database with migrations and seed data
+  - API endpoints for meetings, questions, business rules, decisions, action items
+  - Frontend updated to use API with localStorage fallback for offline support
+  - **Deployed to Railway**: https://api-production-09ea.up.railway.app
+  - Railway Project: https://railway.com/project/df0e1e3d-466a-4634-beb3-6bce0a8b727c
+- **Meeting Portal Created** (2026-01-04)
+  - New interactive HTML document for tracking meetings, questions, and action items
+  - JSON-based data storage with browser localStorage
+  - Pre-loaded with 7 questions for Thierry meeting
+  - Export/Import functionality for data backup
+  - Added to global navigation and deliverables index
+- **AI Operations Proposal Redesigned** (2026-01-04)
+  - Hero: "Your Operations Partner" → "You're Live. What Happens Now?"
+  - Personal, conversational tone (not corporate)
+  - Added concrete metrics: 10 agents, 81K LOC, 238 endpoints, 1,440 hours
+  - Moved comparison table BEFORE pricing (value anchor)
+  - Replaced gimmicky hourly timeline with "We Built This Platform"
+  - Writing style rules added to CLAUDE.md (no em-dashes)
+- **Source Citations Added** (2026-01-04)
+  - Market Value Comparison table now includes clickable source links
+  - FullStack Labs and Qubit Labs sources for all hourly rate claims
+  - All pricing data now verifiable by client
+- **Deliverables Index Redesigned** (2026-01-04)
+  - 8 documents organized into 4 categories
+  - Quick navigation links bar at top
+  - Cleaner card design with category colors
+- **Global Navigation Added** (2026-01-04)
+  - All 8 content pages now have sticky nav bar
+  - Quick links to all documents from any page
+  - Responsive and print-friendly
+- **AI Operations Proposal** created (`ai-operations-proposal.html`)
+  - Customer-facing maintenance proposal for post-deployment operations
+  - 3-tier pricing: Essential €9,950 | Professional €14,950 | Enterprise €19,950
+  - SLA terms, response times, included services
+  - Live: https://morichalai.deploystaff.com/ai-operations-proposal.html
+- **Internal Feature Requests Tracker** created (`internal-feature-requests.html`)
+  - Internal document to track collected feature requests
+  - NOT linked from public deliverables (internal use only)
+  - Links to source Google Drive document
+  - Live: https://morichalai.deploystaff.com/internal-feature-requests.html
+- **Original Proposal Recap** created (`proposal-recap.html`)
+  - Complete recap of original proposal terms
+  - €104,850 / 1,440 hours / 10 agents / 40 features
+  - Scope definition and market comparison
+  - Live: https://morichalai.deploystaff.com/proposal-recap.html
+- **PRD Verification Complete** (2026-01-03)
+  - Confirmed PRD created from actual codebase analysis
+  - Repos cloned to `/home/claude/claude_code/morichal-prd-analysis/`
+  - Backend: 51,032 LOC Python (Deploy-Staff/morichal-ai-backend)
+  - Frontend: 30,897 LOC TypeScript (Deploy-Staff/morichal-ai-frontend)
+  - Total: **81,929 LOC** analyzed
+  - PRD live and verified: https://morichalai.deploystaff.com/morichal-prd.html
+- **Product Requirements Document** created (`morichal-prd.html`)
+  - Full codebase analysis: 74,233 lines of code (reported in PRD)
+  - 10 AI agents documented with complexity metrics
+  - Technical architecture and market value justification
+  - Live: https://morichalai.deploystaff.com/morichal-prd.html
+- **Local Project Skill** created (`.claude/skills/update-index.md`)
+  - Automatically updates deliverables index when new documents are added
+- **Maintenance Pricing** (10% below market, based on €104,850 dev cost)
+  - Essential: €1,200/month (total €1,600 with infra)
+  - Professional: €1,600/month (total €2,000 with infra)
+  - Enterprise: €2,000/month (total €2,400 with infra)
+- **Deliverables Index** now shows 4 documents
+- **User Acceptance Protocol** upgraded to v3.0 Interactive
 - Image optimization completed (all images compressed)
-- Project context documentation added
-- CLAUDE.md updated with 10 AI agents reference
 
 ## Deployment
 
@@ -35,18 +113,41 @@ MorichalAI Sprint 2 Assessment Report website is live and operational. This is a
 - **Site ID**: 75102d47-5bf1-4c19-abf0-3e303438df45
 - **Deploy Method**: `netlify deploy --prod`
 
-## Documents
+## Documents (9 total + index)
 
-- **Competitive Pricing Research**: `competitive-pricing-research.html`
-  - Market analysis for AI agent services
-  - 30+ verified sources, 8 pricing categories
-  - MorichalAI vs market comparison (75-90% savings)
-  - Live: https://morichalai.deploystaff.com/competitive-pricing-research.html
+### Proposals & Pricing
+| Document | File | URL |
+|----------|------|-----|
+| AI Operations Proposal | `ai-operations-proposal.html` | [View](https://morichalai.deploystaff.com/ai-operations-proposal.html) |
+| Original Proposal Recap | `proposal-recap.html` | [View](https://morichalai.deploystaff.com/proposal-recap.html) |
+| Value Comparison | `morichal-value-comparison.html` | [View](https://morichalai.deploystaff.com/morichal-value-comparison.html) |
+| Pricing Research | `competitive-pricing-research.html` | [View](https://morichalai.deploystaff.com/competitive-pricing-research.html) |
 
-- **User Acceptance Protocol**: `UAP-MORICHAL-2026.html`
-  - Formal client sign-off document
-  - Covers all sprints + QA + Final Acceptance
-  - Ready for signature collection
+### Project Documentation
+| Document | File | URL |
+|----------|------|-----|
+| Product Requirements | `morichal-prd.html` | [View](https://morichalai.deploystaff.com/morichal-prd.html) |
+| Sprint 2 Assessment | `index.html` | [View](https://morichalai.deploystaff.com) |
+
+### Sign-Off & Acceptance
+| Document | File | URL |
+|----------|------|-----|
+| User Acceptance Protocol v3.0 | `UAP-MORICHAL-2026.html` | [View](https://morichalai.deploystaff.com/UAP-MORICHAL-2026.html) |
+
+### Future Roadmap
+| Document | File | URL |
+|----------|------|-----|
+| Phase 2 Opportunities | `internal-feature-requests.html` | [View](https://morichalai.deploystaff.com/internal-feature-requests.html) |
+
+### Project Management
+| Document | File | URL |
+|----------|------|-----|
+| Meeting Portal | `meeting-portal.html` | [View](https://morichalai.deploystaff.com/meeting-portal.html) |
+
+### Index
+- **Deliverables Index**: `deliverables.html` - [View](https://morichalai.deploystaff.com/deliverables.html)
+  - Central hub with all documents organized by category
+  - Global navigation on every page
 
 ## Next Steps
 

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorichalAI | Original Proposal Recap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #0d5d56;
+            --secondary: #1e293b;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, #334155 100%);
+            color: white;
+            padding: 60px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .header-text .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .header-text .date {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .stat-box .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .stat-box .label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* Sections */
+        section {
+            padding: 60px 0;
+        }
+
+        section:nth-child(even) {
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Pricing Comparison Table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .pricing-table th,
+        .pricing-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-table th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pricing-table tr.selected {
+            background: #ecfdf5;
+        }
+
+        .pricing-table tr.selected td {
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-selected {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Agent Cards */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .agent-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .agent-card .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .agent-card .agent-icon {
+            font-size: 2rem;
+        }
+
+        .agent-card .agent-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .agent-card .agent-number {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .agent-card ul {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .agent-card li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .agent-card li:last-child {
+            border-bottom: none;
+        }
+
+        .agent-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Infrastructure */
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .infra-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .infra-item .name {
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .infra-item .cost {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .infra-total {
+            background: var(--secondary);
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .infra-total .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .infra-total .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Included vs Excluded */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .comparison-box {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .comparison-box .box-header {
+            padding: 16px 24px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .comparison-box.included .box-header {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .comparison-box.excluded .box-header {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .comparison-box ul {
+            list-style: none;
+            padding: 16px 24px;
+        }
+
+        .comparison-box li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .comparison-box li:last-child {
+            border-bottom: none;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 48px;
+        }
+
+        .summary-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-item .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .summary-item .label {
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            header {
+                background: var(--secondary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .agent-card,
+            .comparison-box,
+            .summary-box {
+                break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+
+            .header-text h1 {
+                font-size: 1.75rem;
+            }
+
+            .header-stats {
+                width: 100%;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Global Nav */
+        .global-nav {
+            background: #1e293b;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .global-nav .nav-home {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+        .global-nav .nav-home:hover { opacity: 1; }
+        .global-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .global-nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .global-nav .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .global-nav .nav-links a.active { background: #0f766e; }
+        @media (max-width: 768px) {
+            .global-nav .nav-container { flex-direction: column; gap: 10px; }
+            .global-nav .nav-links { justify-content: center; }
+        }
+        @media print { .global-nav { display: none; } }
+    </style>
+</head>
+<body>
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="deliverables.html" class="nav-home">← All Documents</a>
+            <div class="nav-links">
+                <a href="ai-operations-proposal.html">Operations</a>
+                <a href="proposal-recap.html" class="active">Proposal</a>
+                <a href="morichal-value-comparison.html">Value</a>
+                <a href="competitive-pricing-research.html">Pricing</a>
+                <a href="morichal-prd.html">PRD</a>
+                <a href="index.html">Sprint</a>
+                <a href="UAP-MORICHAL-2026.html">UAP</a>
+                <a href="internal-feature-requests.html">Phase 2</a>
+                <a href="meeting-portal.html">Meetings</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Original Proposal Recap</h1>
+                    <p class="subtitle">MorichalAI - AI-Powered Trade & Supply Chain Platform</p>
+                    <p class="date">Contract Start: October 2025 | Executive Tier Selected</p>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-box">
+                        <div class="value">€104,850</div>
+                        <div class="label">Total Investment</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">1,440</div>
+                        <div class="label">Development Hours</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">10</div>
+                        <div class="label">AI Agents</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">40</div>
+                        <div class="label">Features Delivered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Pricing Tiers -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Pricing Tiers Offered</h2>
+                <p>All tiers deliver the same 10 AI agents - difference is timeline and monthly capacity</p>
+            </div>
+
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Monthly Rate</th>
+                        <th>Duration</th>
+                        <th>Total Price</th>
+                        <th>Hours/Month</th>
+                        <th>Total Hours</th>
+                        <th>Effective Rate</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Foundation</td>
+                        <td>€14,950</td>
+                        <td>8 months</td>
+                        <td>€119,600</td>
+                        <td>160</td>
+                        <td>1,280</td>
+                        <td>€93.44/hr</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Accelerated</td>
+                        <td>€22,500</td>
+                        <td>5 months</td>
+                        <td>€112,500</td>
+                        <td>320</td>
+                        <td>1,600</td>
+                        <td>€70.31/hr</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="selected">
+                        <td><strong>Executive</strong></td>
+                        <td><strong>€34,950</strong></td>
+                        <td><strong>3 months</strong></td>
+                        <td><strong>€104,850</strong></td>
+                        <td><strong>480</strong></td>
+                        <td><strong>1,440</strong></td>
+                        <td><strong>€72.81/hr</strong></td>
+                        <td><span class="badge badge-selected">Selected</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                <strong>Note:</strong> Executive tier provides best value per hour while delivering fastest time-to-market
+            </p>
+        </div>
+    </section>
+
+    <!-- 10 AI Agents -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>10 AI Agents Delivered</h2>
+                <p>Each agent includes 4 specific capabilities = 40 total features promised and delivered</p>
+            </div>
+
+            <div class="agents-grid">
+                <!-- Agent 1 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">📨</span>
+                        <div>
+                            <div class="agent-name">Email Intake Agent</div>
+                            <div class="agent-number">Agent #1</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Monitors incoming customer emails 24/7</li>
+                        <li>Extracts product specs with 95% confidence</li>
+                        <li>Creates draft orders in Zoho CRM automatically</li>
+                        <li>Routes uncertain items for human review</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 2 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">📏</span>
+                        <div>
+                            <div class="agent-name">Specification Extraction Agent</div>
+                            <div class="agent-number">Agent #2</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Extracts paper type, dimensions, grammage, brightness</li>
+                        <li>Converts between cm, inches, meters, gsm, lbs</li>
+                        <li>Validates specs against known product categories</li>
+                        <li>Flags impossible combinations for review</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 3 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">🏭</span>
+                        <div>
+                            <div class="agent-name">Supplier Matching Agent</div>
+                            <div class="agent-number">Agent #3</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Matches specs against 45 supplier capabilities</li>
+                        <li>Filters by product type, width, grammage, region</li>
+                        <li>Ranks by on-time delivery %, quality score, response time</li>
+                        <li>Suggests optimal contact person at each mill</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 4 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">💰</span>
+                        <div>
+                            <div class="agent-name">Pricing & Margin Agent</div>
+                            <div class="agent-number">Agent #4</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Applies margin rules (7-14% by product/customer/size)</li>
+                        <li>Compares quotes against historical pricing</li>
+                        <li>Flags outliers (>15% deviation from market)</li>
+                        <li>Provides profitability forecasts</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 5 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">✅</span>
+                        <div>
+                            <div class="agent-name">Document Verification Agent</div>
+                            <div class="agent-number">Agent #5</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>OCR extraction from invoices, packing lists, BLs, certificates</li>
+                        <li>Cross-reference all documents for discrepancies</li>
+                        <li>Detects quantity mismatches, amount errors, date issues</li>
+                        <li>Achieves 92-95% extraction confidence</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 6 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">🛡️</span>
+                        <div>
+                            <div class="agent-name">Compliance Agent</div>
+                            <div class="agent-number">Agent #6</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Monitors document completeness per destination country (13 countries)</li>
+                        <li>Tracks certificate types (origin, quality, phytosanitary)</li>
+                        <li>Validates European preferential origin for duty-free</li>
+                        <li>Alerts 48hrs before vessel arrival if docs incomplete</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 7 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">🔄</span>
+                        <div>
+                            <div class="agent-name">CRM Sync Agent</div>
+                            <div class="agent-number">Agent #7</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Bidirectional sync with Zoho CRM</li>
+                        <li>Updates order status in real-time across 10+ states</li>
+                        <li>Syncs documents to appropriate CRM records</li>
+                        <li>Maintains contact database currency</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 8 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">🚢</span>
+                        <div>
+                            <div class="agent-name">Logistics Milestone Agent</div>
+                            <div class="agent-number">Agent #8</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Tracks 4 phases: Production → Origin Port → Transit → Destination</li>
+                        <li>Monitors milestone completion vs. expected timelines</li>
+                        <li>Triggers delay alerts (5+ days behind schedule)</li>
+                        <li>Provides real-time dashboard visibility</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 9 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">📊</span>
+                        <div>
+                            <div class="agent-name">Analytics & Internal Control Agent</div>
+                            <div class="agent-number">Agent #9</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Real-time KPI dashboards (AI accuracy, cycle times)</li>
+                        <li>Supplier performance scorecards</li>
+                        <li>Exception tracking and reporting</li>
+                        <li>Complete audit trail for compliance</li>
+                    </ul>
+                </div>
+
+                <!-- Agent 10 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span class="agent-icon">🤖</span>
+                        <div>
+                            <div class="agent-name">Real-time Processing Orchestrator</div>
+                            <div class="agent-number">Agent #10</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Central coordination engine for all agents</li>
+                        <li>Confidence-based routing (>93% auto, <85% human)</li>
+                        <li>Parallel processing when agents can work simultaneously</li>
+                        <li>Real-time queue management and bottleneck alerts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infrastructure -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Infrastructure Costs</h2>
+                <p>Ongoing operational costs paid directly by client (separate from development)</p>
+            </div>
+
+            <div class="infra-grid">
+                <div class="infra-item">
+                    <div class="name">Digital Ocean</div>
+                    <div class="cost">~€450/mo</div>
+                </div>
+                <div class="infra-item">
+                    <div class="name">Managed Database</div>
+                    <div class="cost">~€100/mo</div>
+                </div>
+                <div class="infra-item">
+                    <div class="name">New Relic Monitoring</div>
+                    <div class="cost">~€180/mo</div>
+                </div>
+                <div class="infra-item">
+                    <div class="name">AI Models (Vertex AI)</div>
+                    <div class="cost">~€450/mo</div>
+                </div>
+                <div class="infra-item">
+                    <div class="name">API Costs (Zoho, Shipping)</div>
+                    <div class="cost">~€200/mo</div>
+                </div>
+            </div>
+
+            <div class="infra-total">
+                <div class="label">Total Monthly Infrastructure</div>
+                <div class="value">~€1,380/month</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Was Included -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Scope Definition</h2>
+                <p>What was included in the €104,850 development contract</p>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-box included">
+                    <div class="box-header">✓ Included in Development Contract</div>
+                    <ul>
+                        <li>All 10 AI Agents with 40 features</li>
+                        <li>Monthly sprint releases</li>
+                        <li>Stakeholder reviews every 3 weeks</li>
+                        <li>Weekly progress & scope meetings</li>
+                        <li>Team training (8 hrs/user)</li>
+                        <li>Go-live support</li>
+                        <li>Zoho CRM integration</li>
+                        <li>Google Drive integration</li>
+                        <li>OCR engine training</li>
+                        <li>Architecture design</li>
+                        <li>User acceptance testing</li>
+                        <li>Bug fixes during development</li>
+                        <li>Analytics & reporting dashboards</li>
+                        <li>Training materials preparation</li>
+                        <li>Production deployment</li>
+                        <li>Initial continuous monitoring setup</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-box excluded">
+                    <div class="box-header">✗ Not Included (Client Responsibility)</div>
+                    <ul>
+                        <li>Monthly infrastructure costs (~€1,380/mo)</li>
+                        <li>Digital Ocean hosting</li>
+                        <li>Managed database</li>
+                        <li>Server monitoring (New Relic)</li>
+                        <li>AI model API costs (Vertex AI)</li>
+                        <li>Third-party API costs (Zoho, Shipping APIs)</li>
+                        <li>Post-launch maintenance (separate contract)</li>
+                        <li>New feature development (quoted separately)</li>
+                        <li>Additional AI agents beyond the 10</li>
+                        <li>Additional integrations beyond Zoho/Google</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-box">
+                <h3>Development Contract Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="value">€104,850</div>
+                        <div class="label">Total Development Cost</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value">1,440 hrs</div>
+                        <div class="label">Development Hours</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value">€72.81/hr</div>
+                        <div class="label">Effective Hourly Rate</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value">3 months</div>
+                        <div class="label">Development Timeline</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value">10 Agents</div>
+                        <div class="label">AI Systems Delivered</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="value">82K LOC</div>
+                        <div class="label">Lines of Code</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Value Comparison -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Market Value Comparison</h2>
+                <p>What this platform would cost if built by market-rate agencies</p>
+            </div>
+
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Calculation</th>
+                        <th>Estimated Cost</th>
+                        <th>vs. MorichalAI</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>USA Enterprise Agency</td>
+                        <td>1,440 hrs × $300/hr</td>
+                        <td>$432,000 (~€400,000)</td>
+                        <td style="color: var(--success);">74% savings</td>
+                        <td><a href="https://www.fullstack.com/labs/resources/blog/software-development-price-guide-hourly-rate-comparison" target="_blank" style="color: var(--primary);">FullStack Labs</a></td>
+                    </tr>
+                    <tr>
+                        <td>USA Mid-Market Agency</td>
+                        <td>1,440 hrs × $185/hr</td>
+                        <td>$266,400 (~€245,000)</td>
+                        <td style="color: var(--success);">57% savings</td>
+                        <td><a href="https://www.fullstack.com/labs/resources/blog/software-development-price-guide-hourly-rate-comparison" target="_blank" style="color: var(--primary);">FullStack Labs</a></td>
+                    </tr>
+                    <tr>
+                        <td>Western European Agency</td>
+                        <td>1,440 hrs × €95/hr</td>
+                        <td>€136,800</td>
+                        <td style="color: var(--success);">23% savings</td>
+                        <td><a href="https://qubit-labs.com/average-hourly-rates-offshore-development-services-software-development-costs-guide/" target="_blank" style="color: var(--primary);">Qubit Labs</a></td>
+                    </tr>
+                    <tr>
+                        <td>Eastern European Agency</td>
+                        <td>1,440 hrs × €55/hr</td>
+                        <td>€79,200</td>
+                        <td style="color: var(--warning);">32% premium</td>
+                        <td><a href="https://qubit-labs.com/average-hourly-rates-offshore-development-services-software-development-costs-guide/" target="_blank" style="color: var(--primary);">Qubit Labs</a></td>
+                    </tr>
+                    <tr class="selected">
+                        <td><strong>MorichalAI (DeployStaff)</strong></td>
+                        <td><strong>1,440 hrs × €72.81/hr</strong></td>
+                        <td><strong>€104,850</strong></td>
+                        <td><strong>Baseline</strong></td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="text-align: center; color: var(--text-muted); margin-top: 24px;">
+                <strong>Note:</strong> MorichalAI pricing reflects Western European quality at competitive Eastern European rates,
+                with the advantage of deep domain expertise in trade & supply chain automation.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p><strong>MorichalAI</strong> - AI-Powered Trade & Supply Chain Platform</p>
+            <p style="margin-top: 8px;">Development: DeployStaff.com | Contact: rafael@deploystaff.com</p>
+            <p style="margin-top: 16px;">Document generated: January 2026</p>
+        </div>
+    </footer>
+</body>
+</html>

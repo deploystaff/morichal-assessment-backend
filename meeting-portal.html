@@ -1,0 +1,2843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorichalAI | Meeting Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #0d5d56;
+            --primary-light: #14b8a6;
+            --secondary: #1e293b;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --success-light: #dcfce7;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --purple: #8b5cf6;
+            --purple-light: #ede9fe;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Global Navigation */
+        .global-nav {
+            background: #1e293b;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .global-nav .nav-home {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+        .global-nav .nav-home:hover { opacity: 1; }
+        .global-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .global-nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .global-nav .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .global-nav .nav-links a.active { background: #0f766e; }
+        @media (max-width: 768px) {
+            .global-nav .nav-container { flex-direction: column; gap: 10px; }
+            .global-nav .nav-links { justify-content: center; }
+        }
+        @media print { .global-nav { display: none; } }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fbbf24;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .connection-status.online .status-dot {
+            background: #10b981;
+            animation: none;
+        }
+
+        .connection-status.offline .status-dot {
+            background: #f59e0b;
+            animation: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        main {
+            padding: 30px 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 900px) {
+            .content-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Questions List */
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .question-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+
+        .question-item:hover {
+            border-color: var(--primary-light);
+        }
+
+        .question-item.answered {
+            background: var(--success-light);
+            border-color: var(--success);
+        }
+
+        .question-item.needs-follow-up {
+            background: var(--warning-light);
+            border-color: var(--warning);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .question-id {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .question-badges {
+            display: flex;
+            gap: 6px;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-high { background: var(--danger-light); color: var(--danger); }
+        .badge-medium { background: var(--warning-light); color: #b45309; }
+        .badge-low { background: var(--info-light); color: var(--info); }
+        .badge-pending { background: var(--bg); color: var(--text-muted); }
+        .badge-answered { background: var(--success-light); color: var(--success); }
+        .badge-follow-up { background: var(--warning-light); color: #b45309; }
+
+        .badge-category {
+            background: var(--purple-light);
+            color: var(--purple);
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .question-notes {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: var(--bg);
+            border-radius: 6px;
+        }
+
+        .question-answer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .answer-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .answer-text {
+            font-size: 0.9rem;
+            color: var(--text);
+            padding: 10px 12px;
+            background: var(--success-light);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .answer-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: var(--border); }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover { background: #059669; }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-danger:hover { background: #dc2626; }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Action Items */
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .action-item.completed {
+            opacity: 0.6;
+            background: var(--bg);
+        }
+
+        .action-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .action-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Meetings */
+        .meeting-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .meeting-card.scheduled {
+            border-left: 4px solid var(--info);
+        }
+
+        .meeting-card.completed {
+            border-left: 4px solid var(--success);
+        }
+
+        .meeting-date {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .meeting-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .meeting-attendees {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Business Rules */
+        .rule-item {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .rule-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .rule-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Export Section */
+        .export-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .settings-tab {
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .settings-tab:hover {
+            color: var(--text);
+        }
+        .settings-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .settings-section {
+            display: none;
+        }
+        .settings-section.active {
+            display: block;
+        }
+        .provider-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .provider-option:hover {
+            border-color: var(--primary-light);
+        }
+        .provider-option.selected {
+            border-color: var(--primary);
+            background: rgba(15, 118, 110, 0.05);
+        }
+        .provider-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .provider-option input[type="radio"] {
+            margin-right: 12px;
+        }
+        .provider-name {
+            font-weight: 500;
+        }
+        .provider-status {
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+        .provider-status.configured {
+            color: var(--success);
+        }
+        .provider-status.not-configured {
+            color: var(--text-muted);
+        }
+        .usage-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .usage-stat {
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+        .usage-stat span:first-child {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .usage-value {
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        .checkbox-label input {
+            margin-right: 8px;
+        }
+        .custom-category-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .custom-category-item input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+        }
+        .custom-category-item button {
+            padding: 4px 8px;
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+        }
+
+        /* Save Indicator */
+        .save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 3000;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Project Status Card */
+        .status-overview {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .status-overview h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sprint-status {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sprint-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .sprint-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sprint-badge.complete { background: rgba(255,255,255,0.2); }
+        .sprint-badge.in-progress { background: var(--warning); color: var(--secondary); }
+
+        /* Print Styles */
+        @media print {
+            .btn, .filter-tabs, .export-section, .modal-overlay { display: none !important; }
+            .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="deliverables.html" class="nav-home">← All Documents</a>
+            <div class="nav-links">
+                <a href="ai-operations-proposal.html">Operations</a>
+                <a href="proposal-recap.html">Proposal</a>
+                <a href="morichal-value-comparison.html">Value</a>
+                <a href="competitive-pricing-research.html">Pricing</a>
+                <a href="morichal-prd.html">PRD</a>
+                <a href="index.html">Sprint</a>
+                <a href="UAP-MORICHAL-2026.html">UAP</a>
+                <a href="internal-feature-requests.html">Phase 2</a>
+                <a href="meeting-portal.html" class="active">Meetings</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>Meeting Portal</h1>
+            <p>Track meetings, questions, business rules, and action items</p>
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
+                <div class="connection-status" id="connection-status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="openSettingsModal()" style="background: rgba(255,255,255,0.15); border: none;">
+                    ⚙️ Settings
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value" id="stat-meetings">0</div>
+                <div class="stat-label">Meetings</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-questions">0</div>
+                <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-answered">0</div>
+                <div class="stat-label">Answered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-rules">0</div>
+                <div class="stat-label">Business Rules</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-actions">0</div>
+                <div class="stat-label">Action Items</div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="content-grid">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Questions Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📋 Questions</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openAddQuestionModal()">+ Add Question</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">All</button>
+                            <button class="filter-tab" data-filter="pending">Pending</button>
+                            <button class="filter-tab" data-filter="answered">Answered</button>
+                            <button class="filter-tab" data-filter="high">High Priority</button>
+                        </div>
+                        <div class="questions-list" id="questions-list">
+                            <!-- Questions rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Items Section -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h2>✅ Action Items</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openAddActionModal()">+ Add Action</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="action-items-list">
+                            <!-- Action items rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Rules Section -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h2>📚 Business Rules Discovered</h2>
+                        <button class="btn btn-primary btn-sm" onclick="openAddRuleModal()">+ Add Rule</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="business-rules-list">
+                            <!-- Business rules rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Project Status -->
+                <div class="status-overview">
+                    <h3>Project Status</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 82%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>82% Complete</span>
+                        <span>41/50 items</span>
+                    </div>
+                    <div class="sprint-status">
+                        <div class="sprint-item">
+                            <span>Sprint 1</span>
+                            <span class="sprint-badge complete">✓ Complete</span>
+                        </div>
+                        <div class="sprint-item">
+                            <span>Sprint 2</span>
+                            <span class="sprint-badge complete">✓ Complete</span>
+                        </div>
+                        <div class="sprint-item">
+                            <span>Sprint 3</span>
+                            <span class="sprint-badge in-progress">In Progress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Meetings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📅 Meetings</h2>
+                        <button class="btn btn-secondary btn-sm" onclick="openAddMeetingModal()">+ New</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="meetings-list">
+                            <!-- Meetings rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export/Import -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>💾 Data Management</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="export-section">
+                            <button class="btn btn-secondary btn-sm" onclick="exportData()">Export JSON</button>
+                            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">Import JSON</button>
+                            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+                            <button class="btn btn-danger btn-sm" onclick="clearAllData()">Clear All</button>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                            Data is saved to the server with local backup. Export for offline use.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Question Modal -->
+    <div class="modal-overlay" id="question-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Question</h3>
+                <button class="modal-close" onclick="closeModal('question-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="question-form">
+                    <div class="form-group">
+                        <label>Question</label>
+                        <textarea class="form-control" id="q-question" required placeholder="Enter your question..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" id="q-category">
+                                <option value="payment-timing">Payment Timing</option>
+                                <option value="pricing">Pricing</option>
+                                <option value="documents">Documents</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="customer-data">Customer Data</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select class="form-control" id="q-priority">
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (optional)</label>
+                        <textarea class="form-control" id="q-notes" placeholder="Additional context..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('question-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveQuestion()">Add Question</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Answer Question Modal -->
+    <div class="modal-overlay" id="answer-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Answer Question</h3>
+                <button class="modal-close" onclick="closeModal('answer-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="question-preview" id="answer-question-preview"></div>
+                <form id="answer-form">
+                    <input type="hidden" id="answer-question-id">
+                    <div class="form-group">
+                        <label>Answer</label>
+                        <textarea class="form-control" id="a-answer" required placeholder="Enter the answer..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Answered By</label>
+                            <input type="text" class="form-control" id="a-answeredBy" placeholder="e.g., Thierry">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="a-status">
+                                <option value="answered">Answered</option>
+                                <option value="needs-follow-up">Needs Follow-up</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('answer-modal')">Cancel</button>
+                <button class="btn btn-success" onclick="submitAnswer()">Save Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Question Modal -->
+    <div class="modal-overlay" id="edit-question-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Question</h3>
+                <button class="modal-close" onclick="closeModal('edit-question-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-question-form">
+                    <input type="hidden" id="eq-id">
+                    <div class="form-group">
+                        <label>Question</label>
+                        <textarea class="form-control" id="eq-question" required placeholder="Enter your question..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" id="eq-category">
+                                <option value="payment-timing">Payment Timing</option>
+                                <option value="pricing">Pricing</option>
+                                <option value="documents">Documents</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="customer-data">Customer Data</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select class="form-control" id="eq-priority">
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea class="form-control" id="eq-notes" placeholder="Additional context..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('edit-question-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveEditQuestion()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Meeting Modal -->
+    <div class="modal-overlay" id="meeting-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="meeting-modal-title">Add Meeting</h3>
+                <button class="modal-close" onclick="closeModal('meeting-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="meeting-form">
+                    <input type="hidden" id="m-edit-id">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="m-title" required placeholder="Meeting title...">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" class="form-control" id="m-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="m-status">
+                                <option value="scheduled">Scheduled</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Attendees (comma separated)</label>
+                        <input type="text" class="form-control" id="m-attendees" placeholder="e.g., Thierry, Rafael">
+                    </div>
+                    <div class="form-group">
+                        <label>Agenda</label>
+                        <textarea class="form-control" id="m-agenda" placeholder="Meeting agenda..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea class="form-control" id="m-notes" placeholder="Meeting notes..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('meeting-modal')">Cancel</button>
+                <button class="btn btn-primary" id="meeting-modal-save" onclick="saveMeeting()">Add Meeting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Action Item Modal -->
+    <div class="modal-overlay" id="action-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Action Item</h3>
+                <button class="modal-close" onclick="closeModal('action-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="action-form">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="ai-title" required placeholder="Action item title...">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Assigned To</label>
+                            <input type="text" class="form-control" id="ai-assignedTo" placeholder="e.g., Thierry">
+                        </div>
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <input type="date" class="form-control" id="ai-dueDate">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select class="form-control" id="ai-priority">
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="ai-status">
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="ai-description" placeholder="Details..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('action-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveActionItem()">Add Action</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Business Rule Modal -->
+    <div class="modal-overlay" id="rule-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Business Rule</h3>
+                <button class="modal-close" onclick="closeModal('rule-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="rule-form">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="br-title" required placeholder="Rule title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="br-description" required placeholder="Describe the rule..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" id="br-category">
+                                <option value="payments">Payments</option>
+                                <option value="documents">Documents</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="customers">Customers</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Source</label>
+                            <input type="text" class="form-control" id="br-source" placeholder="e.g., Thierry">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('rule-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveBusinessRule()">Add Rule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcript Upload Modal -->
+    <div class="modal-overlay" id="transcript-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Upload Transcript</h3>
+                <button class="modal-close" onclick="closeModal('transcript-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="transcript-meeting-id">
+                <div class="form-group">
+                    <label>Select Transcript File</label>
+                    <input type="file" class="form-control" id="transcript-file" accept=".txt,.pdf,.json,.mp3,.wav,.m4a">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
+                        Supported formats: Text (.txt), PDF (.pdf), JSON (.json)
+                    </p>
+                </div>
+                <div id="transcript-status" style="display: none; padding: 12px; border-radius: 8px; margin-top: 12px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('transcript-modal')">Cancel</button>
+                <button class="btn btn-primary" id="upload-transcript-btn" onclick="uploadTranscript()">Upload Transcript</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Suggestions Modal -->
+    <div class="modal-overlay" id="suggestions-modal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>AI Suggestions</h3>
+                <button class="modal-close" onclick="closeModal('suggestions-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="suggestions-meeting-id">
+                <div id="suggestions-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🤖</div>
+                        <p>No suggestions yet. Upload a transcript and click "Analyze" to get AI suggestions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('suggestions-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" onclick="closeModal('settings-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button class="settings-tab active" onclick="switchSettingsTab('provider')">AI Provider</button>
+                    <button class="settings-tab" onclick="switchSettingsTab('preferences')">Preferences</button>
+                    <button class="settings-tab" onclick="switchSettingsTab('categories')">Categories</button>
+                    <button class="settings-tab" onclick="switchSettingsTab('usage')">Usage</button>
+                </div>
+
+                <!-- AI Provider Tab -->
+                <div class="settings-section active" id="settings-provider">
+                    <h4 style="margin-bottom: 16px;">Analysis Provider</h4>
+                    <div id="provider-options"></div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>Model</label>
+                        <select class="form-control" id="settings-model"></select>
+                    </div>
+
+                    <h4 style="margin: 24px 0 16px;">Transcription Provider</h4>
+                    <div id="transcription-options"></div>
+
+                    <div style="margin-top: 20px; padding: 12px; background: var(--bg); border-radius: 8px; font-size: 0.85rem; color: var(--text-muted);">
+                        <strong>Note:</strong> API keys are configured on the server. Only providers with configured keys are available.
+                    </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div class="settings-section" id="settings-preferences">
+                    <h4 style="margin-bottom: 16px;">AI Suggestions</h4>
+                    <div class="form-group">
+                        <label>Auto-Approve Threshold</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="range" id="settings-threshold" min="0.5" max="1" step="0.05" value="1"
+                                   style="flex: 1;" onchange="updateThresholdLabel()">
+                            <span id="threshold-label" style="min-width: 80px; text-align: right;">Disabled</span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                            Set to 100% to disable auto-approval. Lower values auto-approve suggestions above that confidence.
+                        </p>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Auto-Approve Types</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-approve-answer"> Answers
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-approve-rule"> Business Rules
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-approve-decision"> Decisions
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-approve-action"> Action Items
+                            </label>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 24px 0 16px;">Notifications</h4>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-suggestions" checked> Notify on new AI suggestions
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-pending" checked> Notify on pending questions
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notify-actions" checked> Notify on action items due
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Categories Tab -->
+                <div class="settings-section" id="settings-categories">
+                    <h4 style="margin-bottom: 16px;">Question Categories</h4>
+                    <div style="margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+                        Default categories: Payment Timing, Pricing, Documents, Compliance, Customer Data, General
+                    </div>
+                    <div id="custom-question-categories"></div>
+                    <button class="btn btn-secondary btn-sm" onclick="addCustomCategory('question')" style="margin-top: 8px;">
+                        + Add Question Category
+                    </button>
+
+                    <h4 style="margin: 24px 0 16px;">Business Rule Categories</h4>
+                    <div style="margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+                        Default categories: Payments, Documents, Compliance, Customers, General
+                    </div>
+                    <div id="custom-rule-categories"></div>
+                    <button class="btn btn-secondary btn-sm" onclick="addCustomCategory('rule')" style="margin-top: 8px;">
+                        + Add Rule Category
+                    </button>
+                </div>
+
+                <!-- Usage Tab -->
+                <div class="settings-section" id="settings-usage">
+                    <h4 style="margin-bottom: 16px;">API Usage This Month</h4>
+                    <div class="usage-stats">
+                        <div class="usage-stat">
+                            <span>API Calls</span>
+                            <span class="usage-value" id="usage-calls">0</span>
+                        </div>
+                        <div class="usage-stat">
+                            <span>Tokens Used</span>
+                            <span class="usage-value" id="usage-tokens">0</span>
+                        </div>
+                        <div class="usage-stat">
+                            <span>Estimated Cost</span>
+                            <span class="usage-value" id="usage-cost">$0.00</span>
+                        </div>
+                        <div class="usage-stat">
+                            <span>Total API Calls (All Time)</span>
+                            <span class="usage-value" id="usage-total">0</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn btn-secondary btn-sm" onclick="resetUsage()">Reset Monthly Usage</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('settings-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="save-indicator">✓ Saved</div>
+
+    <script>
+        // ========================================
+        // API CONFIGURATION
+        // ========================================
+        const API_URL = 'https://api-production-09ea.up.railway.app/api';
+        const CLIENT_SLUG = new URLSearchParams(window.location.search).get('client') || 'morichal';
+        const STORAGE_KEY = 'morichal-meeting-portal';
+
+        // ========================================
+        // DATA MANAGER (API-backed with localStorage fallback)
+        // ========================================
+        const DataManager = {
+            data: null,
+            isOnline: true,
+
+            async init() {
+                try {
+                    // Try to fetch from API
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/all`);
+                    if (response.ok) {
+                        this.data = await response.json();
+                        this.isOnline = true;
+                        // Cache to localStorage for offline use
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+                        console.log('Loaded data from API');
+                    } else {
+                        throw new Error('API not available');
+                    }
+                } catch (e) {
+                    console.warn('API unavailable, using localStorage:', e.message);
+                    this.isOnline = false;
+                    // Fallback to localStorage
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        try {
+                            this.data = JSON.parse(saved);
+                        } catch (parseError) {
+                            this.data = this.getEmptyData();
+                        }
+                    } else {
+                        // Try to load initial data file as last resort
+                        try {
+                            const response = await fetch('data/initial-data.json');
+                            this.data = await response.json();
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+                        } catch {
+                            this.data = this.getEmptyData();
+                        }
+                    }
+                }
+            },
+
+            getEmptyData() {
+                return {
+                    version: '2.0',
+                    lastUpdated: new Date().toISOString(),
+                    meetings: [],
+                    questions: [],
+                    businessRules: [],
+                    decisions: [],
+                    actionItems: []
+                };
+            },
+
+            saveToLocal() {
+                this.data.lastUpdated = new Date().toISOString();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+                showSaveIndicator();
+            },
+
+            generateCode(prefix) {
+                const num = Math.floor(Math.random() * 900) + 100;
+                return `${prefix}-${num}`;
+            },
+
+            // Questions
+            getQuestions() { return this.data.questions || []; },
+
+            async addQuestion(q) {
+                const questionData = {
+                    question_code: this.generateCode('Q'),
+                    category: q.category,
+                    question: q.question,
+                    priority: q.priority,
+                    notes: q.notes,
+                    status: 'pending'
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/questions`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(questionData)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.questions.push(this.mapQuestion(saved));
+                        this.saveToLocal();
+                        return saved;
+                    }
+                } catch (e) {
+                    console.warn('API save failed, saving locally:', e.message);
+                }
+                // Fallback to local storage
+                q.id = questionData.question_code;
+                q.createdAt = new Date().toISOString();
+                q.status = 'pending';
+                this.data.questions.push(q);
+                this.saveToLocal();
+                return q;
+            },
+
+            async updateQuestion(id, updates) {
+                const idx = this.data.questions.findIndex(q => q.id === id || q.question_code === id);
+                if (idx === -1) return;
+
+                const q = this.data.questions[idx];
+                const apiUpdates = {
+                    question: updates.question,
+                    category: updates.category,
+                    answer: updates.answer,
+                    answered_by: updates.answeredBy,
+                    answered_date: updates.answeredDate,
+                    status: updates.status,
+                    notes: updates.notes,
+                    priority: updates.priority
+                };
+
+                // Remove undefined values
+                Object.keys(apiUpdates).forEach(key => {
+                    if (apiUpdates[key] === undefined) delete apiUpdates[key];
+                });
+
+                try {
+                    const qId = q.dbId || q.id;
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/questions/${qId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(apiUpdates)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.questions[idx] = this.mapQuestion(saved);
+                        this.saveToLocal();
+                        showSaveIndicator();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('API update failed, saving locally:', e.message);
+                }
+                // Fallback
+                this.data.questions[idx] = { ...q, ...updates };
+                this.saveToLocal();
+            },
+
+            async deleteQuestion(id) {
+                const q = this.data.questions.find(q => q.id === id || q.question_code === id);
+                if (!q) return;
+
+                try {
+                    const qId = q.dbId || q.id;
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/questions/${qId}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        this.data.questions = this.data.questions.filter(q => q.id !== id && q.question_code !== id);
+                        this.saveToLocal();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('API delete failed, saving locally:', e.message);
+                }
+                this.data.questions = this.data.questions.filter(q => q.id !== id);
+                this.saveToLocal();
+            },
+
+            // Map API response to frontend format
+            mapQuestion(q) {
+                return {
+                    id: q.question_code || q.id,
+                    dbId: q.id,
+                    question: q.question,
+                    category: q.category,
+                    priority: q.priority,
+                    status: q.status,
+                    notes: q.notes,
+                    answer: q.answer,
+                    answeredBy: q.answered_by,
+                    answeredDate: q.answered_date,
+                    createdAt: q.created_at
+                };
+            },
+
+            // Meetings
+            getMeetings() { return this.data.meetings || []; },
+
+            async addMeeting(m) {
+                const meetingData = {
+                    meeting_code: `MTG-2026-${String((this.data.meetings?.length || 0) + 1).padStart(3, '0')}`,
+                    date: m.date,
+                    title: m.title,
+                    attendees: m.attendees,
+                    agenda: m.agenda,
+                    status: m.status || 'scheduled'
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/meetings`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(meetingData)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.meetings.push(this.mapMeeting(saved));
+                        this.saveToLocal();
+                        return saved;
+                    }
+                } catch (e) {
+                    console.warn('API save failed, saving locally:', e.message);
+                }
+                m.id = meetingData.meeting_code;
+                m.createdAt = new Date().toISOString();
+                this.data.meetings.push(m);
+                this.saveToLocal();
+                return m;
+            },
+
+            async updateMeeting(id, updates) {
+                const idx = this.data.meetings.findIndex(m => m.id === id || m.meeting_code === id);
+                if (idx === -1) return;
+
+                const m = this.data.meetings[idx];
+                const apiUpdates = {
+                    title: updates.title,
+                    date: updates.date,
+                    status: updates.status,
+                    attendees: updates.attendees,
+                    agenda: updates.agenda,
+                    notes: updates.notes
+                };
+
+                try {
+                    const mId = m.dbId || m.id;
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/meetings/${mId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(apiUpdates)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.meetings[idx] = this.mapMeeting(saved);
+                        this.saveToLocal();
+                        showSaveIndicator();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('API update failed, saving locally:', e.message);
+                }
+                // Fallback
+                this.data.meetings[idx] = { ...m, ...updates };
+                this.saveToLocal();
+            },
+
+            async deleteMeeting(id) {
+                const m = this.data.meetings.find(m => m.id === id || m.meeting_code === id);
+                if (!m) return;
+
+                try {
+                    const mId = m.dbId || m.id;
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/meetings/${mId}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        this.data.meetings = this.data.meetings.filter(m => m.id !== id && m.meeting_code !== id);
+                        this.saveToLocal();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('API delete failed, saving locally:', e.message);
+                }
+                this.data.meetings = this.data.meetings.filter(m => m.id !== id);
+                this.saveToLocal();
+            },
+
+            mapMeeting(m) {
+                return {
+                    id: m.meeting_code || m.id,
+                    dbId: m.id,
+                    title: m.title,
+                    date: m.date,
+                    status: m.status,
+                    attendees: m.attendees,
+                    agenda: m.agenda,
+                    notes: m.notes
+                };
+            },
+
+            // Action Items
+            getActionItems() { return this.data.actionItems || []; },
+
+            async addActionItem(ai) {
+                const itemData = {
+                    action_code: this.generateCode('AI'),
+                    title: ai.title,
+                    description: ai.description,
+                    assigned_to: ai.assignedTo,
+                    due_date: ai.dueDate || null,
+                    priority: ai.priority,
+                    status: ai.status || 'pending'
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/action-items`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(itemData)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.actionItems.push(this.mapActionItem(saved));
+                        this.saveToLocal();
+                        return saved;
+                    }
+                } catch (e) {
+                    console.warn('API save failed, saving locally:', e.message);
+                }
+                ai.id = itemData.action_code;
+                ai.createdAt = new Date().toISOString();
+                this.data.actionItems.push(ai);
+                this.saveToLocal();
+                return ai;
+            },
+
+            async updateActionItem(id, updates) {
+                const idx = this.data.actionItems.findIndex(ai => ai.id === id || ai.action_code === id);
+                if (idx === -1) return;
+
+                const ai = this.data.actionItems[idx];
+                const apiUpdates = {
+                    status: updates.status,
+                    completed_date: updates.completedDate
+                };
+
+                try {
+                    const aiId = ai.dbId || ai.id;
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/action-items/${aiId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(apiUpdates)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.actionItems[idx] = this.mapActionItem(saved);
+                        this.saveToLocal();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('API update failed, saving locally:', e.message);
+                }
+                this.data.actionItems[idx] = { ...ai, ...updates };
+                this.saveToLocal();
+            },
+
+            mapActionItem(ai) {
+                return {
+                    id: ai.action_code || ai.id,
+                    dbId: ai.id,
+                    title: ai.title,
+                    description: ai.description,
+                    assignedTo: ai.assigned_to,
+                    dueDate: ai.due_date,
+                    priority: ai.priority,
+                    status: ai.status,
+                    completedDate: ai.completed_date,
+                    notes: ai.notes
+                };
+            },
+
+            // Business Rules
+            getBusinessRules() { return this.data.businessRules || []; },
+
+            async addBusinessRule(br) {
+                const ruleData = {
+                    rule_code: this.generateCode('BR'),
+                    title: br.title,
+                    description: br.description,
+                    category: br.category,
+                    source: br.source,
+                    status: 'confirmed'
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/business-rules`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(ruleData)
+                    });
+                    if (response.ok) {
+                        const saved = await response.json();
+                        this.data.businessRules.push(this.mapBusinessRule(saved));
+                        this.saveToLocal();
+                        return saved;
+                    }
+                } catch (e) {
+                    console.warn('API save failed, saving locally:', e.message);
+                }
+                br.id = ruleData.rule_code;
+                br.createdAt = new Date().toISOString();
+                br.status = 'confirmed';
+                this.data.businessRules.push(br);
+                this.saveToLocal();
+                return br;
+            },
+
+            mapBusinessRule(br) {
+                return {
+                    id: br.rule_code || br.id,
+                    dbId: br.id,
+                    title: br.title,
+                    description: br.description,
+                    category: br.category,
+                    source: br.source,
+                    status: br.status
+                };
+            },
+
+            // Export/Import
+            async exportAll() {
+                try {
+                    const response = await fetch(`${API_URL}/${CLIENT_SLUG}/export`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        return JSON.stringify(data, null, 2);
+                    }
+                } catch (e) {
+                    console.warn('API export failed, using local data');
+                }
+                return JSON.stringify(this.data, null, 2);
+            },
+
+            importData(jsonStr) {
+                try {
+                    const data = JSON.parse(jsonStr);
+                    if (data.version || data.questions) {
+                        this.data = data;
+                        this.saveToLocal();
+                        return true;
+                    }
+                    return false;
+                } catch (e) {
+                    return false;
+                }
+            },
+
+            clearAll() {
+                this.data = this.getEmptyData();
+                this.saveToLocal();
+            }
+        };
+
+        // ========================================
+        // UI MANAGER
+        // ========================================
+        let currentFilter = 'all';
+
+        function renderAll() {
+            renderQuestions();
+            renderMeetings();
+            renderActionItems();
+            renderBusinessRules();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-list');
+            let questions = DataManager.getQuestions();
+
+            // Apply filter
+            if (currentFilter === 'pending') {
+                questions = questions.filter(q => q.status === 'pending');
+            } else if (currentFilter === 'answered') {
+                questions = questions.filter(q => q.status === 'answered' || q.status === 'needs-follow-up');
+            } else if (currentFilter === 'high') {
+                questions = questions.filter(q => q.priority === 'high');
+            }
+
+            if (questions.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No questions found</p></div>';
+                return;
+            }
+
+            container.innerHTML = questions.map(q => `
+                <div class="question-item ${q.status}">
+                    <div class="question-header">
+                        <span class="question-id">${q.id}</span>
+                        <div class="question-badges">
+                            <span class="badge badge-category">${formatCategory(q.category)}</span>
+                            <span class="badge badge-${q.priority}">${q.priority}</span>
+                            <span class="badge badge-${q.status}">${q.status}</span>
+                        </div>
+                    </div>
+                    <div class="question-text">${q.question}</div>
+                    ${q.notes ? `<div class="question-notes">${q.notes}</div>` : ''}
+                    ${q.answer ? `
+                        <div class="question-answer">
+                            <div class="answer-label">Answer</div>
+                            <div class="answer-text">${q.answer}</div>
+                            <div class="answer-meta">Answered by ${q.answeredBy || 'Unknown'} on ${q.answeredDate || 'Unknown'}</div>
+                        </div>
+                    ` : ''}
+                    <div class="btn-group" style="margin-top: 12px;">
+                        ${q.status === 'pending' ? `<button class="btn btn-success btn-sm" onclick="openAnswerModal('${q.id}')">Answer</button>` : ''}
+                        ${q.status === 'needs-follow-up' ? `<button class="btn btn-primary btn-sm" onclick="openAnswerModal('${q.id}')">Update Answer</button>` : ''}
+                        ${q.status === 'answered' ? `<button class="btn btn-secondary btn-sm" onclick="openAnswerModal('${q.id}')">Edit Answer</button>` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="openEditQuestionModal('${q.id}')">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteQuestion('${q.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMeetings() {
+            const container = document.getElementById('meetings-list');
+            const meetings = DataManager.getMeetings();
+
+            if (meetings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><p>No meetings scheduled</p></div>';
+                return;
+            }
+
+            container.innerHTML = meetings.map(m => `
+                <div class="meeting-card ${m.status}">
+                    <div class="meeting-date">${formatDate(m.date)}</div>
+                    <div class="meeting-title">${m.title}</div>
+                    <div class="meeting-attendees">👥 ${m.attendees?.join(', ') || 'No attendees'}</div>
+                    ${m.agenda ? `<div class="answer-meta" style="margin-top: 6px; font-size: 0.8rem;">${m.agenda.substring(0, 80)}${m.agenda.length > 80 ? '...' : ''}</div>` : ''}
+                    ${m.transcript_text || m.transcriptText ? `<div class="answer-meta" style="margin-top: 6px;"><span class="badge badge-answered">📄 Transcript uploaded</span></div>` : ''}
+                    <div class="btn-group" style="margin-top: 10px;">
+                        <button class="btn btn-secondary btn-sm" onclick="openEditMeetingModal('${m.id}')">Edit</button>
+                        <button class="btn btn-primary btn-sm" onclick="openTranscriptModal('${m.id}')">📤 Transcript</button>
+                        ${m.transcript_text || m.transcriptText ? `<button class="btn btn-success btn-sm" onclick="analyzeTranscript('${m.id}')">🤖 Analyze</button>` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="openSuggestionsModal('${m.id}')">💡 Suggestions</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteMeeting('${m.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderActionItems() {
+            const container = document.getElementById('action-items-list');
+            const items = DataManager.getActionItems();
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><p>No action items</p></div>';
+                return;
+            }
+
+            container.innerHTML = items.map(ai => `
+                <div class="action-item ${ai.status === 'completed' ? 'completed' : ''}">
+                    <input type="checkbox" class="action-checkbox" ${ai.status === 'completed' ? 'checked' : ''} onchange="toggleActionItem('${ai.id}')">
+                    <div class="action-content">
+                        <div class="action-title">${ai.title}</div>
+                        <div class="action-meta">
+                            ${ai.assignedTo ? `👤 ${ai.assignedTo}` : ''}
+                            ${ai.dueDate ? ` • 📅 ${formatDate(ai.dueDate)}` : ''}
+                            <span class="badge badge-${ai.priority}" style="margin-left: 8px;">${ai.priority}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderBusinessRules() {
+            const container = document.getElementById('business-rules-list');
+            const rules = DataManager.getBusinessRules();
+
+            if (rules.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>No business rules discovered yet</p></div>';
+                return;
+            }
+
+            container.innerHTML = rules.map(br => `
+                <div class="rule-item">
+                    <div class="rule-title">${br.title}</div>
+                    <div class="rule-description">${br.description}</div>
+                    ${br.source ? `<div class="answer-meta" style="margin-top: 8px;">Source: ${br.source}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            const questions = DataManager.getQuestions();
+            const meetings = DataManager.getMeetings();
+            const rules = DataManager.getBusinessRules();
+            const actions = DataManager.getActionItems();
+
+            document.getElementById('stat-meetings').textContent = meetings.length;
+            document.getElementById('stat-questions').textContent = questions.length;
+            document.getElementById('stat-answered').textContent = questions.filter(q => q.status === 'answered').length;
+            document.getElementById('stat-rules').textContent = rules.length;
+            document.getElementById('stat-actions').textContent = actions.filter(a => a.status !== 'completed').length;
+        }
+
+        // ========================================
+        // MODAL HANDLERS
+        // ========================================
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function openAddQuestionModal() {
+            document.getElementById('question-form').reset();
+            openModal('question-modal');
+        }
+
+        function openAnswerModal(questionId) {
+            const q = DataManager.getQuestions().find(q => q.id === questionId);
+            if (!q) return;
+
+            document.getElementById('answer-question-id').value = questionId;
+            document.getElementById('answer-question-preview').innerHTML = `
+                <div class="question-text" style="margin-bottom: 16px; padding: 12px; background: var(--bg); border-radius: 8px;">
+                    <strong>${q.id}:</strong> ${q.question}
+                </div>
+            `;
+            document.getElementById('a-answer').value = q.answer || '';
+            document.getElementById('a-answeredBy').value = q.answeredBy || '';
+            document.getElementById('a-status').value = q.status === 'needs-follow-up' ? 'needs-follow-up' : 'answered';
+
+            openModal('answer-modal');
+        }
+
+        function openAddMeetingModal() {
+            document.getElementById('meeting-form').reset();
+            document.getElementById('m-edit-id').value = '';
+            document.getElementById('m-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('meeting-modal-title').textContent = 'Add Meeting';
+            document.getElementById('meeting-modal-save').textContent = 'Add Meeting';
+            openModal('meeting-modal');
+        }
+
+        function openEditMeetingModal(meetingId) {
+            const m = DataManager.getMeetings().find(m => m.id === meetingId);
+            if (!m) return;
+
+            document.getElementById('m-edit-id').value = meetingId;
+            document.getElementById('m-title').value = m.title || '';
+            document.getElementById('m-date').value = m.date ? m.date.split('T')[0] : '';
+            document.getElementById('m-status').value = m.status || 'scheduled';
+            document.getElementById('m-attendees').value = (m.attendees || []).join(', ');
+            document.getElementById('m-agenda').value = m.agenda || '';
+            document.getElementById('m-notes').value = m.notes || '';
+            document.getElementById('meeting-modal-title').textContent = 'Edit Meeting';
+            document.getElementById('meeting-modal-save').textContent = 'Save Changes';
+            openModal('meeting-modal');
+        }
+
+        function openAddActionModal() {
+            document.getElementById('action-form').reset();
+            openModal('action-modal');
+        }
+
+        function openAddRuleModal() {
+            document.getElementById('rule-form').reset();
+            openModal('rule-modal');
+        }
+
+        function openEditQuestionModal(questionId) {
+            const q = DataManager.getQuestions().find(q => q.id === questionId);
+            if (!q) return;
+
+            document.getElementById('eq-id').value = questionId;
+            document.getElementById('eq-question').value = q.question || '';
+            document.getElementById('eq-category').value = q.category || 'general';
+            document.getElementById('eq-priority').value = q.priority || 'medium';
+            document.getElementById('eq-notes').value = q.notes || '';
+            openModal('edit-question-modal');
+        }
+
+        async function saveEditQuestion() {
+            const questionId = document.getElementById('eq-id').value;
+            const updates = {
+                question: document.getElementById('eq-question').value,
+                category: document.getElementById('eq-category').value,
+                priority: document.getElementById('eq-priority').value,
+                notes: document.getElementById('eq-notes').value
+            };
+
+            await DataManager.updateQuestion(questionId, updates);
+            closeModal('edit-question-modal');
+            renderAll();
+        }
+
+        // ========================================
+        // SAVE HANDLERS
+        // ========================================
+        async function saveQuestion() {
+            const question = {
+                question: document.getElementById('q-question').value,
+                category: document.getElementById('q-category').value,
+                priority: document.getElementById('q-priority').value,
+                notes: document.getElementById('q-notes').value,
+                answer: null,
+                answeredBy: null,
+                answeredDate: null,
+                relatedBusinessRules: []
+            };
+
+            await DataManager.addQuestion(question);
+            closeModal('question-modal');
+            renderAll();
+        }
+
+        async function submitAnswer() {
+            const questionId = document.getElementById('answer-question-id').value;
+            const updates = {
+                answer: document.getElementById('a-answer').value,
+                answeredBy: document.getElementById('a-answeredBy').value,
+                answeredDate: new Date().toISOString().split('T')[0],
+                status: document.getElementById('a-status').value
+            };
+
+            await DataManager.updateQuestion(questionId, updates);
+            closeModal('answer-modal');
+            renderAll();
+        }
+
+        async function saveMeeting() {
+            const editId = document.getElementById('m-edit-id').value;
+            const meeting = {
+                title: document.getElementById('m-title').value,
+                date: document.getElementById('m-date').value,
+                status: document.getElementById('m-status').value,
+                attendees: document.getElementById('m-attendees').value.split(',').map(s => s.trim()).filter(s => s),
+                agenda: document.getElementById('m-agenda').value,
+                notes: document.getElementById('m-notes').value,
+                questionsDiscussed: []
+            };
+
+            if (editId) {
+                await DataManager.updateMeeting(editId, meeting);
+            } else {
+                await DataManager.addMeeting(meeting);
+            }
+            closeModal('meeting-modal');
+            renderAll();
+        }
+
+        async function deleteMeeting(id) {
+            if (confirm('Delete this meeting?')) {
+                await DataManager.deleteMeeting(id);
+                renderAll();
+            }
+        }
+
+        async function saveActionItem() {
+            const item = {
+                title: document.getElementById('ai-title').value,
+                assignedTo: document.getElementById('ai-assignedTo').value,
+                dueDate: document.getElementById('ai-dueDate').value || null,
+                priority: document.getElementById('ai-priority').value,
+                status: document.getElementById('ai-status').value,
+                description: document.getElementById('ai-description').value,
+                fromMeeting: null,
+                completedDate: null,
+                notes: ''
+            };
+
+            await DataManager.addActionItem(item);
+            closeModal('action-modal');
+            renderAll();
+        }
+
+        async function saveBusinessRule() {
+            const rule = {
+                title: document.getElementById('br-title').value,
+                description: document.getElementById('br-description').value,
+                category: document.getElementById('br-category').value,
+                source: document.getElementById('br-source').value,
+                discoveredInMeeting: null,
+                relatedQuestions: []
+            };
+
+            await DataManager.addBusinessRule(rule);
+            closeModal('rule-modal');
+            renderAll();
+        }
+
+        // ========================================
+        // ACTION HANDLERS
+        // ========================================
+        async function deleteQuestion(id) {
+            if (confirm('Delete this question?')) {
+                await DataManager.deleteQuestion(id);
+                renderAll();
+            }
+        }
+
+        // ========================================
+        // TRANSCRIPT HANDLERS
+        // ========================================
+        function openTranscriptModal(meetingId) {
+            document.getElementById('transcript-meeting-id').value = meetingId;
+            document.getElementById('transcript-file').value = '';
+            document.getElementById('transcript-status').style.display = 'none';
+            openModal('transcript-modal');
+        }
+
+        async function uploadTranscript() {
+            const meetingId = document.getElementById('transcript-meeting-id').value;
+            const fileInput = document.getElementById('transcript-file');
+            const statusDiv = document.getElementById('transcript-status');
+            const uploadBtn = document.getElementById('upload-transcript-btn');
+
+            if (!fileInput.files[0]) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = 'var(--warning-light)';
+                statusDiv.innerHTML = '⚠️ Please select a file';
+                return;
+            }
+
+            // Show loading state
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = 'var(--info-light)';
+            statusDiv.innerHTML = '⏳ Uploading transcript...';
+
+            try {
+                const m = DataManager.getMeetings().find(m => m.id === meetingId);
+                const dbId = m?.dbId || meetingId;
+
+                const formData = new FormData();
+                formData.append('transcript', fileInput.files[0]);
+
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/meetings/${dbId}/transcript`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    statusDiv.style.background = 'var(--success-light)';
+                    statusDiv.innerHTML = `✓ Transcript uploaded (${result.transcriptLength.toLocaleString()} characters)`;
+
+                    // Update local data
+                    const idx = DataManager.data.meetings.findIndex(m => m.id === meetingId || m.dbId === dbId);
+                    if (idx !== -1) {
+                        DataManager.data.meetings[idx].transcriptText = true;
+                        DataManager.data.meetings[idx].transcript_text = true;
+                        DataManager.saveToLocal();
+                    }
+
+                    // Refresh UI after a short delay
+                    setTimeout(() => {
+                        closeModal('transcript-modal');
+                        renderMeetings();
+                    }, 1500);
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Upload failed');
+                }
+            } catch (err) {
+                statusDiv.style.background = 'var(--danger-light)';
+                statusDiv.innerHTML = `❌ Error: ${err.message}`;
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload Transcript';
+            }
+        }
+
+        async function analyzeTranscript(meetingId) {
+            const m = DataManager.getMeetings().find(m => m.id === meetingId);
+            const dbId = m?.dbId || meetingId;
+
+            if (!confirm('Analyze this transcript with AI? This will generate suggestions for answers, business rules, decisions, and action items.')) {
+                return;
+            }
+
+            // Show loading indicator
+            const indicator = document.getElementById('save-indicator');
+            indicator.textContent = '🤖 Analyzing transcript...';
+            indicator.classList.add('show');
+
+            try {
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/meetings/${dbId}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    indicator.textContent = `✓ ${result.suggestionsCount} suggestions generated`;
+
+                    // Open suggestions modal after a short delay
+                    setTimeout(() => {
+                        indicator.classList.remove('show');
+                        openSuggestionsModal(meetingId);
+                    }, 1500);
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Analysis failed');
+                }
+            } catch (err) {
+                indicator.textContent = `❌ ${err.message}`;
+                setTimeout(() => indicator.classList.remove('show'), 3000);
+            }
+        }
+
+        async function openSuggestionsModal(meetingId) {
+            const m = DataManager.getMeetings().find(m => m.id === meetingId);
+            const dbId = m?.dbId || meetingId;
+
+            document.getElementById('suggestions-meeting-id').value = meetingId;
+            const container = document.getElementById('suggestions-list');
+            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><p>Loading suggestions...</p></div>';
+            openModal('suggestions-modal');
+
+            try {
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/meetings/${dbId}/suggestions`);
+
+                if (response.ok) {
+                    const suggestions = await response.json();
+                    renderSuggestions(suggestions);
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Failed to load suggestions</p></div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><p>Error: ' + err.message + '</p></div>';
+            }
+        }
+
+        function renderSuggestions(suggestions) {
+            const container = document.getElementById('suggestions-list');
+
+            if (!suggestions || suggestions.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🤖</div><p>No suggestions yet. Upload a transcript and click "Analyze" to get AI suggestions.</p></div>';
+                return;
+            }
+
+            const typeLabels = {
+                'answer': { label: 'Answer', badge: 'badge-answered', icon: '💬' },
+                'business_rule': { label: 'Business Rule', badge: 'badge-category', icon: '📚' },
+                'decision': { label: 'Decision', badge: 'badge-info', icon: '✅' },
+                'action_item': { label: 'Action Item', badge: 'badge-warning', icon: '📋' }
+            };
+
+            container.innerHTML = suggestions.map(s => {
+                const typeInfo = typeLabels[s.suggestion_type] || { label: s.suggestion_type, badge: 'badge-pending', icon: '📝' };
+                const content = typeof s.suggested_content === 'string' ? JSON.parse(s.suggested_content) : s.suggested_content;
+                const confidence = s.confidence ? Math.round(s.confidence * 100) : 80;
+
+                return `
+                    <div class="suggestion-item ${s.status}" style="border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <div>
+                                <span class="badge ${typeInfo.badge}">${typeInfo.icon} ${typeInfo.label}</span>
+                                <span class="badge badge-pending" style="margin-left: 4px;">${confidence}% confidence</span>
+                            </div>
+                            <span class="badge badge-${s.status === 'pending' ? 'pending' : s.status === 'approved' ? 'answered' : 'high'}">${s.status}</span>
+                        </div>
+                        ${s.target_question_text ? `<div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;"><strong>For question:</strong> ${s.target_question_text}</div>` : ''}
+                        <div style="margin-bottom: 8px;">
+                            ${content.title ? `<strong>${content.title}</strong><br>` : ''}
+                            ${content.answer || content.description || ''}
+                        </div>
+                        ${content.sourceQuote ? `<div style="font-size: 0.8rem; color: var(--text-muted); padding: 8px; background: var(--bg); border-radius: 6px; margin-bottom: 8px;"><em>"${content.sourceQuote}"</em></div>` : ''}
+                        ${s.status === 'pending' ? `
+                            <div class="btn-group">
+                                <button class="btn btn-success btn-sm" onclick="approveSuggestion('${s.id}')">✓ Approve</button>
+                                <button class="btn btn-danger btn-sm" onclick="rejectSuggestion('${s.id}')">✗ Reject</button>
+                            </div>
+                        ` : `
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                ${s.status === 'approved' ? '✓ Approved' : '✗ Rejected'} ${s.reviewed_at ? 'on ' + formatDate(s.reviewed_at) : ''}
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function approveSuggestion(suggestionId) {
+            try {
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/suggestions/${suggestionId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'approved', reviewed_by: 'User' })
+                });
+
+                if (response.ok) {
+                    showSaveIndicator();
+                    // Refresh suggestions and main data
+                    const meetingId = document.getElementById('suggestions-meeting-id').value;
+                    await DataManager.init();
+                    renderAll();
+                    openSuggestionsModal(meetingId);
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+
+        async function rejectSuggestion(suggestionId) {
+            try {
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/suggestions/${suggestionId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'rejected', reviewed_by: 'User' })
+                });
+
+                if (response.ok) {
+                    showSaveIndicator();
+                    const meetingId = document.getElementById('suggestions-meeting-id').value;
+                    openSuggestionsModal(meetingId);
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+
+        // ========================================
+        // SETTINGS
+        // ========================================
+        let appSettings = null;
+        let availableProviders = null;
+
+        async function loadSettings() {
+            try {
+                const [settingsRes, providersRes] = await Promise.all([
+                    fetch(`${API_URL}/${CLIENT_SLUG}/settings`),
+                    fetch(`${API_URL}/${CLIENT_SLUG}/settings/providers`)
+                ]);
+                if (settingsRes.ok) appSettings = await settingsRes.json();
+                if (providersRes.ok) availableProviders = await providersRes.json();
+            } catch (e) {
+                console.warn('Failed to load settings:', e.message);
+            }
+        }
+
+        function openSettingsModal() {
+            loadSettings().then(() => {
+                renderProviderTab();
+                renderPreferencesTab();
+                renderCategoriesTab();
+                renderUsageTab();
+                openModal('settings-modal');
+            });
+        }
+
+        function switchSettingsTab(tabName) {
+            document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.settings-tab[onclick*="${tabName}"]`).classList.add('active');
+            document.getElementById(`settings-${tabName}`).classList.add('active');
+        }
+
+        function renderProviderTab() {
+            if (!availableProviders) return;
+
+            // Render analysis providers
+            const providerContainer = document.getElementById('provider-options');
+            providerContainer.innerHTML = Object.entries(availableProviders).map(([key, provider]) => `
+                <label class="provider-option ${!provider.configured ? 'disabled' : ''} ${appSettings?.ai_provider === key ? 'selected' : ''}"
+                       onclick="${provider.configured ? `selectProvider('${key}')` : ''}">
+                    <input type="radio" name="ai-provider" value="${key}"
+                           ${appSettings?.ai_provider === key ? 'checked' : ''}
+                           ${!provider.configured ? 'disabled' : ''}>
+                    <span class="provider-name">${provider.name}</span>
+                    <span class="provider-status ${provider.configured ? 'configured' : 'not-configured'}">
+                        ${provider.configured ? '✓ Configured' : '✗ Not Configured'}
+                    </span>
+                </label>
+            `).join('');
+
+            // Render model dropdown
+            const modelSelect = document.getElementById('settings-model');
+            const currentProvider = availableProviders[appSettings?.ai_provider || 'anthropic'];
+            if (currentProvider?.models) {
+                modelSelect.innerHTML = currentProvider.models.map(m => `
+                    <option value="${m.id}" ${appSettings?.ai_model === m.id ? 'selected' : ''}>
+                        ${m.name}${m.recommended ? ' (Recommended)' : ''}${m.description ? ` - ${m.description}` : ''}
+                    </option>
+                `).join('');
+            }
+
+            // Render transcription providers
+            const transcriptionContainer = document.getElementById('transcription-options');
+            const transcriptionProviders = Object.entries(availableProviders)
+                .filter(([_, p]) => p.transcription);
+            transcriptionContainer.innerHTML = transcriptionProviders.map(([key, provider]) => `
+                <label class="provider-option ${!provider.configured ? 'disabled' : ''} ${appSettings?.transcription_provider === key ? 'selected' : ''}">
+                    <input type="radio" name="transcription-provider" value="${key}"
+                           ${appSettings?.transcription_provider === key ? 'checked' : ''}
+                           ${!provider.configured ? 'disabled' : ''}>
+                    <span class="provider-name">${provider.name} (${provider.transcription?.[0]?.name || 'Whisper'})</span>
+                    <span class="provider-status ${provider.configured ? 'configured' : 'not-configured'}">
+                        ${provider.configured ? '✓ Configured' : '✗ Not Configured'}
+                    </span>
+                </label>
+            `).join('');
+        }
+
+        function selectProvider(providerKey) {
+            document.querySelectorAll('#provider-options .provider-option').forEach(el => {
+                el.classList.remove('selected');
+                if (el.querySelector(`input[value="${providerKey}"]`)) {
+                    el.classList.add('selected');
+                }
+            });
+
+            // Update model dropdown
+            const modelSelect = document.getElementById('settings-model');
+            const provider = availableProviders[providerKey];
+            if (provider?.models) {
+                modelSelect.innerHTML = provider.models.map(m => `
+                    <option value="${m.id}">${m.name}${m.recommended ? ' (Recommended)' : ''}${m.description ? ` - ${m.description}` : ''}</option>
+                `).join('');
+            }
+        }
+
+        function renderPreferencesTab() {
+            if (!appSettings) return;
+
+            const threshold = appSettings.auto_approve_threshold || 1.0;
+            document.getElementById('settings-threshold').value = threshold;
+            updateThresholdLabel();
+
+            const types = appSettings.auto_approve_types || [];
+            document.getElementById('auto-approve-answer').checked = types.includes('answer');
+            document.getElementById('auto-approve-rule').checked = types.includes('business_rule');
+            document.getElementById('auto-approve-decision').checked = types.includes('decision');
+            document.getElementById('auto-approve-action').checked = types.includes('action_item');
+
+            document.getElementById('notify-suggestions').checked = appSettings.notify_new_suggestions !== false;
+            document.getElementById('notify-pending').checked = appSettings.notify_pending_questions !== false;
+            document.getElementById('notify-actions').checked = appSettings.notify_action_items_due !== false;
+        }
+
+        function updateThresholdLabel() {
+            const value = parseFloat(document.getElementById('settings-threshold').value);
+            const label = document.getElementById('threshold-label');
+            if (value >= 1.0) {
+                label.textContent = 'Disabled';
+            } else {
+                label.textContent = `${Math.round(value * 100)}%`;
+            }
+        }
+
+        function renderCategoriesTab() {
+            if (!appSettings) return;
+
+            const questionCategories = appSettings.custom_question_categories || [];
+            const ruleCategories = appSettings.custom_rule_categories || [];
+
+            document.getElementById('custom-question-categories').innerHTML = questionCategories.map((cat, i) => `
+                <div class="custom-category-item">
+                    <input type="text" value="${cat}" onchange="updateCustomCategory('question', ${i}, this.value)">
+                    <button onclick="removeCustomCategory('question', ${i})">✗</button>
+                </div>
+            `).join('');
+
+            document.getElementById('custom-rule-categories').innerHTML = ruleCategories.map((cat, i) => `
+                <div class="custom-category-item">
+                    <input type="text" value="${cat}" onchange="updateCustomCategory('rule', ${i}, this.value)">
+                    <button onclick="removeCustomCategory('rule', ${i})">✗</button>
+                </div>
+            `).join('');
+        }
+
+        function addCustomCategory(type) {
+            const key = type === 'question' ? 'custom_question_categories' : 'custom_rule_categories';
+            if (!appSettings[key]) appSettings[key] = [];
+            appSettings[key].push('New Category');
+            renderCategoriesTab();
+        }
+
+        function updateCustomCategory(type, index, value) {
+            const key = type === 'question' ? 'custom_question_categories' : 'custom_rule_categories';
+            if (appSettings[key]) appSettings[key][index] = value;
+        }
+
+        function removeCustomCategory(type, index) {
+            const key = type === 'question' ? 'custom_question_categories' : 'custom_rule_categories';
+            if (appSettings[key]) {
+                appSettings[key].splice(index, 1);
+                renderCategoriesTab();
+            }
+        }
+
+        function renderUsageTab() {
+            if (!appSettings) return;
+
+            document.getElementById('usage-calls').textContent = (appSettings.api_calls_this_month || 0).toLocaleString();
+            document.getElementById('usage-tokens').textContent = (appSettings.tokens_used_this_month || 0).toLocaleString();
+            document.getElementById('usage-cost').textContent = '$' + (appSettings.estimated_cost_this_month || 0).toFixed(4);
+            document.getElementById('usage-total').textContent = (appSettings.api_calls_total || 0).toLocaleString();
+        }
+
+        async function resetUsage() {
+            if (!confirm('Reset monthly usage counters? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/settings/reset-usage`, {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    appSettings = result.settings;
+                    renderUsageTab();
+                    showSaveIndicator();
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        async function saveSettings() {
+            const updates = {
+                ai_provider: document.querySelector('input[name="ai-provider"]:checked')?.value,
+                ai_model: document.getElementById('settings-model').value,
+                transcription_provider: document.querySelector('input[name="transcription-provider"]:checked')?.value,
+                auto_approve_threshold: parseFloat(document.getElementById('settings-threshold').value),
+                auto_approve_types: [
+                    document.getElementById('auto-approve-answer').checked && 'answer',
+                    document.getElementById('auto-approve-rule').checked && 'business_rule',
+                    document.getElementById('auto-approve-decision').checked && 'decision',
+                    document.getElementById('auto-approve-action').checked && 'action_item'
+                ].filter(Boolean),
+                notify_new_suggestions: document.getElementById('notify-suggestions').checked,
+                notify_pending_questions: document.getElementById('notify-pending').checked,
+                notify_action_items_due: document.getElementById('notify-actions').checked,
+                custom_question_categories: appSettings.custom_question_categories || [],
+                custom_rule_categories: appSettings.custom_rule_categories || []
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/${CLIENT_SLUG}/settings`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updates)
+                });
+
+                if (response.ok) {
+                    appSettings = await response.json();
+                    closeModal('settings-modal');
+                    showSaveIndicator();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        async function toggleActionItem(id) {
+            const item = DataManager.getActionItems().find(ai => ai.id === id);
+            if (item) {
+                const newStatus = item.status === 'completed' ? 'pending' : 'completed';
+                await DataManager.updateActionItem(id, {
+                    status: newStatus,
+                    completedDate: newStatus === 'completed' ? new Date().toISOString().split('T')[0] : null
+                });
+                renderAll();
+            }
+        }
+
+        // ========================================
+        // EXPORT/IMPORT
+        // ========================================
+        async function exportData() {
+            const data = await DataManager.exportAll();
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `morichal-meeting-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (DataManager.importData(e.target.result)) {
+                    alert('Data imported successfully!');
+                    renderAll();
+                } else {
+                    alert('Error: Invalid data file');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL data? This cannot be undone.')) {
+                DataManager.clearAll();
+                renderAll();
+            }
+        }
+
+        // ========================================
+        // UTILITIES
+        // ========================================
+        function formatCategory(cat) {
+            return cat.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.getElementById('save-indicator');
+            indicator.classList.add('show');
+            setTimeout(() => indicator.classList.remove('show'), 2000);
+        }
+
+        function updateConnectionStatus() {
+            const el = document.getElementById('connection-status');
+            if (DataManager.isOnline) {
+                el.className = 'connection-status online';
+                el.querySelector('.status-text').textContent = 'Connected to server';
+            } else {
+                el.className = 'connection-status offline';
+                el.querySelector('.status-text').textContent = 'Offline mode (local data)';
+            }
+        }
+
+        // ========================================
+        // FILTER HANDLERS
+        // ========================================
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderQuestions();
+            });
+        });
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            await DataManager.init();
+            renderAll();
+            updateConnectionStatus();
+        });
+    </script>
+</body>
+</html>

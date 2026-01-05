@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorichalAI | You're Live. What Happens Now?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #0d5d56;
+            --primary-light: #14b8a6;
+            --secondary: #1e293b;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, #334155 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        header .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header .badge {
+            display: inline-block;
+            background: var(--primary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 24px;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        section:nth-child(even) {
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Intro Section */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .intro-text h2 {
+            font-size: 1.75rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .intro-text p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .intro-text .highlight {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 24px;
+        }
+
+        .intro-text .highlight strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .intro-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        /* Why AI Needs Operations */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .why-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--primary);
+        }
+
+        .why-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .why-card h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .why-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Risk Section */
+        .risk-container {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-radius: 20px;
+            padding: 48px;
+            border: 1px solid #fecaca;
+        }
+
+        .risk-container h3 {
+            color: #991b1b;
+            font-size: 1.5rem;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .risk-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .risk-timeline::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, #fca5a5, #ef4444, #991b1b);
+            border-radius: 2px;
+        }
+
+        .risk-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .risk-item .time {
+            background: white;
+            border: 3px solid #ef4444;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-weight: 700;
+            color: #ef4444;
+            font-size: 0.85rem;
+        }
+
+        .risk-item h4 {
+            color: #991b1b;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .risk-item p {
+            color: #7f1d1d;
+            font-size: 0.85rem;
+            max-width: 160px;
+            margin: 0 auto;
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border: 2px solid var(--border);
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0,0,0,0.15);
+        }
+
+        .pricing-card .tier-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .pricing-card .tier-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .pricing-card .price-note {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 32px;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .pricing-card li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-card li .check {
+            color: var(--success);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .pricing-card li.highlight-feature {
+            background: #ecfdf5;
+            margin: 0 -32px;
+            padding: 10px 32px;
+            border-bottom: none;
+        }
+
+        .pricing-card .cta-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .pricing-card .cta-btn:hover {
+            background: #334155;
+        }
+
+        /* All Plans Include */
+        .included-section {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            border-radius: 20px;
+            padding: 48px;
+            border: 1px solid #99f6e4;
+        }
+
+        .included-section h3 {
+            text-align: center;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 32px;
+        }
+
+        .included-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .included-item {
+            text-align: center;
+        }
+
+        .included-item .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .included-item h4 {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .included-item p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Comparison */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table .check {
+            color: var(--success);
+            font-size: 1.25rem;
+        }
+
+        .comparison-table .cross {
+            color: var(--danger);
+            font-size: 1.25rem;
+        }
+
+        .comparison-table tr.total-row {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        .comparison-table tr.total-row td {
+            font-size: 1.1rem;
+        }
+
+        .savings-badge {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Plan Selector */
+        .plan-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .plan-option {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border: 2px solid var(--border);
+        }
+
+        .plan-option h3 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .plan-option .tagline {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .plan-option ul {
+            list-style: none;
+            text-align: left;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .plan-option li {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .plan-option li::before {
+            content: "→";
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* How We Work Together */
+        .commitment-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .commitment-item {
+            text-align: center;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .commitment-item .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .commitment-item h4 {
+            color: var(--secondary);
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .commitment-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .faq-item h4 {
+            color: var(--secondary);
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+        }
+
+        .faq-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            font-size: 1.1rem;
+        }
+
+        .cta-section .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: white;
+            color: var(--primary);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .cta-section .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .intro-grid,
+            .pricing-grid,
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .why-grid,
+            .included-grid,
+            .commitment-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .plan-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-timeline {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .risk-timeline::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .why-grid,
+            .included-grid,
+            .commitment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 0.85rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px;
+            }
+        }
+
+        /* Global Nav */
+        .global-nav {
+            background: #1e293b;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .global-nav .nav-home {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+        .global-nav .nav-home:hover { opacity: 1; }
+        .global-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .global-nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .global-nav .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .global-nav .nav-links a.active { background: #0f766e; }
+        @media (max-width: 768px) {
+            .global-nav .nav-container { flex-direction: column; gap: 10px; }
+            .global-nav .nav-links { justify-content: center; }
+        }
+        @media print { .global-nav { display: none; } }
+
+        /* Print */
+        @media print {
+            header, .cta-section {
+                background: var(--secondary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .pricing-card, .why-card, .faq-item {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="deliverables.html" class="nav-home">← All Documents</a>
+            <div class="nav-links">
+                <a href="ai-operations-proposal.html" class="active">Operations</a>
+                <a href="proposal-recap.html">Proposal</a>
+                <a href="morichal-value-comparison.html">Value</a>
+                <a href="competitive-pricing-research.html">Pricing</a>
+                <a href="morichal-prd.html">PRD</a>
+                <a href="index.html">Sprint</a>
+                <a href="UAP-MORICHAL-2026.html">UAP</a>
+                <a href="internal-feature-requests.html">Phase 2</a>
+                <a href="meeting-portal.html">Meetings</a>
+            </div>
+        </div>
+    </nav>
+    <header>
+        <div class="container">
+            <span class="badge">What's Next</span>
+            <h1>You're Live. What Happens Now?</h1>
+            <p class="subtitle">We built something together. Now comes the part that makes it last. Training your team until they're confident. Refining the AI as it learns your business. Tuning every workflow until the platform feels like second nature.</p>
+        </div>
+    </header>
+
+    <!-- Introduction -->
+    <section>
+        <div class="container">
+            <div class="intro-grid">
+                <div class="intro-text">
+                    <h2>Here's What Your Platform Does</h2>
+                    <p>Your AI platform works around the clock so your team doesn't have to. Orders come in by email and get extracted automatically. Suppliers get matched based on their track record. Prices get checked against market rates. Documents get verified before they cause problems. And when something needs attention, the right person gets notified.</p>
+                    <p>That's 10 AI agents handling the work that used to take hours of manual effort. Processing 16 document types, connecting to 45 suppliers, operating across 13 countries. All happening in real-time, all day, every day.</p>
+                    <div class="highlight">
+                        <strong>10 AI Agents Working For You</strong>
+                        Extracting orders. Matching suppliers. Checking prices. Verifying documents. Tracking shipments. Flagging problems. Our job is to keep all of this running smoothly.
+                    </div>
+                </div>
+                <div class="intro-stats">
+                    <div class="stat-card">
+                        <div class="icon">🤖</div>
+                        <div class="value">10</div>
+                        <div class="label">AI Agents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">💻</div>
+                        <div class="value">81K+</div>
+                        <div class="label">Lines of Code</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">🔌</div>
+                        <div class="value">238</div>
+                        <div class="label">API Endpoints</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">⏱️</div>
+                        <div class="value">1,440</div>
+                        <div class="label">Dev Hours</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do For You -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>What Happens Behind the Scenes</h2>
+                <p>The work that keeps your AI platform running at peak performance</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="icon">📋</div>
+                    <h3>Daily Order Queue Review</h3>
+                    <p>Every morning we check what came in overnight. Orders that processed smoothly, items the AI flagged for review, anything stuck in the queue. We catch issues before they become backlogs.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon">🔍</div>
+                    <h3>Edge Cases & Exceptions</h3>
+                    <p>New supplier format? Unusual paper spec? Document the AI hasn't seen before? We spot these, handle them, and train the system so it recognizes them next time.</p>
+                </div>
+                <div class="why-card">
+                    <div class="icon">💬</div>
+                    <h3>Weekly Syncs With Your Team</h3>
+                    <p>We talk with your people about orders that needed manual attention. What patterns are emerging? What's confusing? We take that feedback and make the platform smarter.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Happens Without Operations -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>What Happens Without AI Operations?</h2>
+                <p>A realistic timeline of platform degradation without professional care</p>
+            </div>
+
+            <div class="risk-container">
+                <h3>Timeline of Unmanaged AI Platform</h3>
+                <div class="risk-timeline">
+                    <div class="risk-item">
+                        <div class="time">Month 1-2</div>
+                        <h4>Silent Drift</h4>
+                        <p>AI accuracy begins dropping. You won't notice yet.</p>
+                    </div>
+                    <div class="risk-item">
+                        <div class="time">Month 3-4</div>
+                        <h4>Errors Appear</h4>
+                        <p>More items flagged for review. Team compensates manually.</p>
+                    </div>
+                    <div class="risk-item">
+                        <div class="time">Month 5-6</div>
+                        <h4>Integration Breaks</h4>
+                        <p>API update breaks CRM sync. Data stops flowing.</p>
+                    </div>
+                    <div class="risk-item">
+                        <div class="time">Month 6+</div>
+                        <h4>Emergency Mode</h4>
+                        <p>Platform unreliable. Emergency fixes cost 3-5x normal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Which Plan Fits You? -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Which Plan Fits You?</h2>
+                <p>A quick guide to help you decide</p>
+            </div>
+
+            <div class="plan-selector">
+                <div class="plan-option">
+                    <h3>Essential</h3>
+                    <div class="tagline">Keep It Running</div>
+                    <ul>
+                        <li>Platform runs smoothly today</li>
+                        <li>Need monitoring and maintenance</li>
+                        <li>Quarterly training is enough</li>
+                        <li>Contact us when you need dev work</li>
+                    </ul>
+                </div>
+                <div class="plan-option">
+                    <h3>Professional</h3>
+                    <div class="tagline">Grow and Optimize</div>
+                    <ul>
+                        <li>Want to improve workflows monthly</li>
+                        <li>Need 25 dev hours included</li>
+                        <li>Bi-weekly check-ins work for you</li>
+                        <li>Ready to optimize, not just maintain</li>
+                    </ul>
+                </div>
+                <div class="plan-option">
+                    <h3>Enterprise</h3>
+                    <div class="tagline">Full Partnership</div>
+                    <ul>
+                        <li>High volume, complex needs</li>
+                        <li>Need 50 dev hours included</li>
+                        <li>Weekly strategy calls make sense</li>
+                        <li>Want new capabilities as we release them</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Operations Partnership</h2>
+                <p>Every plan keeps your orders flowing and your team supported</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Essential -->
+                <div class="pricing-card">
+                    <div class="tier-name">Essential</div>
+                    <div class="tier-desc">Keep Operations Running</div>
+                    <div class="price">€9,950<span>/month</span></div>
+                    <div class="price-note">Billed monthly or annually</div>
+                    <ul>
+                        <li><span class="check">✓</span> 24/7 order flow monitoring</li>
+                        <li><span class="check">✓</span> Daily operations health check</li>
+                        <li><span class="check">✓</span> Issue detection before it affects orders</li>
+                        <li><span class="check">✓</span> Bug fixes & security patches</li>
+                        <li><span class="check">✓</span> Integration maintenance</li>
+                        <li><span class="check">✓</span> Monthly performance report</li>
+                        <li><span class="check">✓</span> Speed, throughput & bottleneck metrics</li>
+                        <li><span class="check">✓</span> 1 team training session/quarter</li>
+                        <li><span class="check">✓</span> Direct email access to our team</li>
+                        <li><span class="check">✓</span> Additional dev hours: €175/hr</li>
+                    </ul>
+                    <a href="https://deploystaff.com/book-a-meeting" class="cta-btn">Schedule a Call</a>
+                </div>
+
+                <!-- Professional -->
+                <div class="pricing-card">
+                    <div class="tier-name">Professional</div>
+                    <div class="tier-desc">Optimize Your Operations</div>
+                    <div class="price">€14,950<span>/month</span></div>
+                    <div class="price-note">Billed monthly or annually</div>
+                    <ul>
+                        <li><span class="check">✓</span> Everything in Essential</li>
+                        <li class="highlight-feature"><span class="check">✓</span> <strong>25 development hours/month</strong></li>
+                        <li><span class="check">✓</span> Weekly operations report with insights</li>
+                        <li><span class="check">✓</span> Bi-weekly check-in calls</li>
+                        <li><span class="check">✓</span> Bottleneck identification & resolution</li>
+                        <li><span class="check">✓</span> Workflow optimization recommendations</li>
+                        <li><span class="check">✓</span> 1 team training session/month</li>
+                        <li><span class="check">✓</span> Tool adjustments based on usage</li>
+                        <li><span class="check">✓</span> AI model & prompt optimization</li>
+                        <li><span class="check">✓</span> Additional dev hours: €125/hr</li>
+                    </ul>
+                    <a href="https://deploystaff.com/book-a-meeting" class="cta-btn">Schedule a Call</a>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="pricing-card">
+                    <div class="tier-name">Enterprise</div>
+                    <div class="tier-desc">Full Operations Partnership</div>
+                    <div class="price">€19,950<span>/month</span></div>
+                    <div class="price-note">Billed monthly or annually</div>
+                    <ul>
+                        <li><span class="check">✓</span> Everything in Professional</li>
+                        <li class="highlight-feature"><span class="check">✓</span> <strong>50 development hours/month</strong></li>
+                        <li><span class="check">✓</span> Daily operations dashboard access</li>
+                        <li><span class="check">✓</span> Weekly strategy calls</li>
+                        <li><span class="check">✓</span> Unlimited team training</li>
+                        <li><span class="check">✓</span> Proactive performance tuning</li>
+                        <li><span class="check">✓</span> Priority bottleneck resolution</li>
+                        <li><span class="check">✓</span> New AI capabilities as released</li>
+                        <li><span class="check">✓</span> Custom reporting & analytics</li>
+                        <li><span class="check">✓</span> Weekend coverage</li>
+                        <li><span class="check">✓</span> Additional dev hours: €95/hr</li>
+                    </ul>
+                    <a href="https://deploystaff.com/book-a-meeting" class="cta-btn">Schedule a Call</a>
+                </div>
+            </div>
+
+            <!-- Additional Hours Note -->
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 48px;">
+                Higher tiers include more development capacity at better hourly rates. Unused hours do not roll over.
+            </p>
+
+            <!-- All Plans Include -->
+            <div class="included-section">
+                <h3>Every Plan Includes</h3>
+                <div class="included-grid">
+                    <div class="included-item">
+                        <div class="icon">📦</div>
+                        <h4>Order Flow Monitoring</h4>
+                        <p>We watch every transaction so nothing falls through</p>
+                    </div>
+                    <div class="included-item">
+                        <div class="icon">👥</div>
+                        <h4>Team Training</h4>
+                        <p>Your staff stays proficient and confident</p>
+                    </div>
+                    <div class="included-item">
+                        <div class="icon">📈</div>
+                        <h4>Performance Reports</h4>
+                        <p>Speed, bottlenecks, and throughput metrics</p>
+                    </div>
+                    <div class="included-item">
+                        <div class="icon">🔧</div>
+                        <h4>Proactive Optimization</h4>
+                        <p>We tune the system before problems arise</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What This Would Cost In-House -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>What This Would Cost In-House</h2>
+                <p>Building your own AI operations team vs. partnering with us</p>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Capability</th>
+                        <th>In-House Team</th>
+                        <th>DeployStaff</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>24/7 Order Flow Monitoring</td>
+                        <td>€500-1,000/month tools + staff</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr>
+                        <td>Operations Reports (Speed, Bottlenecks)</td>
+                        <td><span class="cross">✗</span> Custom development</td>
+                        <td><span class="check">✓</span> Weekly/Monthly</td>
+                    </tr>
+                    <tr>
+                        <td>Team Training Sessions</td>
+                        <td>€500-1,500/session external</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr>
+                        <td>AI/ML Operations Specialist</td>
+                        <td>€8,000-12,000/month</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr>
+                        <td>Backend Developer (part-time)</td>
+                        <td>€3,000-5,000/month</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr>
+                        <td>Platform Knowledge</td>
+                        <td>3-6 months ramp-up</td>
+                        <td><span class="check">✓</span> We built it</td>
+                    </tr>
+                    <tr>
+                        <td>Proactive Issue Detection</td>
+                        <td><span class="cross">✗</span> Reactive only</td>
+                        <td><span class="check">✓</span> Before it affects you</td>
+                    </tr>
+                    <tr>
+                        <td>Workflow Optimization</td>
+                        <td><span class="cross">✗</span> Not their focus</td>
+                        <td><span class="check">✓</span> Continuous</td>
+                    </tr>
+                    <tr>
+                        <td>Quality Assurance</td>
+                        <td>€2,000-4,000/month</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr>
+                        <td>Continuous Testing & Validation</td>
+                        <td>€1,500-3,000/month</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr>
+                        <td>DevOps & Infrastructure</td>
+                        <td>€3,000-5,000/month</td>
+                        <td><span class="check">✓</span> Included</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>Estimated Monthly Cost</strong></td>
+                        <td><strong>€20,000-32,000+</strong></td>
+                        <td><strong>€9,950-19,950</strong> <span class="savings-badge">Save 40-70%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- How We Work Together -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>How We Work Together</h2>
+                <p>Flexibility built into every partnership</p>
+            </div>
+
+            <div class="commitment-grid">
+                <div class="commitment-item">
+                    <div class="icon">📅</div>
+                    <h4>Start Anytime</h4>
+                    <p>No waiting for quarter boundaries. Begin when you're ready.</p>
+                </div>
+                <div class="commitment-item">
+                    <div class="icon">🔓</div>
+                    <h4>30-Day Minimum</h4>
+                    <p>No long-term lock-in. We earn your business every month.</p>
+                </div>
+                <div class="commitment-item">
+                    <div class="icon">🔄</div>
+                    <h4>Change Plans Freely</h4>
+                    <p>Upgrade or downgrade with 30 days notice.</p>
+                </div>
+                <div class="commitment-item">
+                    <div class="icon">💳</div>
+                    <h4>Transparent Billing</h4>
+                    <p>Infrastructure billed separately. You control your data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Common Questions</h2>
+            </div>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>How do you monitor our orders?</h4>
+                    <p>We track every transaction flowing through the platform - emails received, documents processed, CRM syncs completed. If something gets stuck or fails, we get an alert and address it before it impacts your business.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What kind of reports will we receive?</h4>
+                    <p>You'll see order processing speed, document extraction accuracy, bottleneck locations, and throughput trends. Essential gets monthly reports; Professional gets weekly; Enterprise gets real-time dashboard access.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How often do you train our team?</h4>
+                    <p>Essential includes quarterly training sessions. Professional includes monthly sessions. Enterprise gets unlimited training - we're always available to onboard new staff or refresh your team's skills.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What happens if orders stop processing?</h4>
+                    <p>Our 24/7 monitoring catches this immediately. We diagnose the issue and resolve it - often before you even notice. Response times depend on your plan: 24h Essential, 12h Professional, 4h Enterprise.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What counts as a "development hour"?</h4>
+                    <p>New features, workflow changes, report customization, tool adjustments for your team. Bug fixes and maintenance are always included regardless of hours - that's our job.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What about infrastructure costs?</h4>
+                    <p>Infrastructure (servers, databases, AI APIs) is billed separately at approximately €1,380/month. You pay directly for full transparency and control over your systems.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I upgrade or downgrade later?</h4>
+                    <p>Yes. Plans can be adjusted with 30 days notice. Most clients start with Professional and adjust based on actual needs.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What's the minimum commitment?</h4>
+                    <p>30 days. Either party can cancel with 30 days written notice. No long-term lock-in - we earn your business every month.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Make It Yours?</h2>
+            <p>You've got the platform. Now let's make sure it actually works for you, your team, and your customers. Every single day.</p>
+            <a href="https://deploystaff.com/book-a-meeting" class="btn">Let's Talk</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p><strong>MorichalAI</strong> - What's Next</p>
+            <p style="margin-top: 8px;">DeployStaff.com | rafael@deploystaff.com</p>
+            <p style="margin-top: 16px;">Prepared: January 2026</p>
+        </div>
+    </footer>
+</body>
+</html>

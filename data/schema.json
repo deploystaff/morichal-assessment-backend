@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MorichalAI Meeting Portal Data Schema",
+  "version": "1.0",
+  "description": "Schema definitions for meeting portal data storage",
+
+  "definitions": {
+    "meeting": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^MTG-\\d{4}-\\d{3}$" },
+        "date": { "type": "string", "format": "date" },
+        "title": { "type": "string" },
+        "attendees": { "type": "array", "items": { "type": "string" } },
+        "agenda": { "type": "string" },
+        "status": { "type": "string", "enum": ["scheduled", "in-progress", "completed", "cancelled"] },
+        "notes": { "type": "string" },
+        "questionsDiscussed": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "date", "title", "status"]
+    },
+
+    "question": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^Q-\\d{3}$" },
+        "category": { "type": "string", "enum": ["payment-timing", "pricing", "documents", "compliance", "customer-data", "general"] },
+        "question": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "answered", "needs-follow-up", "deferred"] },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "askedInMeeting": { "type": ["string", "null"] },
+        "answer": { "type": ["string", "null"] },
+        "answeredBy": { "type": ["string", "null"] },
+        "answeredDate": { "type": ["string", "null"], "format": "date" },
+        "relatedBusinessRules": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "category", "question", "status", "priority"]
+    },
+
+    "businessRule": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^BR-\\d{3}$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "discoveredInMeeting": { "type": ["string", "null"] },
+        "relatedQuestions": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["confirmed", "pending-confirmation", "deprecated"] },
+        "source": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "description", "status"]
+    },
+
+    "decision": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^DEC-\\d{3}$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "madeInMeeting": { "type": ["string", "null"] },
+        "madeBy": { "type": "string" },
+        "status": { "type": "string", "enum": ["approved", "pending", "rejected", "superseded"] },
+        "implementationNotes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "description", "status"]
+    },
+
+    "actionItem": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^AI-\\d{3}$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "assignedTo": { "type": "string" },
+        "dueDate": { "type": ["string", "null"], "format": "date" },
+        "status": { "type": "string", "enum": ["pending", "in-progress", "completed", "cancelled"] },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "fromMeeting": { "type": ["string", "null"] },
+        "completedDate": { "type": ["string", "null"], "format": "date" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "assignedTo", "status"]
+    }
+  },
+
+  "type": "object",
+  "properties": {
+    "version": { "type": "string" },
+    "lastUpdated": { "type": "string", "format": "date-time" },
+    "meetings": { "type": "array", "items": { "$ref": "#/definitions/meeting" } },
+    "questions": { "type": "array", "items": { "$ref": "#/definitions/question" } },
+    "businessRules": { "type": "array", "items": { "$ref": "#/definitions/businessRule" } },
+    "decisions": { "type": "array", "items": { "$ref": "#/definitions/decision" } },
+    "actionItems": { "type": "array", "items": { "$ref": "#/definitions/actionItem" } }
+  },
+  "required": ["version", "meetings", "questions", "businessRules", "decisions", "actionItems"]
+}

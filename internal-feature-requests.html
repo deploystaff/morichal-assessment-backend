@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorichalAI | Phase 2 Opportunities (Internal)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --secondary: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Global Nav */
+        .global-nav {
+            background: #1e293b;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .global-nav .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .global-nav .nav-home {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+        .global-nav .nav-home:hover { opacity: 1; }
+        .global-nav .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .global-nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .global-nav .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .global-nav .nav-links a.active { background: #0f766e; }
+        @media (max-width: 768px) {
+            .global-nav .nav-container { flex-direction: column; gap: 10px; }
+            .global-nav .nav-links { justify-content: center; }
+        }
+        @media print { .global-nav { display: none; } }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d5d56 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.05) 100%);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+            margin-top: 8px;
+            max-width: 600px;
+        }
+
+        .header .badge {
+            background: rgba(220, 38, 38, 0.9);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .header .meta {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Phase Status Bar */
+        .phase-bar {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .phase-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .phase-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .phase-dot.complete { background: #22c55e; }
+        .phase-dot.progress { background: #f59e0b; }
+        .phase-dot.input { background: #3b82f6; }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .stat-card.features .value { color: var(--primary); }
+        .stat-card.agents .value { color: var(--info); }
+        .stat-card.high .value { color: var(--danger); }
+
+        /* Section Title */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        /* Opportunity Cards Grid */
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .opportunity-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .opportunity-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .card-icon.feature { background: #d1fae5; }
+        .card-icon.agent { background: #dbeafe; }
+
+        .card-title-wrap {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 6px;
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge-type, .badge-complexity {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-type {
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .badge-complexity.high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-complexity.medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .badge-complexity.low {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .card-body {
+            padding: 20px 24px;
+        }
+
+        .card-footer {
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .estimate-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .estimate {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .estimate-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .estimate-value {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .estimate-value.cost {
+            color: var(--primary);
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: linear-gradient(135deg, var(--secondary) 0%, #334155 100%);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .summary-subtitle {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+
+        .summary-stat .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .summary-stat .label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .summary-note {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .includes-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .includes-list {
+            list-style: none;
+        }
+
+        .includes-list li {
+            font-size: 0.85rem;
+            color: var(--text);
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .includes-list li:last-child {
+            border-bottom: none;
+        }
+
+        .includes-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .footer h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-meta {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .opportunities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .phase-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+        }
+
+        /* Print */
+        @media print {
+            body { padding: 20px; }
+            .header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="deliverables.html" class="nav-home">← All Documents</a>
+            <div class="nav-links">
+                <a href="ai-operations-proposal.html">Operations</a>
+                <a href="proposal-recap.html">Proposal</a>
+                <a href="morichal-value-comparison.html">Value</a>
+                <a href="competitive-pricing-research.html">Pricing</a>
+                <a href="morichal-prd.html">PRD</a>
+                <a href="index.html">Sprint</a>
+                <a href="UAP-MORICHAL-2026.html">UAP</a>
+                <a href="internal-feature-requests.html" class="active">Phase 2</a>
+                <a href="meeting-portal.html">Meetings</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <h1>MorichalAI - Phase 2 Opportunities</h1>
+                    <p class="subtitle">Additional capabilities we can build after the current engagement concludes. Review and mark your top priorities for the next phase of development.</p>
+                </div>
+                <span class="badge">INTERNAL USE ONLY</span>
+            </div>
+            <div class="meta">Generated: December 13, 2025</div>
+            <div class="phase-bar">
+                <div class="phase-item">
+                    <span class="phase-dot complete"></span>
+                    Sprint 1 Complete
+                </div>
+                <div class="phase-item">
+                    <span class="phase-dot progress"></span>
+                    Sprint 2-4 In Progress
+                </div>
+                <div class="phase-item">
+                    <span class="phase-dot input"></span>
+                    Phase 2: Your Input Needed
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="value">8</div>
+                <div class="label">Total Opportunities</div>
+            </div>
+            <div class="stat-card features">
+                <div class="value">7</div>
+                <div class="label">Features</div>
+            </div>
+            <div class="stat-card agents">
+                <div class="value">1</div>
+                <div class="label">AI Agent</div>
+            </div>
+            <div class="stat-card high">
+                <div class="value">2</div>
+                <div class="label">High Complexity</div>
+            </div>
+        </div>
+
+        <!-- Opportunities -->
+        <div class="section-header">
+            <h2 class="section-title">Available Opportunities</h2>
+        </div>
+
+        <div class="opportunities-grid">
+            <!-- 1. ReadAI Integration -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">🎙️</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">ReadAI Integration</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity medium">Medium</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Integrates with Read.AI to capture meeting intelligence, then automatically connects client requirements to MorichalAI supplier, shipping, and pricing systems.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Read.AI Integration: Leverages transcription and meeting summaries</li>
+                        <li>Requirement Extraction: Identifies specs, quantities, and quality requirements</li>
+                        <li>Meeting-to-Proposal Pipeline: Transforms discussions into draft proposals</li>
+                        <li>Connects to Supplier Database: Matches requirements with best-fit suppliers</li>
+                        <li>Connects to Shipping System: Pulls optimal freight rates</li>
+                        <li>Connects to Pricing Engine: Suggests competitive sell prices</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">80-120</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€7,600-€11,400</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Advanced Freight Rate Comparison -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">🚢</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">Advanced Freight Rate Comparison System</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity medium">Medium</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Compare freight rates across multiple carriers instantly to find the best shipping prices for every order.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Instant Rate Comparison: Get quotes from 10-15 shipping lines in seconds</li>
+                        <li>Cost Savings: Automatically find the lowest rates for your routes</li>
+                        <li>Smart Recommendations: Best carrier based on price, speed, reliability</li>
+                        <li>Route Optimization: All available options for any origin-destination pair</li>
+                        <li>Historical Tracking: Compare current rates against what you paid before</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">120-160</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€11,400-€15,200</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Supplier/Mill Discovery Agent -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon agent">🤖</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">Supplier/Mill Discovery Agent</div>
+                        <div class="card-badges">
+                            <span class="badge-type">AI Agent</span>
+                            <span class="badge-complexity high">High</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">AI agent that automatically discovers new suppliers and mills, verifies their legitimacy, and initiates outreach.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Internet Research: AI researches potential mills online</li>
+                        <li>Google Maps Integration: Verify mill locations and existence</li>
+                        <li>Paper Index Integration: Cross-reference with paper industry database</li>
+                        <li>ISO Certification Check: Verify mills have proper ISO certification</li>
+                        <li>Credit Reports API: Verify supplier financial health</li>
+                        <li>Automated Outreach: Set up calls, emails, follow-ups to new mills</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">220-280</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€20,900-€26,600</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Market Price Intelligence (RISI) -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">📊</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">Market Price Intelligence (RISI Integration)</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity medium">Medium</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Access industry benchmark pricing from RISI to validate deals, time purchases, and negotiate with confidence.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Deal Validation: Compare quotes against current RISI benchmarks</li>
+                        <li>Buy/Sell Signals: Alerts when market prices hit advantageous levels</li>
+                        <li>Negotiation Ammunition: Use real market data in negotiations</li>
+                        <li>Margin Protection: Alerts when market shifts threaten profits</li>
+                        <li>Grade-Specific Pricing: Benchmarks for different paper grades</li>
+                        <li>Regional Price Tracking: Compare pricing across Asia, Europe, Americas</li>
+                        <li>Trend Forecasting: Historical patterns help predict prices</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">100-140</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€9,500-€13,300</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. AI Email Rule Change Detection -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">📧</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">AI Email Rule Change Detection</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity low">Low</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">AI automatically detects rule changes from supplier emails and suggests updates to your compliance rules.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Rule Change Detection: Identify when suppliers change country restrictions</li>
+                        <li>Human Approval: Suggest rule updates, require human confirmation</li>
+                        <li>Audit Trail: Log all rule changes with dates and sources</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">40-60</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€3,800-€5,700</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Import Data Lead Discovery -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">🎯</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">Import Data Lead Discovery</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity medium">Medium</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Identify new sales opportunities by analyzing import/export data to find companies actively buying paper products.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Prospect Discovery: Find companies importing who aren't yet customers</li>
+                        <li>Purchase Intelligence: See what products prospects are buying</li>
+                        <li>Competitor Client Identification: Find companies buying from competitors</li>
+                        <li>Market Opportunity Scoring: AI ranks prospects by conversion likelihood</li>
+                        <li>Buyer Profile Enrichment: Auto-enrich with company details and contacts</li>
+                        <li>Territory Mapping: Visualize opportunities by region</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">120-160</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€11,400-€15,200</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Mill Direct Surplus Marketplace -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">🏭</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">Mill Direct Surplus Marketplace</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity high">High</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">A live marketplace where mills post excess inventory and you get first access to stocklots, job lots, and surplus paper at below-market prices.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Live Inventory Board: Browse real-time surplus listings worldwide</li>
+                        <li>Mill Direct Posting: Mills list stocklots with full specs and photos</li>
+                        <li>Instant Match Alerts: Notifications when surplus matches your criteria</li>
+                        <li>Make an Offer: Submit bids - mills can accept, counter, or decline</li>
+                        <li>Below-Market Deals: Access stocklots at 20-40% below standard pricing</li>
+                        <li>Verified Sellers: All mills verified with ratings and transaction history</li>
+                        <li>Deal Tracker: Manage offers, negotiations, and closed deals</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">280-350</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€26,600-€33,250</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Watchlist -->
+            <div class="opportunity-card">
+                <div class="card-header">
+                    <div class="card-icon feature">👁️</div>
+                    <div class="card-title-wrap">
+                        <div class="card-title">Watchlist</div>
+                        <div class="card-badges">
+                            <span class="badge-type">Feature</span>
+                            <span class="badge-complexity low">Low</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Monitor everything important to your business in one place with customizable alerts.</p>
+                    <div class="includes-title">What's Included</div>
+                    <ul class="includes-list">
+                        <li>Price Alerts: Get notified when watched products hit target prices</li>
+                        <li>Supplier Monitoring: Track preferred suppliers' availability and pricing</li>
+                        <li>Client Activity: Monitor when key clients are active in the market</li>
+                        <li>Market Triggers: Set custom alerts for market conditions that matter</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="estimate-group">
+                        <div class="estimate">
+                            <span class="estimate-label">Hours:</span>
+                            <span class="estimate-value">30-50</span>
+                        </div>
+                        <div class="estimate">
+                            <span class="estimate-label">Cost:</span>
+                            <span class="estimate-value cost">€2,850-€4,750</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <div class="summary-header">
+                <div>
+                    <h2 class="summary-title">Phase 2 Investment Summary</h2>
+                    <p class="summary-subtitle">Based on Phase 1 delivery metrics and codebase analysis</p>
+                </div>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-stat">
+                    <div class="value">990-1,320</div>
+                    <div class="label">Total Hours</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="value">€94K-€125K</div>
+                    <div class="label">Total Investment</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="value">~80%</div>
+                    <div class="label">of Phase 1 Size</div>
+                </div>
+            </div>
+            <div class="summary-note">
+                Estimates at €95/hr (Enterprise rate) • Based on 81,929 LOC codebase analysis • Phase 1 baseline: 1,440 hrs / €104,850
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3>How to Use This Document</h3>
+            <p>1. Review each opportunity above</p>
+            <p>2. Mark your priority (1-5) for your top choices</p>
+            <p>3. Share your priorities with Rafael to plan the next phase</p>
+            <div class="footer-meta">
+                <a href="https://drive.google.com/file/d/1LrxSV0dlfbZmxnd4bYkD17bSfkacfh84/view" target="_blank">View Original Document</a>
+                &nbsp;|&nbsp; MorichalAI - Intelligent Trade Operations Platform
+                &nbsp;|&nbsp; Confidential - For Internal Discussion Only
+            </div>
+        </div>
+    </div>
+</body>
+</html>

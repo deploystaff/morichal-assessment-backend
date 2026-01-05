@@ -85,3 +85,9 @@ Maintain these documentation folders:
 - All architecture decisions must be documented
 - All completed tasks must be documented
 - Follow existing patterns identified by architect skill
+
+## Writing Style
+
+- **Never use em-dashes (—)** - Use periods, colons, or commas instead
+- **Avoid antagonistic sentence structures** - Don't use "not only X, but Y!" or "this isn't just X, it's Y!" patterns. State things directly and positively.
+- **Never use "Most Popular", "Recommended", or similar badges** on pricing tiers or plan options. Let the content speak for itself.
