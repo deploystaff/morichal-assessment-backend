@@ -1218,7 +1218,7 @@
             color: var(--dark);
         }
 
-        /* Responsive */
+        /* Responsive - Tablets */
         @media (max-width: 768px) {
             .header {
                 padding: 30px 25px;
@@ -1252,6 +1252,188 @@
                 flex-direction: column;
                 gap: 15px;
                 align-items: flex-start;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .roadmap-features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .carousel-container {
+                margin: 0 -16px;
+            }
+        }
+
+        /* Responsive - Large Phones */
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .header-content h1 {
+                font-size: 24px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .metric-card {
+                padding: 16px;
+            }
+
+            .metric-value {
+                font-size: 1.5rem;
+            }
+
+            .roadmap-features {
+                grid-template-columns: 1fr;
+            }
+
+            .achievement-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .achievement-status {
+                margin-left: 0;
+            }
+        }
+
+        /* Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px 16px;
+            }
+
+            .header-content h1 {
+                font-size: 20px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .header-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .meta-item {
+                font-size: 12px;
+            }
+
+            .summary-card {
+                padding: 20px;
+            }
+
+            .summary-card h2 {
+                font-size: 18px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .metric-card {
+                padding: 12px;
+            }
+
+            .metric-value {
+                font-size: 1.25rem;
+            }
+
+            .metric-label {
+                font-size: 0.7rem;
+            }
+
+            .platform-access {
+                padding: 20px;
+            }
+
+            .platform-url {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .roadmap-section {
+                padding: 20px 16px;
+            }
+
+            .roadmap-features {
+                gap: 12px;
+            }
+
+            .roadmap-feature {
+                padding: 10px;
+            }
+
+            .feature-icon {
+                font-size: 1.25rem;
+            }
+
+            .feature-text {
+                font-size: 13px;
+            }
+
+            .carousel-nav {
+                width: 36px;
+                height: 36px;
+            }
+
+            .carousel-dots {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .carousel-dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            .password-box {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .password-box h2 {
+                font-size: 1.25rem;
+            }
+
+            .password-box input {
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            .password-box button {
+                padding: 12px;
+                min-height: 44px;
+            }
+
+            .progress-section {
+                padding: 20px 16px;
+            }
+
+            .progress-section h3 {
+                font-size: 16px;
+            }
+
+            .sprint-progress {
+                gap: 16px;
+            }
+
+            .sprint-item {
+                padding: 12px;
+            }
+
+            .sprint-title {
+                font-size: 14px;
             }
         }
 

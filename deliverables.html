@@ -469,6 +469,221 @@
             opacity: 0.6;
         }
 
+        /* Responsive - Tablets */
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .container {
+                padding: 30px 16px;
+            }
+
+            .category-section {
+                margin-bottom: 35px;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Responsive - Large Phones */
+        @media (max-width: 640px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-links-grid {
+                gap: 8px;
+            }
+
+            .quick-link {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+
+            .status-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        /* Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px 16px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .logo {
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 20px 16px;
+            }
+
+            .status-card {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .status-info h2 {
+                font-size: 18px;
+            }
+
+            .status-info p {
+                font-size: 13px;
+            }
+
+            .progress-circle {
+                width: 90px;
+                height: 90px;
+            }
+
+            .progress-text .percent {
+                font-size: 22px;
+            }
+
+            .progress-text .label {
+                font-size: 10px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .card-content {
+                padding: 16px;
+            }
+
+            .card-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .card-title {
+                font-size: 14px;
+            }
+
+            .card-subtitle {
+                font-size: 11px;
+            }
+
+            .card-description {
+                font-size: 12px;
+            }
+
+            .card-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+
+            .category-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .category-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .category-title {
+                font-size: 16px;
+            }
+
+            .category-count {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+
+            .quick-links {
+                padding: 16px;
+            }
+
+            .quick-links h3 {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+
+            .quick-links-grid {
+                flex-direction: column;
+            }
+
+            .quick-link {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 16px;
+                min-height: 44px;
+                font-size: 13px;
+            }
+
+            .platforms-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .platform-card {
+                padding: 16px;
+            }
+
+            .platform-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .platform-name {
+                font-size: 14px;
+            }
+
+            .platform-url {
+                font-size: 11px;
+            }
+
+            .footer {
+                padding: 30px 16px;
+            }
+
+            .footer h3 {
+                font-size: 16px;
+            }
+
+            .footer p {
+                font-size: 13px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .footer-links a {
+                font-size: 13px;
+            }
+        }
+
         /* Print Styles */
         @media print {
             .header { padding: 20px; }

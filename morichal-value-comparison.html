@@ -552,6 +552,124 @@
             }
         }
 
+        /* Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+            .header {
+                padding: 30px 16px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .header p {
+                font-size: 14px;
+            }
+            .logo {
+                font-size: 20px;
+            }
+            .card {
+                padding: 20px 16px;
+                margin-bottom: 20px;
+            }
+            .card h2 {
+                font-size: 1.2rem;
+            }
+            .card > p {
+                font-size: 0.9rem;
+            }
+            .comparison-box {
+                padding: 20px 16px;
+            }
+            .comparison-label {
+                font-size: 12px;
+            }
+            .comparison-price {
+                font-size: 28px;
+            }
+            .comparison-note {
+                font-size: 12px;
+            }
+            .vs-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .savings-banner {
+                padding: 20px 16px;
+            }
+            .savings-banner .amount {
+                font-size: 28px;
+            }
+            .savings-banner .label {
+                font-size: 13px;
+            }
+            .metrics-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .metric {
+                padding: 16px;
+            }
+            .metric .value {
+                font-size: 26px;
+            }
+            .metric .label {
+                font-size: 12px;
+            }
+            .table-container table th,
+            .table-container table td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+            .maint-card {
+                padding: 20px;
+            }
+            .maint-card h4 {
+                font-size: 16px;
+            }
+            .maint-card .price {
+                font-size: 24px;
+            }
+            .maint-card .features li {
+                font-size: 13px;
+            }
+            .summary-box {
+                padding: 25px 16px;
+            }
+            .summary-box h3 {
+                font-size: 18px;
+            }
+            .summary-item .value {
+                font-size: 28px;
+            }
+            .summary-item .label {
+                font-size: 13px;
+            }
+            .footer {
+                padding: 30px 16px;
+                font-size: 13px;
+            }
+            .insight-box {
+                padding: 16px;
+            }
+            .insight-box p {
+                font-size: 0.9rem;
+            }
+            .agent-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Table scroll wrapper for better mobile */
+        .table-container {
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-container table {
+            min-width: 500px;
+        }
+
         /* Print */
         @media print {
             .header, .summary-box, .savings-banner {

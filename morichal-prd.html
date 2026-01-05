@@ -405,6 +405,20 @@
             font-size: 14px;
         }
 
+        /* Table Wrapper for Mobile Scroll */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .table-wrapper table {
+            min-width: 500px;
+            margin: 0;
+        }
+
+        /* Responsive - Tablets */
         @media (max-width: 768px) {
             .header-stats {
                 grid-template-columns: repeat(2, 1fr);
@@ -414,6 +428,138 @@
             }
             .toc ul {
                 columns: 1;
+            }
+
+            .header {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .container {
+                padding: 20px 16px;
+            }
+        }
+
+        /* Responsive - Large Phones */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .header-stats {
+                gap: 12px;
+            }
+
+            .header-stat {
+                padding: 16px;
+            }
+
+            .header-stat .number {
+                font-size: 1.75rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card h2 {
+                font-size: 18px;
+            }
+        }
+
+        /* Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .header {
+                padding: 30px 16px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .header-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .header-stat {
+                padding: 12px;
+            }
+
+            .header-stat .number {
+                font-size: 1.5rem;
+            }
+
+            .header-stat .label {
+                font-size: 0.7rem;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card h2 {
+                font-size: 16px;
+            }
+
+            .card h3 {
+                font-size: 14px;
+            }
+
+            .toc {
+                padding: 16px;
+            }
+
+            .toc h3 {
+                font-size: 14px;
+            }
+
+            .toc li {
+                font-size: 12px;
+            }
+
+            .agent-card {
+                padding: 16px;
+            }
+
+            .agent-name {
+                font-size: 14px;
+            }
+
+            .agent-features li {
+                font-size: 12px;
+            }
+
+            .metric-card {
+                padding: 16px;
+            }
+
+            .metric-card .value {
+                font-size: 1.5rem;
+            }
+
+            .metric-card .label {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+                font-size: 12px;
             }
         }
 

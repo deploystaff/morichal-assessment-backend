@@ -291,6 +291,20 @@
             font-size: 14px;
         }
 
+        /* Table Wrapper for Mobile Scroll */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .table-wrapper table {
+            min-width: 500px;
+            margin: 0;
+        }
+
+        /* Responsive - Tablets */
         @media (max-width: 768px) {
             .comparison-grid {
                 grid-template-columns: 1fr;
@@ -298,6 +312,118 @@
             .meta-bar {
                 flex-direction: column;
                 gap: 15px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .container {
+                padding: 20px 16px;
+            }
+        }
+
+        /* Responsive - Large Phones */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .meta-item {
+                padding: 12px 16px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card h2 {
+                font-size: 18px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px 16px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .meta-bar {
+                gap: 10px;
+            }
+
+            .meta-item {
+                padding: 10px 14px;
+            }
+
+            .meta-label {
+                font-size: 10px;
+            }
+
+            .meta-value {
+                font-size: 13px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card h2 {
+                font-size: 16px;
+            }
+
+            .comparison-card .price {
+                font-size: 24px;
+            }
+
+            .comparison-card .period {
+                font-size: 12px;
+            }
+
+            .highlight-box {
+                padding: 25px 16px;
+            }
+
+            .highlight-box .big-number {
+                font-size: 28px;
+            }
+
+            .highlight-box p {
+                font-size: 14px;
+            }
+
+            .source-list {
+                font-size: 11px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+                font-size: 12px;
             }
         }
 
@@ -877,6 +1003,7 @@
         <div class="card">
             <h2>Summary: MorichalAI Value</h2>
 
+            <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
@@ -907,6 +1034,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
 
         <!-- Sources -->

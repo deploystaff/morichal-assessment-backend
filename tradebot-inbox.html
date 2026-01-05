@@ -741,6 +741,197 @@
                 justify-content: center;
             }
         }
+
+        /* Responsive - Small Phones */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .hero {
+                padding: 50px 16px;
+            }
+            .hero h1 {
+                font-size: 26px;
+            }
+            .hero p {
+                font-size: 15px;
+            }
+            .hero-badge {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+            }
+            .hero-cta .btn {
+                width: 100%;
+                justify-content: center;
+                min-height: 44px;
+            }
+            .btn {
+                padding: 12px 20px;
+                min-height: 44px;
+            }
+            .trust-badges {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .card {
+                padding: 20px 16px;
+                margin-bottom: 20px;
+            }
+            .card h2 {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            .pain-grid {
+                grid-template-columns: 1fr;
+            }
+            .pain-card {
+                padding: 20px;
+            }
+            .pain-icon {
+                font-size: 28px;
+            }
+            .pain-card h3 {
+                font-size: 16px;
+            }
+            .pain-card p {
+                font-size: 13px;
+            }
+            .solution-banner {
+                padding: 16px;
+                font-size: 14px;
+            }
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            .step h3 {
+                font-size: 16px;
+            }
+            .step p {
+                font-size: 13px;
+            }
+            .step code {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .feature-card {
+                padding: 20px;
+            }
+            .feature-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            .feature-card h3 {
+                font-size: 16px;
+            }
+            .feature-card p {
+                font-size: 13px;
+            }
+            .demo-container {
+                padding: 16px;
+            }
+            .demo-content {
+                padding: 16px;
+            }
+            .demo-input,
+            .demo-output {
+                font-size: 11px;
+                padding: 12px;
+            }
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .metric-card {
+                padding: 16px;
+            }
+            .metric-value {
+                font-size: 26px;
+            }
+            .metric-label {
+                font-size: 12px;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            .pricing-card {
+                padding: 24px 20px;
+            }
+            .pricing-price {
+                font-size: 32px;
+            }
+            .pricing-features li {
+                font-size: 14px;
+            }
+            .pricing-cta {
+                min-height: 44px;
+            }
+            .upsell-section {
+                padding: 30px 16px;
+            }
+            .upsell-section h2 {
+                font-size: 22px;
+            }
+            .upsell-section p {
+                font-size: 14px;
+            }
+            .upsell-features {
+                gap: 10px;
+            }
+            .upsell-feature {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            .faq-item {
+                padding: 18px;
+            }
+            .faq-item h4 {
+                font-size: 15px;
+            }
+            .faq-item p {
+                font-size: 13px;
+            }
+            .final-cta {
+                padding: 40px 16px;
+            }
+            .final-cta h2 {
+                font-size: 24px;
+            }
+            .final-cta p {
+                font-size: 15px;
+            }
+            .footer {
+                padding: 30px 16px;
+                font-size: 13px;
+            }
+        }
+
+        /* Table scroll wrapper */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+        }
+        .table-wrapper .comparison-table {
+            min-width: 450px;
+        }
     </style>
 </head>
 <body>
@@ -891,6 +1082,7 @@
         <!-- Comparison Section -->
         <section class="card">
             <h2>Manual vs. TradeBot Inbox</h2>
+            <div class="table-wrapper">
             <table class="comparison-table">
                 <thead>
                     <tr>
@@ -927,6 +1119,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </section>
 
         <!-- Metrics Section -->
