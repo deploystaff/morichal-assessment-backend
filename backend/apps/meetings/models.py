@@ -25,6 +25,14 @@ class Meeting(models.Model):
         related_name='meetings',
         db_column='client_id'
     )
+    sprint = models.ForeignKey(
+        'sprints.Sprint',
+        on_delete=models.SET_NULL,
+        related_name='meetings',
+        db_column='sprint_id',
+        blank=True,
+        null=True
+    )
     meeting_code = models.CharField(max_length=50)
     date = models.DateField()
     title = models.CharField(max_length=500)

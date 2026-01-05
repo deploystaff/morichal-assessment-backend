@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Sparkles,
   Loader2,
+  Presentation,
 } from 'lucide-react';
 import { Button, Card, CardHeader, CardBody, StatusBadge, Badge } from '../../common';
 import { QuestionList } from '../questions';
@@ -51,6 +52,7 @@ interface MeetingDetailProps {
   onSummaryDelete: () => void;
   onAnalyze?: () => Promise<void>;
   onViewSuggestions?: () => void;
+  onPresentationMode?: () => void;
   isUploading?: boolean;
   uploadProgress?: number;
   isAnalyzing?: boolean;
@@ -87,6 +89,7 @@ export function MeetingDetail({
   onSummaryDelete,
   onAnalyze,
   onViewSuggestions,
+  onPresentationMode,
   isUploading,
   uploadProgress,
   isAnalyzing,
@@ -157,6 +160,12 @@ export function MeetingDetail({
         </div>
 
         <div className="flex items-center gap-2">
+          {onPresentationMode && (
+            <Button variant="secondary" onClick={onPresentationMode}>
+              <Presentation className="w-4 h-4 mr-1" />
+              Present to Client
+            </Button>
+          )}
           {meeting.status === 'scheduled' && (
             <Button onClick={() => onStatusChange('in_progress')}>
               <Play className="w-4 h-4 mr-1" />

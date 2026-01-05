@@ -8,3 +8,5 @@ export * from './updates';
 export * from './blockers';
 export * from './attachments';
 export * from './summary';
+export * from './presentation';
+export * from './sprints';

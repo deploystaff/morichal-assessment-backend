@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.settings_app',
     'apps.transcription',
     'apps.authentication',
+    'apps.sprints',
 ]
 
 MIDDLEWARE = [

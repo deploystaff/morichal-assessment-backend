@@ -498,3 +498,179 @@ export function useDeleteSummary() {
     },
   });
 }
+
+// Sprint hooks
+export function useSprints() {
+  return useQuery({
+    queryKey: ['sprints'],
+    queryFn: api.sprints.list,
+  });
+}
+
+export function useSprint(id: string) {
+  return useQuery({
+    queryKey: ['sprints', id],
+    queryFn: () => api.sprints.get(id),
+    enabled: !!id,
+  });
+}
+
+export function useRoadmap() {
+  return useQuery({
+    queryKey: ['roadmap'],
+    queryFn: api.sprints.roadmap,
+  });
+}
+
+export function useCreateSprint() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.sprints.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useUpdateSprint() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof api.sprints.update>[1] }) =>
+      api.sprints.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteSprint() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.sprints.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+    },
+  });
+}
+
+export function useReorderSprints() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.sprints.reorder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+// Sprint Item hooks
+export function useSprintItems(sprintId?: string) {
+  return useQuery({
+    queryKey: ['sprintItems', sprintId],
+    queryFn: () => api.sprintItems.list(sprintId),
+  });
+}
+
+export function useCreateSprintItem() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.sprintItems.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprintItems'] });
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useUpdateSprintItem() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof api.sprintItems.update>[1] }) =>
+      api.sprintItems.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprintItems'] });
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteSprintItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.sprintItems.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprintItems'] });
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+    },
+  });
+}
+
+export function useCompleteSprintItem() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.sprintItems.complete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprintItems'] });
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useMoveSprintItem() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, sprintId, order }: { id: string; sprintId: string; order?: number }) =>
+      api.sprintItems.move(id, sprintId, order),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprintItems'] });
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useReorderSprintItems() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.sprintItems.reorder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sprintItems'] });
+      queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+      triggerSave();
+    },
+  });
+}

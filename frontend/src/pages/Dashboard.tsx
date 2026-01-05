@@ -6,6 +6,7 @@ import {
   RuleList,
   SettingsModal,
   SuggestionsModal,
+  PresentationView,
 } from '../components/features';
 import { Modal } from '../components/common';
 import { useUIStore } from '../store/uiStore';
@@ -103,6 +104,7 @@ export function Dashboard() {
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [presentationMode, setPresentationMode] = useState(false);
 
   // Fetch suggestions for selected meeting
   const { data: suggestions, isLoading: suggestionsLoading } = useSuggestions(selectedMeeting?.id || '');
@@ -270,6 +272,45 @@ export function Dashboard() {
     });
   };
 
+  // Presentation mode handler
+  const handleEnterPresentationMode = () => {
+    setPresentationMode(true);
+  };
+
+  const handleExitPresentationMode = () => {
+    setPresentationMode(false);
+  };
+
+  // Filter data for presentation view
+  const meetingQuestions = selectedMeeting
+    ? (data?.questions || []).filter((q) => q.asked_in_meeting === selectedMeeting.id)
+    : [];
+  const meetingActions = selectedMeeting
+    ? (data?.actionItems || []).filter((a) => a.from_meeting === selectedMeeting.id)
+    : [];
+  const meetingBlockers = selectedMeeting
+    ? (data?.blockers || []).filter((b) => b.meeting === selectedMeeting.id)
+    : [];
+
+  // Show presentation view when in presentation mode
+  if (presentationMode && selectedMeeting) {
+    return (
+      <PresentationView
+        meeting={selectedMeeting}
+        questions={meetingQuestions}
+        actions={meetingActions}
+        blockers={meetingBlockers}
+        summary={meetingSummary || null}
+        onExit={handleExitPresentationMode}
+        onQuestionUpdate={handleUpdateQuestion}
+        onActionUpdate={handleUpdateAction}
+        onActionAdd={handleAddAction}
+        onBlockerUpdate={handleUpdateBlocker}
+        onBlockerResolve={handleResolveBlocker}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header />
@@ -310,6 +351,7 @@ export function Dashboard() {
                 onSummaryDelete={handleDeleteSummary}
                 onAnalyze={handleAnalyze}
                 onViewSuggestions={() => setShowSuggestions(true)}
+                onPresentationMode={handleEnterPresentationMode}
                 isUploading={uploadTranscript.isPending}
                 isAnalyzing={analyzeTranscript.isPending}
                 suggestionCount={suggestions?.length || 0}

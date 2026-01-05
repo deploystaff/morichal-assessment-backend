@@ -13,6 +13,9 @@ import type {
   Blocker,
   Attachment,
   MeetingSummary,
+  Sprint,
+  SprintItem,
+  RoadmapSummary,
 } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
@@ -316,6 +319,76 @@ export const summary = {
   },
   delete: async (meetingId: string) => {
     await api.delete(`/${CLIENT_SLUG}/meetings/${meetingId}/summary/`);
+  },
+};
+
+// Sprints
+export const sprints = {
+  list: async () => {
+    const { data } = await api.get<Sprint[]>(`/${CLIENT_SLUG}/sprints/`);
+    return data;
+  },
+  get: async (id: string) => {
+    const { data } = await api.get<Sprint>(`/${CLIENT_SLUG}/sprints/${id}/`);
+    return data;
+  },
+  create: async (sprint: Partial<Sprint>) => {
+    const { data } = await api.post<Sprint>(`/${CLIENT_SLUG}/sprints/`, sprint);
+    return data;
+  },
+  update: async (id: string, sprint: Partial<Sprint>) => {
+    const { data } = await api.patch<Sprint>(`/${CLIENT_SLUG}/sprints/${id}/`, sprint);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/sprints/${id}/`);
+  },
+  reorder: async (items: { id: string; order: number }[]) => {
+    const { data } = await api.post(`/${CLIENT_SLUG}/sprints/reorder/`, { items });
+    return data;
+  },
+  roadmap: async () => {
+    const { data } = await api.get<RoadmapSummary>(`/${CLIENT_SLUG}/sprints/roadmap/`);
+    return data;
+  },
+};
+
+// Sprint Items
+export const sprintItems = {
+  list: async (sprintId?: string) => {
+    const params = sprintId ? { sprint: sprintId } : {};
+    const { data } = await api.get<SprintItem[]>(`/${CLIENT_SLUG}/sprint-items/`, { params });
+    return data;
+  },
+  get: async (id: string) => {
+    const { data } = await api.get<SprintItem>(`/${CLIENT_SLUG}/sprint-items/${id}/`);
+    return data;
+  },
+  create: async (item: Partial<SprintItem>) => {
+    const { data } = await api.post<SprintItem>(`/${CLIENT_SLUG}/sprint-items/`, item);
+    return data;
+  },
+  update: async (id: string, item: Partial<SprintItem>) => {
+    const { data } = await api.patch<SprintItem>(`/${CLIENT_SLUG}/sprint-items/${id}/`, item);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/sprint-items/${id}/`);
+  },
+  complete: async (id: string) => {
+    const { data } = await api.post<SprintItem>(`/${CLIENT_SLUG}/sprint-items/${id}/complete/`);
+    return data;
+  },
+  move: async (id: string, sprintId: string, order?: number) => {
+    const { data } = await api.post<SprintItem>(`/${CLIENT_SLUG}/sprint-items/${id}/move/`, {
+      sprint_id: sprintId,
+      order,
+    });
+    return data;
+  },
+  reorder: async (items: { id: string; order: number; sprint_id?: string }[]) => {
+    const { data } = await api.post(`/${CLIENT_SLUG}/sprint-items/reorder/`, { items });
+    return data;
   },
 };
 

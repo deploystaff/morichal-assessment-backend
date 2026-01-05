@@ -17,6 +17,7 @@ export interface Meeting {
   agenda: string | null;
   notes: string | null;
   status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  sprint: string | null;
   transcript_text: string | null;
   transcript_filename: string | null;
   transcript_uploaded_at: string | null;
@@ -178,6 +179,54 @@ export interface MeetingSummary {
   key_points: string[];
   created_at: string;
   updated_at: string;
+}
+
+// Sprint
+export interface Sprint {
+  id: string;
+  sprint_code: string;
+  name: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  status: 'planned' | 'in_progress' | 'delivered' | 'cancelled';
+  order: number;
+  color: string;
+  progress: number;
+  total_items: number;
+  completed_items: number;
+  items: SprintItem[];
+  created_at: string;
+  updated_at: string;
+}
+
+// Sprint Item
+export interface SprintItem {
+  id: string;
+  sprint: string;
+  item_code: string;
+  name: string;
+  description: string | null;
+  item_type: 'agent' | 'feature' | 'task' | 'bugfix';
+  status: 'planned' | 'in_progress' | 'completed' | 'blocked' | 'cancelled';
+  priority: 'high' | 'medium' | 'low';
+  order: number;
+  assigned_to: string | null;
+  estimated_hours: number | null;
+  actual_hours: number | null;
+  notes: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Roadmap Summary
+export interface RoadmapSummary {
+  sprints: Sprint[];
+  overall_progress: number;
+  total_items: number;
+  completed_items: number;
+  current_sprint: Omit<Sprint, 'items'> | null;
 }
 
 // All Data Response

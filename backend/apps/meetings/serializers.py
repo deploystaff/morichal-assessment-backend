@@ -7,7 +7,7 @@ class MeetingSerializer(serializers.ModelSerializer):
         model = Meeting
         fields = [
             'id', 'meeting_code', 'date', 'title', 'attendees', 'agenda', 'notes',
-            'status', 'transcript_text', 'transcript_filename', 'transcript_uploaded_at',
+            'status', 'sprint', 'transcript_text', 'transcript_filename', 'transcript_uploaded_at',
             'transcript_source', 'transcript_duration', 'transcript_language',
             'created_at', 'updated_at'
         ]
@@ -17,7 +17,7 @@ class MeetingSerializer(serializers.ModelSerializer):
 class MeetingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
-        fields = ['date', 'title', 'attendees', 'agenda', 'notes', 'status']
+        fields = ['date', 'title', 'attendees', 'agenda', 'notes', 'status', 'sprint']
 
     def create(self, validated_data):
         client = self.context['client']
