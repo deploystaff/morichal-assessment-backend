@@ -97,8 +97,12 @@ export function ActionList({ actions, onAdd, onUpdate, onDelete }: ActionListPro
             </span>
           )}
         </div>
-        <Button onClick={() => setIsModalOpen(true)} size="sm">
-          <Plus className="w-4 h-4 mr-1" />
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          size="md"
+          className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 shadow-md hover:shadow-lg transition-all"
+        >
+          <Plus className="w-5 h-5 mr-1.5" />
           Add Action
         </Button>
       </div>
@@ -130,10 +134,14 @@ export function ActionList({ actions, onAdd, onUpdate, onDelete }: ActionListPro
           }
           action={
             filter === 'all' && !searchQuery ? (
-              <Button onClick={() => setIsModalOpen(true)} size="sm">
-                <Plus className="w-4 h-4 mr-1" />
-                Add Action
-              </Button>
+              <Button
+              onClick={() => setIsModalOpen(true)}
+              size="md"
+              className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 shadow-md hover:shadow-lg transition-all"
+            >
+              <Plus className="w-5 h-5 mr-1.5" />
+              Add Action
+            </Button>
             ) : undefined
           }
         />

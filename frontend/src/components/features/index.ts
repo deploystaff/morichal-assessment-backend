@@ -4,3 +4,7 @@ export * from './actions';
 export * from './rules';
 export * from './settings';
 export * from './suggestions';
+export * from './updates';
+export * from './blockers';
+export * from './attachments';
+export * from './summary';

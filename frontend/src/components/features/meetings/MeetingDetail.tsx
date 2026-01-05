@@ -14,13 +14,21 @@ import {
 import { Button, Card, CardHeader, CardBody, StatusBadge, Badge } from '../../common';
 import { QuestionList } from '../questions';
 import { ActionList } from '../actions';
+import { UpdateList } from '../updates';
+import { BlockerList } from '../blockers';
+import { AttachmentList } from '../attachments';
+import { MeetingSummaryView } from '../summary';
 import { TranscriptUpload } from './TranscriptUpload';
-import type { Meeting, Question, ActionItem } from '../../../types';
+import type { Meeting, Question, ActionItem, Update, Blocker, Attachment, MeetingSummary } from '../../../types';
 
 interface MeetingDetailProps {
   meeting: Meeting;
   questions: Question[];
   actions: ActionItem[];
+  updates: Update[];
+  blockers: Blocker[];
+  attachments: Attachment[];
+  summary: MeetingSummary | null;
   onBack: () => void;
   onStatusChange: (status: Meeting['status']) => void;
   onTranscriptUpload: (file: File) => Promise<void>;
@@ -30,6 +38,17 @@ interface MeetingDetailProps {
   onActionAdd: (data: Partial<ActionItem>) => void;
   onActionUpdate: (id: string, data: Partial<ActionItem>) => void;
   onActionDelete: (id: string) => void;
+  onUpdateAdd: (data: Partial<Update>) => void;
+  onUpdateUpdate: (id: string, data: Partial<Update>) => void;
+  onUpdateDelete: (id: string) => void;
+  onBlockerAdd: (data: Partial<Blocker>) => void;
+  onBlockerUpdate: (id: string, data: Partial<Blocker>) => void;
+  onBlockerDelete: (id: string) => void;
+  onBlockerResolve: (id: string, resolution: string) => void;
+  onAttachmentAdd: (data: Partial<Attachment>) => void;
+  onAttachmentDelete: (id: string) => void;
+  onSummarySave: (data: Partial<MeetingSummary>) => void;
+  onSummaryDelete: () => void;
   onAnalyze?: () => Promise<void>;
   onViewSuggestions?: () => void;
   isUploading?: boolean;
@@ -42,6 +61,10 @@ export function MeetingDetail({
   meeting,
   questions,
   actions,
+  updates,
+  blockers,
+  attachments,
+  summary,
   onBack,
   onStatusChange,
   onTranscriptUpload,
@@ -51,6 +74,17 @@ export function MeetingDetail({
   onActionAdd,
   onActionUpdate,
   onActionDelete,
+  onUpdateAdd,
+  onUpdateUpdate,
+  onUpdateDelete,
+  onBlockerAdd,
+  onBlockerUpdate,
+  onBlockerDelete,
+  onBlockerResolve,
+  onAttachmentAdd,
+  onAttachmentDelete,
+  onSummarySave,
+  onSummaryDelete,
   onAnalyze,
   onViewSuggestions,
   isUploading,
@@ -58,7 +92,7 @@ export function MeetingDetail({
   isAnalyzing,
   suggestionCount,
 }: MeetingDetailProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'questions' | 'actions' | 'transcript'>(
+  const [activeTab, setActiveTab] = useState<'overview' | 'questions' | 'actions' | 'updates' | 'blockers' | 'attachments' | 'transcript' | 'summary'>(
     'overview'
   );
 
@@ -80,13 +114,21 @@ export function MeetingDetail({
 
   const meetingQuestions = questions.filter((q) => q.asked_in_meeting === meeting.id);
   const meetingActions = actions.filter((a) => a.from_meeting === meeting.id);
+  const meetingUpdates = updates.filter((u) => u.meeting === meeting.id);
+  const meetingBlockers = blockers.filter((b) => b.meeting === meeting.id);
+  const meetingAttachments = attachments.filter((a) => a.meeting === meeting.id);
+  const openBlockers = meetingBlockers.filter((b) => b.status !== 'resolved');
   const hasTranscript = Boolean(meeting.transcript_text);
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
     { id: 'questions', label: `Questions (${meetingQuestions.length})` },
     { id: 'actions', label: `Actions (${meetingActions.length})` },
+    { id: 'updates', label: `Updates (${meetingUpdates.length})` },
+    { id: 'blockers', label: `Blockers (${openBlockers.length})`, highlight: openBlockers.length > 0 },
+    { id: 'attachments', label: `Attachments (${meetingAttachments.length})` },
     { id: 'transcript', label: 'Transcript' },
+    { id: 'summary', label: 'Summary', highlight: Boolean(summary) },
   ];
 
   return (
@@ -159,18 +201,20 @@ export function MeetingDetail({
       </Card>
 
       {/* Tabs */}
-      <div className="border-b border-slate-200">
-        <nav className="flex gap-6">
+      <div className="border-b border-slate-200 overflow-x-auto">
+        <nav className="flex gap-4 md:gap-6 min-w-max">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`
-                pb-3 text-sm font-medium border-b-2 transition-colors
+                pb-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap
                 ${
                   activeTab === tab.id
                     ? 'border-primary text-primary'
-                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                    : tab.highlight
+                      ? 'border-transparent text-amber-600 hover:text-amber-700'
+                      : 'border-transparent text-slate-500 hover:text-slate-700'
                 }
               `}
             >
@@ -242,6 +286,44 @@ export function MeetingDetail({
           onAdd={(data) => onActionAdd({ ...data, from_meeting: meeting.id })}
           onUpdate={onActionUpdate}
           onDelete={onActionDelete}
+        />
+      )}
+
+      {activeTab === 'updates' && (
+        <UpdateList
+          updates={meetingUpdates}
+          onAdd={(data) => onUpdateAdd({ ...data, meeting: meeting.id })}
+          onUpdate={onUpdateUpdate}
+          onDelete={onUpdateDelete}
+          meetingId={meeting.id}
+        />
+      )}
+
+      {activeTab === 'blockers' && (
+        <BlockerList
+          blockers={meetingBlockers}
+          onAdd={(data) => onBlockerAdd({ ...data, meeting: meeting.id })}
+          onUpdate={onBlockerUpdate}
+          onDelete={onBlockerDelete}
+          onResolve={onBlockerResolve}
+          meetingId={meeting.id}
+        />
+      )}
+
+      {activeTab === 'attachments' && (
+        <AttachmentList
+          attachments={meetingAttachments}
+          onAdd={(data) => onAttachmentAdd({ ...data, meeting: meeting.id })}
+          onDelete={onAttachmentDelete}
+          meetingId={meeting.id}
+        />
+      )}
+
+      {activeTab === 'summary' && (
+        <MeetingSummaryView
+          summary={summary}
+          onSave={onSummarySave}
+          onDelete={onSummaryDelete}
         />
       )}
 

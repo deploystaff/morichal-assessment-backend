@@ -30,8 +30,20 @@ import {
   useRejectSuggestion,
   useSettings,
   useUpdateSettings,
+  useCreateUpdate,
+  useUpdateUpdate,
+  useDeleteUpdate,
+  useCreateBlocker,
+  useUpdateBlocker,
+  useDeleteBlocker,
+  useResolveBlocker,
+  useCreateAttachment,
+  useDeleteAttachment,
+  useMeetingSummary,
+  useSaveSummary,
+  useDeleteSummary,
 } from '../hooks/useData';
-import type { Meeting, Question, ActionItem, BusinessRule, ClientSettings } from '../types';
+import type { Meeting, Question, ActionItem, BusinessRule, ClientSettings, Update, Blocker, Attachment, MeetingSummary } from '../types';
 
 export function Dashboard() {
   const { data, isLoading } = useAllData();
@@ -58,6 +70,25 @@ export function Dashboard() {
   const updateRule = useUpdateBusinessRule();
   const deleteRule = useDeleteBusinessRule();
 
+  // Update mutations
+  const createUpdate = useCreateUpdate();
+  const updateUpdate = useUpdateUpdate();
+  const deleteUpdate = useDeleteUpdate();
+
+  // Blocker mutations
+  const createBlocker = useCreateBlocker();
+  const updateBlocker = useUpdateBlocker();
+  const deleteBlocker = useDeleteBlocker();
+  const resolveBlocker = useResolveBlocker();
+
+  // Attachment mutations
+  const createAttachment = useCreateAttachment();
+  const deleteAttachment = useDeleteAttachment();
+
+  // Summary mutations
+  const saveSummary = useSaveSummary();
+  const deleteSummary = useDeleteSummary();
+
   // Suggestions mutations
   const approveSuggestion = useApproveSuggestion();
   const rejectSuggestion = useRejectSuggestion();
@@ -75,6 +106,9 @@ export function Dashboard() {
 
   // Fetch suggestions for selected meeting
   const { data: suggestions, isLoading: suggestionsLoading } = useSuggestions(selectedMeeting?.id || '');
+
+  // Fetch summary for selected meeting
+  const { data: meetingSummary } = useMeetingSummary(selectedMeeting?.id || '');
 
   // Meeting handlers
   const handleAddMeeting = (meetingData: Partial<Meeting>) => {
@@ -171,6 +205,64 @@ export function Dashboard() {
     }
   };
 
+  // Update handlers
+  const handleAddUpdate = (updateData: Partial<Update>) => {
+    createUpdate.mutate(updateData as Parameters<typeof createUpdate.mutate>[0]);
+  };
+
+  const handleUpdateUpdate = (id: string, updateData: Partial<Update>) => {
+    updateUpdate.mutate({ id, data: updateData });
+  };
+
+  const handleDeleteUpdate = (id: string) => {
+    if (confirm('Are you sure you want to delete this update?')) {
+      deleteUpdate.mutate(id);
+    }
+  };
+
+  // Blocker handlers
+  const handleAddBlocker = (blockerData: Partial<Blocker>) => {
+    createBlocker.mutate(blockerData as Parameters<typeof createBlocker.mutate>[0]);
+  };
+
+  const handleUpdateBlocker = (id: string, blockerData: Partial<Blocker>) => {
+    updateBlocker.mutate({ id, data: blockerData });
+  };
+
+  const handleDeleteBlocker = (id: string) => {
+    if (confirm('Are you sure you want to delete this blocker?')) {
+      deleteBlocker.mutate(id);
+    }
+  };
+
+  const handleResolveBlocker = (id: string, resolution: string) => {
+    resolveBlocker.mutate({ id, resolution });
+  };
+
+  // Attachment handlers
+  const handleAddAttachment = (attachmentData: Partial<Attachment>) => {
+    createAttachment.mutate(attachmentData as Parameters<typeof createAttachment.mutate>[0]);
+  };
+
+  const handleDeleteAttachment = (id: string) => {
+    if (confirm('Are you sure you want to delete this attachment?')) {
+      deleteAttachment.mutate(id);
+    }
+  };
+
+  // Summary handlers
+  const handleSaveSummary = (summaryData: Partial<MeetingSummary>) => {
+    if (selectedMeeting) {
+      saveSummary.mutate({ meetingId: selectedMeeting.id, data: summaryData });
+    }
+  };
+
+  const handleDeleteSummary = () => {
+    if (selectedMeeting && confirm('Are you sure you want to delete this summary?')) {
+      deleteSummary.mutate(selectedMeeting.id);
+    }
+  };
+
   // Settings handlers
   const handleSaveSettings = (settingsData: Partial<ClientSettings>) => {
     updateSettings.mutate(settingsData, {
@@ -192,6 +284,10 @@ export function Dashboard() {
                 meeting={selectedMeeting}
                 questions={data?.questions || []}
                 actions={data?.actionItems || []}
+                updates={data?.updates || []}
+                blockers={data?.blockers || []}
+                attachments={data?.attachments || []}
+                summary={meetingSummary || null}
                 onBack={() => setSelectedMeeting(null)}
                 onStatusChange={handleMeetingStatusChange}
                 onTranscriptUpload={handleTranscriptUpload}
@@ -201,6 +297,17 @@ export function Dashboard() {
                 onActionAdd={handleAddAction}
                 onActionUpdate={handleUpdateAction}
                 onActionDelete={handleDeleteAction}
+                onUpdateAdd={handleAddUpdate}
+                onUpdateUpdate={handleUpdateUpdate}
+                onUpdateDelete={handleDeleteUpdate}
+                onBlockerAdd={handleAddBlocker}
+                onBlockerUpdate={handleUpdateBlocker}
+                onBlockerDelete={handleDeleteBlocker}
+                onBlockerResolve={handleResolveBlocker}
+                onAttachmentAdd={handleAddAttachment}
+                onAttachmentDelete={handleDeleteAttachment}
+                onSummarySave={handleSaveSummary}
+                onSummaryDelete={handleDeleteSummary}
                 onAnalyze={handleAnalyze}
                 onViewSuggestions={() => setShowSuggestions(true)}
                 isUploading={uploadTranscript.isPending}

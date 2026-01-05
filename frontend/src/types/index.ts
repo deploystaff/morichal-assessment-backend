@@ -123,6 +123,59 @@ export interface ClientSettings {
   usage_reset_date: string;
   openai_api_key_configured: boolean;
   openai_api_key_masked: string | null;
+  anthropic_api_key_configured: boolean;
+  anthropic_api_key_masked: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Update (Progress Report)
+export interface Update {
+  id: string;
+  update_code: string;
+  meeting: string;
+  author: string;
+  content: string;
+  category: 'development' | 'design' | 'testing' | 'documentation' | 'infrastructure' | 'general';
+  created_at: string;
+  updated_at: string;
+}
+
+// Blocker/Risk
+export interface Blocker {
+  id: string;
+  blocker_code: string;
+  meeting: string;
+  title: string;
+  description: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  status: 'open' | 'in_progress' | 'resolved';
+  owner: string | null;
+  resolution: string | null;
+  resolved_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Attachment
+export interface Attachment {
+  id: string;
+  meeting: string;
+  filename: string;
+  file_type: 'pdf' | 'doc' | 'image' | 'spreadsheet' | 'presentation' | 'link' | 'other';
+  file_url: string;
+  description: string | null;
+  uploaded_by: string | null;
+  created_at: string;
+}
+
+// Meeting Summary
+export interface MeetingSummary {
+  id: string;
+  meeting: string;
+  content: string;
+  generated_by: 'ai' | 'manual';
+  key_points: string[];
   created_at: string;
   updated_at: string;
 }
@@ -136,6 +189,9 @@ export interface AllDataResponse {
   businessRules: BusinessRule[];
   decisions: Decision[];
   actionItems: ActionItem[];
+  updates: Update[];
+  blockers: Blocker[];
+  attachments: Attachment[];
 }
 
 // User

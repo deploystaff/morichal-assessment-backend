@@ -9,6 +9,10 @@ import type {
   ClientSettings,
   Client,
   User,
+  Update,
+  Blocker,
+  Attachment,
+  MeetingSummary,
 } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
@@ -209,7 +213,7 @@ export const settings = {
     const { data } = await api.get<ClientSettings>(`/${CLIENT_SLUG}/settings/`);
     return data;
   },
-  update: async (settings: Partial<ClientSettings>) => {
+  update: async (settings: Partial<ClientSettings> & { openai_api_key?: string; anthropic_api_key?: string }) => {
     const { data } = await api.patch<ClientSettings>(`/${CLIENT_SLUG}/settings/`, settings);
     return data;
   },
@@ -221,11 +225,97 @@ export const settings = {
     const { data } = await api.post(`/${CLIENT_SLUG}/settings/reset-usage/`);
     return data;
   },
-  validateApiKey: async (apiKey: string) => {
-    const { data } = await api.post<{ valid: boolean }>(`/${CLIENT_SLUG}/transcription/validate-key/`, {
+  validateApiKey: async (apiKey: string, provider: 'openai' | 'anthropic' = 'openai') => {
+    const { data } = await api.post<{ valid: boolean; provider: string }>(`/${CLIENT_SLUG}/transcription/validate-key/`, {
       api_key: apiKey,
+      provider,
     });
     return data;
+  },
+};
+
+// Updates (Progress Reports)
+export const updates = {
+  list: async (meetingId?: string) => {
+    const params = meetingId ? { meeting: meetingId } : {};
+    const { data } = await api.get<Update[]>(`/${CLIENT_SLUG}/updates/`, { params });
+    return data;
+  },
+  get: async (id: string) => {
+    const { data } = await api.get<Update>(`/${CLIENT_SLUG}/updates/${id}/`);
+    return data;
+  },
+  create: async (update: Partial<Update>) => {
+    const { data } = await api.post<Update>(`/${CLIENT_SLUG}/updates/`, update);
+    return data;
+  },
+  update: async (id: string, update: Partial<Update>) => {
+    const { data } = await api.patch<Update>(`/${CLIENT_SLUG}/updates/${id}/`, update);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/updates/${id}/`);
+  },
+};
+
+// Blockers (Risks)
+export const blockers = {
+  list: async (meetingId?: string, status?: string) => {
+    const params: Record<string, string> = {};
+    if (meetingId) params.meeting = meetingId;
+    if (status) params.status = status;
+    const { data } = await api.get<Blocker[]>(`/${CLIENT_SLUG}/blockers/`, { params });
+    return data;
+  },
+  get: async (id: string) => {
+    const { data } = await api.get<Blocker>(`/${CLIENT_SLUG}/blockers/${id}/`);
+    return data;
+  },
+  create: async (blocker: Partial<Blocker>) => {
+    const { data } = await api.post<Blocker>(`/${CLIENT_SLUG}/blockers/`, blocker);
+    return data;
+  },
+  update: async (id: string, blocker: Partial<Blocker>) => {
+    const { data } = await api.patch<Blocker>(`/${CLIENT_SLUG}/blockers/${id}/`, blocker);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/blockers/${id}/`);
+  },
+  resolve: async (id: string, resolution: string) => {
+    const { data } = await api.post<Blocker>(`/${CLIENT_SLUG}/blockers/${id}/resolve/`, { resolution });
+    return data;
+  },
+};
+
+// Attachments
+export const attachments = {
+  list: async (meetingId?: string) => {
+    const params = meetingId ? { meeting: meetingId } : {};
+    const { data } = await api.get<Attachment[]>(`/${CLIENT_SLUG}/attachments/`, { params });
+    return data;
+  },
+  create: async (attachment: Partial<Attachment>) => {
+    const { data } = await api.post<Attachment>(`/${CLIENT_SLUG}/attachments/`, attachment);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/attachments/${id}/`);
+  },
+};
+
+// Meeting Summary
+export const summary = {
+  get: async (meetingId: string) => {
+    const { data } = await api.get<MeetingSummary>(`/${CLIENT_SLUG}/meetings/${meetingId}/summary/`);
+    return data;
+  },
+  save: async (meetingId: string, summaryData: Partial<MeetingSummary>) => {
+    const { data } = await api.post<MeetingSummary>(`/${CLIENT_SLUG}/meetings/${meetingId}/summary/`, summaryData);
+    return data;
+  },
+  delete: async (meetingId: string) => {
+    await api.delete(`/${CLIENT_SLUG}/meetings/${meetingId}/summary/`);
   },
 };
 

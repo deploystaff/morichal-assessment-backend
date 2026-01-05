@@ -19,8 +19,10 @@ def client_all_data(request, client_slug):
     """Get all data for a client (meetings, questions, etc.)."""
     from django.shortcuts import get_object_or_404
     from apps.clients.models import Client
-    from apps.meetings.models import Meeting
-    from apps.meetings.serializers import MeetingSerializer
+    from apps.meetings.models import Meeting, Update, Blocker, Attachment
+    from apps.meetings.serializers import (
+        MeetingSerializer, UpdateSerializer, BlockerSerializer, AttachmentSerializer
+    )
     from apps.questions.models import Question
     from apps.questions.serializers import QuestionSerializer
     from apps.rules.models import BusinessRule, Decision
@@ -31,13 +33,16 @@ def client_all_data(request, client_slug):
     client = get_object_or_404(Client, slug=client_slug)
 
     return Response({
-        'version': '2.0',
+        'version': '2.1',
         'lastUpdated': client.updated_at,
         'meetings': MeetingSerializer(Meeting.objects.filter(client=client), many=True).data,
         'questions': QuestionSerializer(Question.objects.filter(client=client), many=True).data,
         'businessRules': BusinessRuleSerializer(BusinessRule.objects.filter(client=client), many=True).data,
         'decisions': DecisionSerializer(Decision.objects.filter(client=client), many=True).data,
         'actionItems': ActionItemSerializer(ActionItem.objects.filter(client=client), many=True).data,
+        'updates': UpdateSerializer(Update.objects.filter(client=client), many=True).data,
+        'blockers': BlockerSerializer(Blocker.objects.filter(client=client), many=True).data,
+        'attachments': AttachmentSerializer(Attachment.objects.filter(client=client), many=True).data,
     })
 
 

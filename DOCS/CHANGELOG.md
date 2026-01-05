@@ -4,6 +4,87 @@ All notable changes to this project are documented here.
 
 ---
 
+## 2026-01-05 (Update 22)
+
+### Added
+- **Settings Modal: API Keys Section**
+  - New dedicated section for LLM API key management
+  - Support for both Anthropic (Claude) and OpenAI keys
+  - Password inputs with show/hide toggle (Eye/EyeOff icons)
+  - Status badges showing "Connected" or "Not configured"
+  - Masked key display for configured keys (e.g., `sk-ant-api03-...xxxx`)
+
+### UI Improvements
+- **Complete Settings Modal Redesign**
+  - Color-coded section headers with gradient backgrounds
+  - Icon badges for each section (Key, Bot, Mic, Bell, BarChart)
+  - Improved visual hierarchy and spacing
+  - Dynamic AI model options based on selected provider
+  - Better slider styling for auto-approve threshold
+  - Hover effects on notification checkboxes
+  - Stats cards with subtle background colors
+
+### Backend Changes
+| File | Change |
+|------|--------|
+| `backend/apps/settings_app/models.py` | Added `anthropic_api_key` field, `mask_anthropic_key()` method |
+| `backend/apps/settings_app/serializers.py` | Added `anthropic_api_key_configured`, `anthropic_api_key_masked` fields |
+| `backend/apps/settings_app/views.py` | Updated ValidateKeyView to support both OpenAI and Anthropic |
+
+### Frontend Changes
+| File | Change |
+|------|--------|
+| `frontend/src/types/index.ts` | Added `anthropic_api_key_configured`, `anthropic_api_key_masked` to ClientSettings |
+| `frontend/src/services/api.ts` | Updated `validateApiKey` to accept provider parameter |
+| `frontend/src/components/features/settings/SettingsModal.tsx` | Complete rewrite with new API Keys section and improved UI |
+
+### Database
+- Added `anthropic_api_key` column to `client_settings` table via SQL
+
+### Deployed
+- Backend: Railway (django-api-production-7177.up.railway.app)
+- Frontend: Netlify (morichalai-assessment.netlify.app)
+
+---
+
+## 2026-01-05 (Update 21)
+
+### Fixed
+- **Questions Not Showing in Thierry Meeting**
+  - Root cause: All 7 questions had `asked_in_meeting: null` in database
+  - Fix: PATCH'd each question to set `asked_in_meeting` to meeting UUID
+  - All questions now appear in meeting detail view
+
+### Database Updates
+```sql
+-- Questions linked to Thierry Meeting (f4097fa5-c122-4748-9643-0f0164515ac7)
+UPDATE questions SET asked_in_meeting = 'f4097fa5-c122-4748-9643-0f0164515ac7' WHERE id IN (...)
+```
+
+---
+
+## 2026-01-05 (Update 20)
+
+### Fixed
+- **Deliverables Page: Meeting Portal Link**
+  - Changed link from `meeting-portal.html` to `https://morichalai-assessment.netlify.app`
+  - Updated Quick Navigation section (line 741)
+  - Updated Project Management card (lines 960-966)
+  - Card subtitle changed to "React + Django App"
+  - Description updated to mention "AI transcript analysis with Claude integration"
+
+### Configuration Fix
+- **Netlify Site Linking**
+  - Root folder was linked to wrong Netlify site (morichalai-assessment instead of morichal-sprint1-report)
+  - Fixed `.netlify/state.json` to point to correct site ID: `75102d47-5bf1-4c19-abf0-3e303438df45`
+  - Created `frontend/.netlify/state.json` with React app site ID: `c1bf4513-ea6d-4caf-8d22-668eb29e1884`
+
+### Deployed
+- Deliverables: https://morichalai.deploystaff.com
+- Meeting Portal: https://morichalai-assessment.netlify.app
+
+---
+
 ## 2026-01-05 (Update 19)
 
 ### Added

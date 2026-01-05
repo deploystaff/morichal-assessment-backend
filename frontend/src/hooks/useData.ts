@@ -317,3 +317,184 @@ export function useUpdateSettings() {
     },
   });
 }
+
+// Updates hooks
+export function useUpdates(meetingId?: string) {
+  return useQuery({
+    queryKey: ['updates', meetingId],
+    queryFn: () => api.updates.list(meetingId),
+  });
+}
+
+export function useCreateUpdate() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.updates.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['updates'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useUpdateUpdate() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof api.updates.update>[1] }) =>
+      api.updates.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['updates'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteUpdate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.updates.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['updates'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+    },
+  });
+}
+
+// Blockers hooks
+export function useBlockers(meetingId?: string, status?: string) {
+  return useQuery({
+    queryKey: ['blockers', meetingId, status],
+    queryFn: () => api.blockers.list(meetingId, status),
+  });
+}
+
+export function useCreateBlocker() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.blockers.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blockers'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useUpdateBlocker() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof api.blockers.update>[1] }) =>
+      api.blockers.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blockers'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteBlocker() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.blockers.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blockers'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+    },
+  });
+}
+
+export function useResolveBlocker() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, resolution }: { id: string; resolution: string }) =>
+      api.blockers.resolve(id, resolution),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blockers'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+      triggerSave();
+    },
+  });
+}
+
+// Attachments hooks
+export function useAttachments(meetingId?: string) {
+  return useQuery({
+    queryKey: ['attachments', meetingId],
+    queryFn: () => api.attachments.list(meetingId),
+  });
+}
+
+export function useCreateAttachment() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.attachments.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attachments'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteAttachment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.attachments.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attachments'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+    },
+  });
+}
+
+// Meeting Summary hooks
+export function useMeetingSummary(meetingId: string) {
+  return useQuery({
+    queryKey: ['summary', meetingId],
+    queryFn: () => api.summary.get(meetingId),
+    enabled: !!meetingId,
+  });
+}
+
+export function useSaveSummary() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ meetingId, data }: { meetingId: string; data: Parameters<typeof api.summary.save>[1] }) =>
+      api.summary.save(meetingId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['summary'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteSummary() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.summary.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['summary'] });
+    },
+  });
+}

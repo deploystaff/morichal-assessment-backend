@@ -54,7 +54,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
           `}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 flex-shrink-0">
             <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
             <button
               onClick={onClose}
@@ -64,8 +64,8 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
             </button>
           </div>
 
-          {/* Content */}
-          <div className="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+          {/* Content - scrollable with footer staying visible */}
+          <div className="px-6 py-4 overflow-y-auto flex-1 min-h-0" style={{ maxHeight: 'calc(100vh - 180px)' }}>
             {children}
           </div>
         </div>

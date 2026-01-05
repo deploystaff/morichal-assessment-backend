@@ -25,6 +25,29 @@ MorichalAI Sprint 2 Assessment Report website is live and operational. This is a
 
 ## Recent Activity
 
+- **Settings Modal: API Keys & UI Redesign** (2026-01-05)
+  - New API Keys section for entering OpenAI and Anthropic keys
+  - Password inputs with show/hide toggle (eye icon)
+  - Status badges: "Connected" (green) or "Not configured" (gray)
+  - Masked key display when configured (e.g., `sk-ant-...xxxx`)
+  - Color-coded section headers with icons (Key, Bot, Mic, Bell, BarChart)
+  - Dynamic model selection based on provider choice
+  - Backend updated with `anthropic_api_key` field
+  - Key validation endpoint supports both providers
+  - Deployed to Railway (backend) and Netlify (frontend)
+
+- **Meeting Portal Bug Fix: Questions in Meetings** (2026-01-05)
+  - Fixed: Questions not appearing inside Thierry meeting
+  - Root cause: All questions had `asked_in_meeting: null`
+  - Solution: PATCH'd all 7 questions to link to meeting ID
+  - All questions now correctly display in meeting detail view
+
+- **Deliverables Page: Meeting Portal Link Fix** (2026-01-05)
+  - Fixed link pointing to legacy HTML instead of React app
+  - Updated Quick Navigation and Project Management card
+  - Link now opens React Meeting Portal at correct URL
+  - Fixed Netlify site configuration for proper deployment
+
 - **Comprehensive Mobile Responsive CSS** (2026-01-05)
   - Added 1,834 lines of responsive CSS across all 11 deliverables pages
   - Breakpoints: 480px (small phones), 640px (large phones), 768px (tablets)
