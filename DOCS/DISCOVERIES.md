@@ -4,6 +4,116 @@ Important findings, gotchas, and technical decisions.
 
 ---
 
+## 2026-01-05 (Update 11)
+
+### Comprehensive Mobile Responsive CSS Implementation
+
+**Objective**: Make all 11 deliverables pages fully responsive for mobile devices (320px to desktop).
+
+**Breakpoint Strategy**:
+```css
+@media (max-width: 480px) { }  /* Small phones - iPhone SE, older Android */
+@media (max-width: 640px) { }  /* Large phones - iPhone 14, Galaxy S */
+@media (max-width: 768px) { }  /* Tablets - iPad Mini */
+@media (max-width: 899px) { }  /* Large tablets - meeting-portal.html only */
+```
+
+**Key Patterns Applied**:
+
+1. **Header Reduction** (all files):
+```css
+@media (max-width: 480px) {
+    .header, header { padding: 25px 16px; }
+    .header h1, header h1 { font-size: 22px; }
+    .header p, header p { font-size: 14px; }
+}
+```
+
+2. **Touch-Friendly Buttons** (WCAG 44px minimum):
+```css
+@media (max-width: 480px) {
+    .btn { padding: 12px 16px; min-height: 44px; }
+    .btn-group { flex-direction: column; width: 100%; }
+    .btn-group .btn { width: 100%; justify-content: center; }
+}
+```
+
+3. **Grid Collapse** (single column on mobile):
+```css
+@media (max-width: 480px) {
+    .cards-grid, .agents-grid, .features-grid, .pricing-grid,
+    .comparison-grid, .metrics-grid, .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+```
+
+4. **Table Scroll Wrapper** (prevents horizontal overflow):
+```css
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+.table-wrapper table { min-width: 500px; margin: 0; }
+```
+
+**HTML for Table Wrapping**:
+```html
+<!-- Before -->
+<table class="pricing-table">...</table>
+
+<!-- After -->
+<div class="table-wrapper">
+    <table class="pricing-table">...</table>
+</div>
+```
+
+**Files Requiring Table Wrappers**:
+| File | Tables Wrapped |
+|------|----------------|
+| competitive-pricing-research.html | 11 tables |
+| morichal-prd.html | 11 tables |
+| UAP-MORICHAL-2026.html | 3 tables (phase1, phase2, phase3) |
+| proposal-recap.html | 2 tables |
+| ai-operations-proposal.html | 1 table |
+| tradebot-inbox.html | 1 table |
+
+**Special Case: meeting-portal.html**
+
+The meeting portal had an **inverted media query** (`min-width: 900px` instead of `max-width`). This was intentional for desktop-first design but required adding proper mobile breakpoints:
+
+```css
+/* Original desktop-first approach */
+@media (min-width: 900px) {
+    .content-grid { grid-template-columns: 1fr 380px; }
+}
+
+/* Added mobile breakpoints */
+@media (max-width: 899px) { /* Large tablets */ }
+@media (max-width: 768px) { /* Tablets */ }
+@media (max-width: 640px) { /* Large phones */ }
+@media (max-width: 480px) { /* Small phones */ }
+```
+
+**Testing**:
+- Playwright browser resized to 375x812 (iPhone 14 viewport)
+- Visual verification with screenshots
+- Tested deliverables.html and meeting-portal.html
+
+**Gotchas**:
+1. **Container padding**: Use `16px` on mobile, not `20px` - saves horizontal space
+2. **Font scaling**: Don't go below `13px` for body text (accessibility)
+3. **Table min-width**: Set to `400-600px` depending on column count
+4. **Modal max-width**: Use `calc(100vw - 20px)` instead of fixed pixels
+5. **Stats grids**: 2 columns on 640px, single column on 480px works well
+
+**Total Lines Added**: 1,834 across 11 files
+
+---
+
 ## 2026-01-04 (Update 10)
 
 ### Meeting Portal AI Transcript Analysis
