@@ -4,6 +4,64 @@ All notable changes to this project are documented here.
 
 ---
 
+## 2026-01-05 (Update 18)
+
+### Added
+- **Meeting Portal: React + Django Migration**
+  - Complete rewrite from 3,037-line monolithic HTML to modern stack
+  - **Frontend** (`frontend/`): React 18 + Vite + TypeScript + Tailwind CSS
+  - **Backend** (`backend/`): Django REST Framework + PostgreSQL
+  - Component-based architecture with 40+ reusable components
+  - React Query for server state management
+  - Zustand for UI state management
+
+### New Features
+- **Meeting-First Interface**
+  - Removed top-level Questions/Actions/Rules tabs
+  - Meetings are now the central navigation entity
+  - Users must select a meeting to view/create questions and actions
+  - Business Rules moved to sidebar with modal management
+
+- **AI Suggestions System**
+  - `SuggestionsModal` with approve/reject workflow
+  - `SuggestionList` with filtering by status and type
+  - `SuggestionItem` with confidence scoring and color coding
+  - Analyze with AI button on transcript tab
+
+- **Enhanced Transcript Upload**
+  - `TranscriptUpload` component with drag-and-drop
+  - Audio file detection (mp3, wav, m4a)
+  - "Will be transcribed using OpenAI Whisper" notice
+  - 25MB file size validation
+  - Progress bar during upload
+
+### Frontend Structure
+| Directory | Contents |
+|-----------|----------|
+| `src/components/common/` | Button, Card, Modal, Badge, Input, Select, etc. |
+| `src/components/layout/` | Header, Sidebar, StatsBar, SaveIndicator |
+| `src/components/features/` | Meetings, Questions, Actions, Rules, Suggestions |
+| `src/hooks/` | React Query hooks for all API operations |
+| `src/services/` | API client with full CRUD operations |
+| `src/store/` | Zustand stores for UI state |
+| `src/types/` | TypeScript interfaces |
+| `src/pages/` | Dashboard page component |
+
+### Backend Structure
+| Directory | Contents |
+|-----------|----------|
+| `api/models.py` | Django models for all entities |
+| `api/serializers.py` | DRF serializers |
+| `api/views.py` | ViewSets and API views |
+| `api/urls.py` | URL routing |
+
+### Deployed
+- **Frontend**: https://morichalai-assessment.netlify.app
+- **Backend API**: https://django-api-production-7177.up.railway.app
+- **API Endpoints**: `/api/morichal/meetings/`, `/api/morichal/questions/`, etc.
+
+---
+
 ## 2026-01-04 (Update 17)
 
 ### Added

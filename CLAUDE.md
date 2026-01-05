@@ -72,6 +72,17 @@ For any development request, execute skills in this order:
 - **Use /projects** for project lifecycle management (start, stop, register)
 - **Always run /projects before publishing** - Check available ports before deploying any project live on this server to avoid port conflicts
 
+## Customer-Facing Documents - DO NOT MODIFY
+
+The following sites contain customer-facing documents that should NEVER be modified without explicit permission:
+
+- **morichalai.deploystaff.com** - Client deliverables site
+  - `deliverables.html` - Main deliverables index
+  - `index.html` - Sprint 2 Assessment
+  - All other HTML files on this domain (proposals, PRD, UAP, etc.)
+
+These are polished, client-ready documents. Any changes require explicit user approval. Do NOT add links, modify content, or change styling without being asked.
+
 ## Folder Structure
 
 Maintain these documentation folders:

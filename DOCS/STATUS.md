@@ -1,6 +1,6 @@
 # Project Status
 
-**Last Updated**: 2026-01-04
+**Last Updated**: 2026-01-05
 **Project Health**: Active
 **Current Phase**: Sprint 3 - Analytics & Logistics
 
@@ -20,8 +20,20 @@ MorichalAI Sprint 2 Assessment Report website is live and operational. This is a
 | Sprint 3 | 🔄 In Progress (7/10) |
 | Live URL | https://morichalai.deploystaff.com |
 | Platform URL | https://dev.morichalai.com |
+| Meeting Portal | https://morichalai-assessment.netlify.app |
+| Meeting Portal API | https://django-api-production-7177.up.railway.app |
 
 ## Recent Activity
+
+- **Meeting Portal: React + Django Migration** (2026-01-05)
+  - Complete rewrite from 3,037-line monolithic HTML to modern React + Django stack
+  - **Frontend**: React 18 + Vite + TypeScript + Tailwind CSS
+  - **Backend**: Django REST Framework with PostgreSQL
+  - **Meeting-First Interface**: Removed top-level tabs, meetings are now the central entity
+  - **AI Features**: Suggestions modal, transcript upload with audio detection, analyze button
+  - **Business Rules**: Moved to sidebar with modal management
+  - Deployed: Frontend on Netlify, Backend on Railway
+  - Full CRUD for meetings, questions, actions, business rules
 
 - **Meeting Portal AI Transcript Analysis** (2026-01-04)
   - Transcript upload: .txt, .pdf, .json file support
@@ -142,7 +154,9 @@ MorichalAI Sprint 2 Assessment Report website is live and operational. This is a
 ### Project Management
 | Document | File | URL |
 |----------|------|-----|
-| Meeting Portal | `meeting-portal.html` | [View](https://morichalai.deploystaff.com/meeting-portal.html) |
+| Meeting Portal (React) | `frontend/` | [View](https://morichalai-assessment.netlify.app) |
+| Meeting Portal API | `backend/` | [API](https://django-api-production-7177.up.railway.app/api/morichal/all/) |
+| Meeting Portal (Legacy) | `meeting-portal.html` | [View](https://morichalai.deploystaff.com/meeting-portal.html) |
 
 ### Index
 - **Deliverables Index**: `deliverables.html` - [View](https://morichalai.deploystaff.com/deliverables.html)
