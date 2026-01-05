@@ -88,11 +88,12 @@ class ResetUsageView(APIView):
 
 
 class ValidateKeyView(APIView):
-    """View to validate OpenAI API key."""
+    """View to validate API keys for OpenAI and Anthropic."""
 
     def post(self, request, client_slug):
-        """Validate an OpenAI API key."""
+        """Validate an API key based on provider."""
         api_key = request.data.get('api_key', '')
+        provider = request.data.get('provider', 'openai')
 
         if not api_key:
             return Response(
@@ -100,13 +101,27 @@ class ValidateKeyView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Basic format validation
-        if not api_key.startswith('sk-'):
+        # Validate based on provider
+        if provider == 'openai':
+            # OpenAI keys start with sk-
+            if not api_key.startswith('sk-'):
+                return Response(
+                    {'valid': False, 'error': 'Invalid OpenAI API key format. Keys should start with "sk-"'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        elif provider == 'anthropic':
+            # Anthropic keys start with sk-ant-
+            if not api_key.startswith('sk-ant-'):
+                return Response(
+                    {'valid': False, 'error': 'Invalid Anthropic API key format. Keys should start with "sk-ant-"'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        else:
             return Response(
-                {'valid': False, 'error': 'Invalid API key format'},
+                {'valid': False, 'error': f'Unknown provider: {provider}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # TODO: Actually validate with OpenAI API
+        # TODO: Actually validate with provider APIs
         # For now, just check format
-        return Response({'valid': True})
+        return Response({'valid': True, 'provider': provider})

@@ -46,6 +46,7 @@ class ClientSettings(models.Model):
 
     # API Keys (encrypted in production)
     openai_api_key = models.TextField(blank=True, null=True)
+    anthropic_api_key = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -58,10 +59,18 @@ class ClientSettings(models.Model):
     def __str__(self):
         return f"Settings for {self.client.name}"
 
-    def mask_api_key(self):
-        """Return masked API key for display."""
+    def mask_openai_key(self):
+        """Return masked OpenAI API key for display."""
         if not self.openai_api_key:
             return None
         if len(self.openai_api_key) <= 8:
             return '****'
-        return '****' + self.openai_api_key[-4:]
+        return self.openai_api_key[:7] + '...' + self.openai_api_key[-4:]
+
+    def mask_anthropic_key(self):
+        """Return masked Anthropic API key for display."""
+        if not self.anthropic_api_key:
+            return None
+        if len(self.anthropic_api_key) <= 8:
+            return '****'
+        return self.anthropic_api_key[:10] + '...' + self.anthropic_api_key[-4:]
