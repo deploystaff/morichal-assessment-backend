@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Button, Textarea, Select } from '../../common';
+import { Modal, Button, Textarea, Select, RichTextEditor } from '../../common';
 import type { Question } from '../../../types';
 
 interface QuestionModalProps {
@@ -100,12 +100,12 @@ export function QuestionModal({
           required
         />
 
-        <Textarea
+        <RichTextEditor
           label="Answer"
           value={formData.answer}
-          onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, answer: value })}
           placeholder="Enter the answer (if known)..."
-          rows={3}
+          minHeight="120px"
         />
 
         <div className="grid grid-cols-2 gap-4">

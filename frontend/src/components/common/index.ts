@@ -5,3 +5,4 @@ export { Modal, ModalFooter } from './Modal';
 export { FormGroup, Input, Textarea, Select } from './FormGroup';
 export { FilterTabs } from './FilterTabs';
 export { EmptyState } from './EmptyState';
+export { RichTextEditor, RichTextContent } from './RichTextEditor';

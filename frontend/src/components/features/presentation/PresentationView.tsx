@@ -19,12 +19,21 @@ interface PresentationViewProps {
   blockers: Blocker[];
   summary: MeetingSummary | null;
   onExit: () => void;
-  // Mutation handlers
+  // Question handlers
+  onQuestionAdd: (data: Partial<Question>) => void;
   onQuestionUpdate: (id: string, data: Partial<Question>) => void;
-  onActionUpdate: (id: string, data: Partial<ActionItem>) => void;
+  onQuestionDelete: (id: string) => void;
+  // Action handlers
   onActionAdd: (data: Partial<ActionItem>) => void;
+  onActionUpdate: (id: string, data: Partial<ActionItem>) => void;
+  onActionDelete: (id: string) => void;
+  // Blocker handlers
+  onBlockerAdd: (data: Partial<Blocker>) => void;
   onBlockerUpdate: (id: string, data: Partial<Blocker>) => void;
+  onBlockerDelete: (id: string) => void;
   onBlockerResolve: (id: string, resolution: string) => void;
+  // Summary handlers
+  onSummaryUpdate: (data: Partial<MeetingSummary>) => void;
 }
 
 export function PresentationView({
@@ -34,14 +43,20 @@ export function PresentationView({
   blockers,
   summary,
   onExit,
+  onQuestionAdd,
   onQuestionUpdate,
-  onActionUpdate,
+  onQuestionDelete,
   onActionAdd,
+  onActionUpdate,
+  onActionDelete,
+  onBlockerAdd,
   onBlockerUpdate,
+  onBlockerDelete,
   onBlockerResolve,
+  onSummaryUpdate,
 }: PresentationViewProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [currentSection, setCurrentSection] = useState('summary');
+  const [currentSection, setCurrentSection] = useState('roadmap');
 
   // Fetch roadmap data
   const { data: roadmap, isLoading: roadmapLoading } = useRoadmap();
@@ -56,14 +71,14 @@ export function PresentationView({
   const openBlockers = blockers.filter(b => b.status !== 'resolved').length;
   const criticalBlockers = blockers.filter(b => b.severity === 'critical' && b.status !== 'resolved').length;
 
-  // Section navigation data
+  // Section navigation data - Roadmap is first (primary focus)
   const sections = [
+    { id: 'roadmap', label: 'Roadmap', icon: Rocket, count: roadmap?.sprints?.length || 0 },
     { id: 'summary', label: 'Summary', icon: FileText, count: summary?.key_points?.length || 0 },
     { id: 'questions', label: 'Questions', icon: HelpCircle, count: questions.length, hasAttention: pendingQuestions > 0 },
     { id: 'actions', label: 'Actions', icon: CheckSquare, count: actions.length, hasAttention: overdueActions > 0 },
     { id: 'blockers', label: 'Blockers', icon: AlertTriangle, count: blockers.length, hasAttention: criticalBlockers > 0 },
     { id: 'next-steps', label: 'Next Steps', icon: ArrowRight, count: 0 },
-    { id: 'roadmap', label: 'Roadmap', icon: Rocket, count: roadmap?.sprints?.length || 0 },
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -99,24 +114,46 @@ export function PresentationView({
         onNavigate={scrollToSection}
       />
 
-      {/* Main Content */}
-      <main ref={contentRef} className="max-w-4xl mx-auto px-6 py-8 space-y-8">
-        {/* Section 1: Summary */}
+      {/* Main Content - Wider layout with 20% margins */}
+      <main ref={contentRef} className="w-[80vw] max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* Section 1: Project Roadmap (Primary Focus) */}
+        <PresentationSection
+          id="roadmap"
+          number={1}
+          title="Project Roadmap"
+          icon={Rocket}
+          badgeCount={roadmap?.sprints?.length || 0}
+          badgeVariant="success"
+          statusSummary={
+            roadmap?.current_sprint ? (
+              <span className="text-blue-600 font-medium">
+                {roadmap.overall_progress}% complete
+              </span>
+            ) : null
+          }
+        >
+          <PresentationRoadmap roadmap={roadmap || null} isLoading={roadmapLoading} />
+        </PresentationSection>
+
+        {/* Section 2: Summary */}
         <PresentationSection
           id="summary"
-          number={1}
+          number={2}
           title="Key Points"
           icon={FileText}
           badgeCount={summary?.key_points?.length || 0}
           badgeVariant="success"
         >
-          <PresentationSummary summary={summary} />
+          <PresentationSummary
+            summary={summary}
+            onUpdate={onSummaryUpdate}
+          />
         </PresentationSection>
 
-        {/* Section 2: Questions */}
+        {/* Section 3: Questions */}
         <PresentationSection
           id="questions"
-          number={2}
+          number={3}
           title="Questions"
           icon={HelpCircle}
           badgeCount={questions.length}
@@ -133,13 +170,16 @@ export function PresentationView({
             questions={questions}
             onAnswer={handleQuestionAnswer}
             onStatusChange={handleQuestionStatusChange}
+            onAdd={onQuestionAdd}
+            onUpdate={onQuestionUpdate}
+            onDelete={onQuestionDelete}
           />
         </PresentationSection>
 
-        {/* Section 3: Action Items */}
+        {/* Section 4: Action Items */}
         <PresentationSection
           id="actions"
-          number={3}
+          number={4}
           title="Action Items"
           icon={CheckSquare}
           badgeCount={actions.length}
@@ -159,13 +199,15 @@ export function PresentationView({
           <PresentationActions
             actions={actions}
             onUpdate={onActionUpdate}
+            onAdd={onActionAdd}
+            onDelete={onActionDelete}
           />
         </PresentationSection>
 
-        {/* Section 4: Blockers */}
+        {/* Section 5: Blockers */}
         <PresentationSection
           id="blockers"
-          number={4}
+          number={5}
           title="Blockers & Risks"
           icon={AlertTriangle}
           badgeCount={blockers.length}
@@ -184,15 +226,18 @@ export function PresentationView({
         >
           <PresentationBlockers
             blockers={blockers}
+            meetingId={meeting.id}
             onResolve={handleBlockerResolve}
             onUpdate={onBlockerUpdate}
+            onAdd={onBlockerAdd}
+            onDelete={onBlockerDelete}
           />
         </PresentationSection>
 
-        {/* Section 5: Next Steps */}
+        {/* Section 6: Next Steps */}
         <PresentationSection
           id="next-steps"
-          number={5}
+          number={6}
           title="Next Steps"
           icon={ArrowRight}
         >
@@ -200,25 +245,6 @@ export function PresentationView({
             meetingId={meeting.id}
             onAddAction={onActionAdd}
           />
-        </PresentationSection>
-
-        {/* Section 6: Project Roadmap */}
-        <PresentationSection
-          id="roadmap"
-          number={6}
-          title="Project Roadmap"
-          icon={Rocket}
-          badgeCount={roadmap?.sprints?.length || 0}
-          badgeVariant="success"
-          statusSummary={
-            roadmap?.current_sprint ? (
-              <span className="text-blue-600 font-medium">
-                {roadmap.overall_progress}% complete
-              </span>
-            ) : null
-          }
-        >
-          <PresentationRoadmap roadmap={roadmap || null} isLoading={roadmapLoading} />
         </PresentationSection>
 
         {/* Footer Spacer */}

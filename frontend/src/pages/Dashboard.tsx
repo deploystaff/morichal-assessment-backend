@@ -292,6 +292,25 @@ export function Dashboard() {
     ? (data?.blockers || []).filter((b) => b.meeting === selectedMeeting.id)
     : [];
 
+  // Presentation mode handlers that add meeting ID
+  const handlePresentationQuestionAdd = (data: Partial<Question>) => {
+    if (selectedMeeting) {
+      handleAddQuestion({ ...data, asked_in_meeting: selectedMeeting.id });
+    }
+  };
+
+  const handlePresentationActionAdd = (data: Partial<ActionItem>) => {
+    if (selectedMeeting) {
+      handleAddAction({ ...data, from_meeting: selectedMeeting.id });
+    }
+  };
+
+  const handlePresentationBlockerAdd = (data: Partial<Blocker>) => {
+    if (selectedMeeting) {
+      handleAddBlocker({ ...data, meeting: selectedMeeting.id });
+    }
+  };
+
   // Show presentation view when in presentation mode
   if (presentationMode && selectedMeeting) {
     return (
@@ -302,11 +321,17 @@ export function Dashboard() {
         blockers={meetingBlockers}
         summary={meetingSummary || null}
         onExit={handleExitPresentationMode}
+        onQuestionAdd={handlePresentationQuestionAdd}
         onQuestionUpdate={handleUpdateQuestion}
+        onQuestionDelete={handleDeleteQuestion}
+        onActionAdd={handlePresentationActionAdd}
         onActionUpdate={handleUpdateAction}
-        onActionAdd={handleAddAction}
+        onActionDelete={handleDeleteAction}
+        onBlockerAdd={handlePresentationBlockerAdd}
         onBlockerUpdate={handleUpdateBlocker}
+        onBlockerDelete={handleDeleteBlocker}
         onBlockerResolve={handleResolveBlocker}
+        onSummaryUpdate={handleSaveSummary}
       />
     );
   }

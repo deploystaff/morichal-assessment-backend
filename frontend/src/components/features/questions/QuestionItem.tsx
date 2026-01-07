@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Edit2, Trash2, MessageSquare } from 'lucide-react';
-import { StatusBadge, PriorityBadge, Button, Card, CardBody } from '../../common';
+import { StatusBadge, PriorityBadge, Button, Card, CardBody, RichTextContent } from '../../common';
 import type { Question } from '../../../types';
 
 interface QuestionItemProps {
@@ -79,7 +79,7 @@ export function QuestionItem({ question, onEdit, onDelete, onStatusChange }: Que
                       <MessageSquare className="w-4 h-4 text-emerald-600" />
                       <span className="text-xs font-medium text-emerald-700">Answer</span>
                     </div>
-                    <p className="text-sm text-slate-700">{question.answer}</p>
+                    <RichTextContent html={question.answer} className="text-sm text-slate-700" />
                   </div>
                 )}
 

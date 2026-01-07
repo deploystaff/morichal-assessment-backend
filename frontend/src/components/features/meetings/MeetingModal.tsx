@@ -48,19 +48,22 @@ export function MeetingModal({ isOpen, onClose, onSubmit, meeting }: MeetingModa
     }
   }, [meeting, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const dateTime = new Date(`${formData.date}T${formData.time}`);
+  const submitForm = () => {
     onSubmit({
       title: formData.title,
       agenda: formData.agenda || null,
-      date: dateTime.toISOString(),
+      date: formData.date,  // Send just the date (YYYY-MM-DD)
       status: formData.status,
       attendees: formData.attendees
         ? formData.attendees.split(',').map((a) => a.trim())
         : [],
       notes: formData.notes || null,
     });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitForm();
   };
 
   const statusOptions = [
@@ -139,7 +142,7 @@ export function MeetingModal({ isOpen, onClose, onSubmit, meeting }: MeetingModa
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit">{meeting ? 'Update' : 'Schedule'} Meeting</Button>
+          <Button type="submit" onClick={submitForm}>{meeting ? 'Update' : 'Schedule'} Meeting</Button>
         </div>
       </form>
     </Modal>

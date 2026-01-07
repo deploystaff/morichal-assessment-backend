@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { AlertTriangle, User, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, User, CheckCircle, ChevronDown, ChevronUp, Plus, Edit2, Trash2 } from 'lucide-react';
 import { Button } from '../../common';
+import { PresentationBlockerModal } from './PresentationBlockerModal';
 import type { Blocker } from '../../../types';
 
 interface PresentationBlockersProps {
   blockers: Blocker[];
+  meetingId: string;
   onResolve: (id: string, resolution: string) => void;
   onUpdate: (id: string, data: Partial<Blocker>) => void;
+  onAdd?: (data: Partial<Blocker>) => void;
+  onDelete?: (id: string) => void;
 }
 
 const severityConfig: Record<Blocker['severity'], { color: string; bgColor: string; borderColor: string; icon: string }> = {
@@ -16,10 +20,12 @@ const severityConfig: Record<Blocker['severity'], { color: string; bgColor: stri
   low: { color: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-l-blue-500', icon: '🔵' },
 };
 
-export function PresentationBlockers({ blockers, onResolve, onUpdate }: PresentationBlockersProps) {
+export function PresentationBlockers({ blockers, meetingId, onResolve, onUpdate, onAdd, onDelete }: PresentationBlockersProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [resolvingId, setResolvingId] = useState<string | null>(null);
   const [resolution, setResolution] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingBlocker, setEditingBlocker] = useState<Blocker | null>(null);
 
   // Sort: open blockers by severity first, then resolved
   const sortedBlockers = [...blockers].sort((a, b) => {
@@ -33,16 +39,6 @@ export function PresentationBlockers({ blockers, onResolve, onUpdate }: Presenta
   const openBlockers = blockers.filter(b => b.status !== 'resolved');
   const criticalCount = openBlockers.filter(b => b.severity === 'critical').length;
 
-  if (blockers.length === 0) {
-    return (
-      <div className="text-center py-8 text-slate-500">
-        <AlertTriangle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-        <p className="text-lg font-medium text-slate-600">No blockers</p>
-        <p className="text-sm">Great news! No blockers are blocking progress.</p>
-      </div>
-    );
-  }
-
   const handleResolve = (id: string) => {
     if (resolution.trim()) {
       onResolve(id, resolution);
@@ -51,10 +47,44 @@ export function PresentationBlockers({ blockers, onResolve, onUpdate }: Presenta
     }
   };
 
+  const handleAddClick = () => {
+    setEditingBlocker(null);
+    setModalOpen(true);
+  };
+
+  const handleEditClick = (e: React.MouseEvent, blocker: Blocker) => {
+    e.stopPropagation();
+    setEditingBlocker(blocker);
+    setModalOpen(true);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (onDelete && confirm('Are you sure you want to delete this blocker?')) {
+      onDelete(id);
+    }
+  };
+
+  const handleModalSave = (data: Partial<Blocker>) => {
+    if (editingBlocker) {
+      onUpdate(editingBlocker.id, data);
+    } else {
+      onAdd?.(data);
+    }
+    setModalOpen(false);
+    setEditingBlocker(null);
+  };
+
+  const handleModalDelete = (id: string) => {
+    onDelete?.(id);
+    setModalOpen(false);
+    setEditingBlocker(null);
+  };
+
   return (
     <div className="space-y-4">
-      {/* Status Summary */}
-      {openBlockers.length > 0 && (
+      {/* Header with Add Button */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 text-sm">
           {criticalCount > 0 && (
             <span className="flex items-center gap-1.5 text-red-600 font-medium animate-pulse">
@@ -62,154 +92,211 @@ export function PresentationBlockers({ blockers, onResolve, onUpdate }: Presenta
               {criticalCount} critical
             </span>
           )}
-          <span className="flex items-center gap-1.5 text-slate-600">
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-            {openBlockers.length} open
-          </span>
+          {openBlockers.length > 0 && (
+            <span className="flex items-center gap-1.5 text-slate-600">
+              <span className="w-2 h-2 rounded-full bg-slate-400" />
+              {openBlockers.length} open
+            </span>
+          )}
+        </div>
+        {onAdd && (
+          <Button size="sm" onClick={handleAddClick}>
+            <Plus className="w-4 h-4 mr-1" />
+            Add Blocker
+          </Button>
+        )}
+      </div>
+
+      {/* Empty State */}
+      {blockers.length === 0 ? (
+        <div className="text-center py-8 text-slate-500">
+          <AlertTriangle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+          <p className="text-lg font-medium text-slate-600">No blockers</p>
+          <p className="text-sm">Great news! No blockers are blocking progress.</p>
+          {onAdd && (
+            <Button size="sm" className="mt-4" onClick={handleAddClick}>
+              <Plus className="w-4 h-4 mr-1" />
+              Report Blocker
+            </Button>
+          )}
+        </div>
+      ) : (
+        /* Blockers List */
+        <div className="space-y-3">
+          {sortedBlockers.map((blocker) => {
+            const config = severityConfig[blocker.severity];
+            const isExpanded = expandedId === blocker.id;
+            const isResolving = resolvingId === blocker.id;
+            const isResolved = blocker.status === 'resolved';
+
+            return (
+              <div
+                key={blocker.id}
+                className={`
+                  group border-l-4 rounded-r-lg transition-all
+                  ${config.borderColor} ${isResolved ? 'bg-slate-50 opacity-60' : config.bgColor}
+                `}
+              >
+                {/* Blocker Header */}
+                <button
+                  onClick={() => setExpandedId(isExpanded ? null : blocker.id)}
+                  className="w-full p-4 text-left flex items-start justify-between gap-4"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${config.bgColor} ${config.color} border`}>
+                        {config.icon} {blocker.severity}
+                      </span>
+                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                        blocker.status === 'open' ? 'bg-red-100 text-red-700' :
+                        blocker.status === 'in_progress' ? 'bg-amber-100 text-amber-700' :
+                        'bg-emerald-100 text-emerald-700'
+                      }`}>
+                        {blocker.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <p className={`font-medium ${isResolved ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                      {blocker.title}
+                    </p>
+                    {blocker.owner && (
+                      <p className="flex items-center gap-1 text-xs text-slate-500 mt-1">
+                        <User className="w-3 h-3" />
+                        {blocker.owner}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {/* Edit/Delete buttons - show on hover */}
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => handleEditClick(e, blocker)}
+                        className="p-1.5 text-slate-400 hover:text-primary hover:bg-white rounded-lg transition-colors"
+                        title="Edit blocker"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      {onDelete && (
+                        <button
+                          onClick={(e) => handleDeleteClick(e, blocker.id)}
+                          className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg transition-colors"
+                          title="Delete blocker"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                    {isExpanded ? (
+                      <ChevronUp className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Expanded Content */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 space-y-3 animate-fade-in">
+                    {/* Description */}
+                    <div className="p-3 bg-white rounded-lg border border-slate-200">
+                      <p className="text-sm text-slate-700">{blocker.description}</p>
+                    </div>
+
+                    {/* Existing Resolution */}
+                    {blocker.resolution && (
+                      <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                        <div className="flex items-center gap-2 text-xs text-emerald-600 mb-2">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span className="font-medium">Resolution</span>
+                        </div>
+                        <p className="text-sm text-emerald-700">{blocker.resolution}</p>
+                      </div>
+                    )}
+
+                    {/* Resolution Input (for unresolved blockers) */}
+                    {!isResolved && !isResolving && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setResolvingId(blocker.id)}
+                        className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                      >
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Mark Resolved
+                      </Button>
+                    )}
+
+                    {isResolving && (
+                      <div className="p-3 bg-white rounded-lg border-2 border-emerald-300">
+                        <label className="block text-xs font-medium text-emerald-600 mb-2">
+                          How was this resolved?
+                        </label>
+                        <textarea
+                          value={resolution}
+                          onChange={(e) => setResolution(e.target.value)}
+                          placeholder="Describe the resolution..."
+                          className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                          rows={3}
+                          autoFocus
+                        />
+                        <div className="flex justify-end gap-2 mt-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setResolvingId(null);
+                              setResolution('');
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleResolve(blocker.id)}
+                            disabled={!resolution.trim()}
+                            className="bg-emerald-600 hover:bg-emerald-700"
+                          >
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            Resolve
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Status Selector */}
+                    {!isResolving && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-slate-500">Status:</span>
+                        <select
+                          value={blocker.status}
+                          onChange={(e) => onUpdate(blocker.id, { status: e.target.value as Blocker['status'] })}
+                          className="text-sm border border-slate-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-primary"
+                        >
+                          <option value="open">Open</option>
+                          <option value="in_progress">In Progress</option>
+                          <option value="resolved">Resolved</option>
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Blockers List */}
-      <div className="space-y-3">
-        {sortedBlockers.map((blocker) => {
-          const config = severityConfig[blocker.severity];
-          const isExpanded = expandedId === blocker.id;
-          const isResolving = resolvingId === blocker.id;
-          const isResolved = blocker.status === 'resolved';
-
-          return (
-            <div
-              key={blocker.id}
-              className={`
-                border-l-4 rounded-r-lg transition-all
-                ${config.borderColor} ${isResolved ? 'bg-slate-50 opacity-60' : config.bgColor}
-              `}
-            >
-              {/* Blocker Header */}
-              <button
-                onClick={() => setExpandedId(isExpanded ? null : blocker.id)}
-                className="w-full p-4 text-left flex items-start justify-between gap-4"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${config.bgColor} ${config.color} border`}>
-                      {config.icon} {blocker.severity}
-                    </span>
-                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                      blocker.status === 'open' ? 'bg-red-100 text-red-700' :
-                      blocker.status === 'in_progress' ? 'bg-amber-100 text-amber-700' :
-                      'bg-emerald-100 text-emerald-700'
-                    }`}>
-                      {blocker.status.replace('_', ' ')}
-                    </span>
-                  </div>
-                  <p className={`font-medium ${isResolved ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
-                    {blocker.title}
-                  </p>
-                  {blocker.owner && (
-                    <p className="flex items-center gap-1 text-xs text-slate-500 mt-1">
-                      <User className="w-3 h-3" />
-                      {blocker.owner}
-                    </p>
-                  )}
-                </div>
-                {isExpanded ? (
-                  <ChevronUp className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                )}
-              </button>
-
-              {/* Expanded Content */}
-              {isExpanded && (
-                <div className="px-4 pb-4 space-y-3 animate-fade-in">
-                  {/* Description */}
-                  <div className="p-3 bg-white rounded-lg border border-slate-200">
-                    <p className="text-sm text-slate-700">{blocker.description}</p>
-                  </div>
-
-                  {/* Existing Resolution */}
-                  {blocker.resolution && (
-                    <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                      <div className="flex items-center gap-2 text-xs text-emerald-600 mb-2">
-                        <CheckCircle className="w-3.5 h-3.5" />
-                        <span className="font-medium">Resolution</span>
-                      </div>
-                      <p className="text-sm text-emerald-700">{blocker.resolution}</p>
-                    </div>
-                  )}
-
-                  {/* Resolution Input (for unresolved blockers) */}
-                  {!isResolved && !isResolving && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setResolvingId(blocker.id)}
-                      className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                    >
-                      <CheckCircle className="w-4 h-4 mr-1" />
-                      Mark Resolved
-                    </Button>
-                  )}
-
-                  {isResolving && (
-                    <div className="p-3 bg-white rounded-lg border-2 border-emerald-300">
-                      <label className="block text-xs font-medium text-emerald-600 mb-2">
-                        How was this resolved?
-                      </label>
-                      <textarea
-                        value={resolution}
-                        onChange={(e) => setResolution(e.target.value)}
-                        placeholder="Describe the resolution..."
-                        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                        rows={3}
-                        autoFocus
-                      />
-                      <div className="flex justify-end gap-2 mt-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setResolvingId(null);
-                            setResolution('');
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => handleResolve(blocker.id)}
-                          disabled={!resolution.trim()}
-                          className="bg-emerald-600 hover:bg-emerald-700"
-                        >
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Resolve
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Status Selector */}
-                  {!isResolving && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-slate-500">Status:</span>
-                      <select
-                        value={blocker.status}
-                        onChange={(e) => onUpdate(blocker.id, { status: e.target.value as Blocker['status'] })}
-                        className="text-sm border border-slate-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-primary"
-                      >
-                        <option value="open">Open</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="resolved">Resolved</option>
-                      </select>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      {/* Blocker Modal */}
+      <PresentationBlockerModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setEditingBlocker(null);
+        }}
+        blocker={editingBlocker}
+        meetingId={meetingId}
+        onSave={handleModalSave}
+        onDelete={onDelete ? handleModalDelete : undefined}
+      />
     </div>
   );
 }

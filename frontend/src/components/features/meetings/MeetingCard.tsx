@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Calendar, Clock, Users, Mic, MoreVertical, Play, CheckCircle } from 'lucide-react';
 import { Button, Card, CardBody } from '../../common';
 import type { Meeting } from '../../../types';
@@ -17,6 +18,20 @@ export function MeetingCard({
   onDelete,
   onStatusChange,
 }: MeetingCardProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'short',
@@ -110,15 +125,24 @@ export function MeetingCard({
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <div className="dropdown">
-              <Button variant="ghost" size="sm" className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(!menuOpen);
+                }}
+              >
                 <MoreVertical className="w-4 h-4" />
               </Button>
-              <div className="dropdown-menu hidden absolute right-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10">
+              <div className={`dropdown-menu absolute right-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10 ${menuOpen ? '' : 'hidden'}`}>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    setMenuOpen(false);
                     onEdit(meeting);
                   }}
                   className="w-full px-3 py-2 text-sm text-left hover:bg-slate-50"
@@ -129,6 +153,7 @@ export function MeetingCard({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      setMenuOpen(false);
                       onStatusChange(meeting.id, 'in_progress');
                     }}
                     className="w-full px-3 py-2 text-sm text-left hover:bg-slate-50"
@@ -140,6 +165,7 @@ export function MeetingCard({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      setMenuOpen(false);
                       onStatusChange(meeting.id, 'completed');
                     }}
                     className="w-full px-3 py-2 text-sm text-left hover:bg-slate-50"
@@ -150,6 +176,7 @@ export function MeetingCard({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    setMenuOpen(false);
                     onDelete(meeting.id);
                   }}
                   className="w-full px-3 py-2 text-sm text-left text-red-600 hover:bg-red-50"
