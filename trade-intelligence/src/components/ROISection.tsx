@@ -34,51 +34,43 @@ const stats = [
 
 export function ROISection() {
   return (
-    <section id="roi" className="py-20 lg:py-28 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+    <section id="roi" className="py-20 lg:py-28 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Value Prop */}
-        <div className="text-center max-w-4xl mx-auto mb-20">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
             The Numbers Speak for Themselves
           </h2>
-          <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-white/20">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-              <div>
-                <div className="text-5xl md:text-6xl font-bold text-primary-light mb-2">
-                  EUR 104,850
-                </div>
-                <div className="text-slate-300">MorichalAI Total Cost</div>
-              </div>
-              <div className="text-4xl text-slate-500 font-light">vs</div>
-              <div>
-                <div className="text-5xl md:text-6xl font-bold text-slate-400 mb-2">
-                  EUR 420K-1.09M
-                </div>
-                <div className="text-slate-400">DIY / Agency Approach</div>
-              </div>
-            </div>
-            <div className="mt-8 pt-8 border-t border-white/10">
-              <span className="text-2xl font-bold text-emerald-400">75-90% Savings</span>
-              <span className="text-slate-300 ml-3">compared to building with external agencies</span>
-            </div>
-          </div>
+          <p className="text-lg text-slate-600">
+            Companies implementing AI in supply chain and trade operations report
+            significant improvements across all key metrics.
+          </p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20" hover>
+            <Card key={index} hover>
               <CardBody className="text-center p-8">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-light/20 text-primary-light mb-4">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary mb-4">
                   <stat.icon className="w-7 h-7" />
                 </div>
-                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="font-semibold text-slate-200 mb-1">{stat.label}</div>
-                <div className="text-sm text-slate-400 mb-3">{stat.description}</div>
-                <div className="text-xs text-slate-500">Source: {stat.source}</div>
+                <div className="text-4xl font-bold text-slate-900 mb-2">{stat.value}</div>
+                <div className="font-semibold text-slate-700 mb-1">{stat.label}</div>
+                <div className="text-sm text-slate-500 mb-3">{stat.description}</div>
+                <div className="text-xs text-slate-400">Source: {stat.source}</div>
               </CardBody>
             </Card>
           ))}
+        </div>
+
+        {/* Industry Context */}
+        <div className="mt-12 text-center">
+          <p className="text-slate-500 max-w-2xl mx-auto">
+            These statistics represent industry-wide adoption of AI in supply chain operations.
+            Early adopters report logistics cost improvements of 15%, inventory level improvements
+            of 35%, and service level improvements of 65%.
+          </p>
         </div>
       </div>
     </section>

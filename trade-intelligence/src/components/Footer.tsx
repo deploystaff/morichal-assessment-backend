@@ -8,34 +8,30 @@ export function Footer() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
+              <span className="text-white font-bold text-sm">TI</span>
             </div>
-            <span className="font-semibold text-white">MorichalAI</span>
+            <span className="font-semibold text-white">Trade Intelligence</span>
           </div>
 
-          {/* Links */}
+          {/* Navigation */}
           <div className="flex items-center gap-8 text-sm">
-            <a
-              href="https://dev.morichalai.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              Platform
+            <a href="#workflow" className="hover:text-white transition-colors">
+              How It Works
             </a>
-            <a
-              href="https://morichalai.deploystaff.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              Documentation
+            <a href="#lead-discovery" className="hover:text-white transition-colors">
+              Lead Discovery
+            </a>
+            <a href="#industries" className="hover:text-white transition-colors">
+              Industries
+            </a>
+            <a href="#agents" className="hover:text-white transition-colors">
+              AI Agents
             </a>
           </div>
 
           {/* Copyright */}
           <div className="text-sm">
-            &copy; {currentYear} MorichalAI. All rights reserved.
+            &copy; {currentYear} Trade Intelligence
           </div>
         </div>
 
@@ -44,13 +40,12 @@ export function Footer() {
           <p className="mb-2">Industry research sources:</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             <span>McKinsey Global Institute</span>
-            <span>Oracle Business Analytics</span>
             <span>GlobeNewswire</span>
-            <span>Credence Research</span>
-            <span>Top10ERP.org</span>
             <span>All About AI</span>
-            <span>Klearstack</span>
             <span>Cflow</span>
+            <span>Trade Finance Global</span>
+            <span>ImportGenius</span>
+            <span>Panjiva</span>
           </div>
         </div>
       </div>

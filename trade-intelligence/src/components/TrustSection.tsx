@@ -1,29 +1,29 @@
-import { Globe, Building, CheckCircle2, Code2 } from 'lucide-react';
+import { Globe, Ship, Building2, Cpu } from 'lucide-react';
 
 const trustMetrics = [
   {
     icon: Globe,
-    value: '13',
+    value: '200+',
     label: 'Countries',
-    description: 'Compliance tracking coverage',
+    description: 'Global port data coverage',
   },
   {
-    icon: Building,
-    value: '45',
-    label: 'Suppliers',
-    description: 'In matching database',
+    icon: Ship,
+    value: '2B+',
+    label: 'Shipments',
+    description: 'Historical records tracked',
   },
   {
-    icon: CheckCircle2,
-    value: '82%',
-    label: 'Complete',
-    description: 'Project delivery status',
+    icon: Building2,
+    value: '10M+',
+    label: 'Companies',
+    description: 'Buyer and supplier profiles',
   },
   {
-    icon: Code2,
-    value: '81,929',
-    label: 'Lines of Code',
-    description: 'Production-ready platform',
+    icon: Cpu,
+    value: '10',
+    label: 'AI Agents',
+    description: 'Working 24/7 for you',
   },
 ];
 
@@ -37,7 +37,7 @@ export function TrustSection() {
             Built for Global Trade
           </h2>
           <p className="text-lg text-slate-600">
-            A comprehensive platform designed specifically for paper trading companies
+            A comprehensive platform designed for trading companies
             operating across international markets.
           </p>
         </div>
@@ -69,17 +69,15 @@ export function TrustSection() {
         <div className="mt-20 text-center">
           <p className="text-sm text-slate-500 mb-6">Powered by modern technology</p>
           <div className="flex flex-wrap items-center justify-center gap-8 text-slate-400">
-            <span className="font-medium">React</span>
-            <span className="text-slate-300">|</span>
-            <span className="font-medium">Django</span>
-            <span className="text-slate-300">|</span>
-            <span className="font-medium">PostgreSQL</span>
-            <span className="text-slate-300">|</span>
             <span className="font-medium">AI/ML</span>
+            <span className="text-slate-300">|</span>
+            <span className="font-medium">Real-time Data</span>
             <span className="text-slate-300">|</span>
             <span className="font-medium">OCR</span>
             <span className="text-slate-300">|</span>
-            <span className="font-medium">Zoho CRM</span>
+            <span className="font-medium">Entity Matching</span>
+            <span className="text-slate-300">|</span>
+            <span className="font-medium">Lead Scoring</span>
           </div>
         </div>
       </div>

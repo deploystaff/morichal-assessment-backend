@@ -4,12 +4,13 @@ interface AgentCardProps {
   icon: React.ReactNode;
   name: string;
   description: string;
+  impact?: string;
   number: number;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export function AgentCard({ icon, name, description, number, className = '', style }: AgentCardProps) {
+export function AgentCard({ icon, name, description, impact, number, className = '', style }: AgentCardProps) {
   return (
     <div
       className={`
@@ -34,6 +35,11 @@ export function AgentCard({ icon, name, description, number, className = '', sty
           <p className="text-sm text-slate-600 leading-relaxed">
             {description}
           </p>
+          {impact && (
+            <p className="text-xs text-primary font-medium mt-2 pt-2 border-t border-slate-100">
+              {impact}
+            </p>
+          )}
         </div>
       </div>
     </div>

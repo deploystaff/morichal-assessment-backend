@@ -1,5 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Dashboard } from './pages/Dashboard';
+import { DeliverablesList } from './pages/DeliverablesList';
+import { DeliverableView } from './pages/DeliverableView';
+import { DeliverableEditor } from './pages/DeliverableEditor';
 import { ThemeProvider } from './providers';
 
 const queryClient = new QueryClient({
@@ -18,9 +22,17 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <Dashboard />
-      </ThemeProvider>
+      <BrowserRouter>
+        <ThemeProvider>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/deliverables" element={<DeliverablesList />} />
+            <Route path="/deliverables/:slug" element={<DeliverableView />} />
+            <Route path="/deliverables/:slug/edit" element={<DeliverableEditor />} />
+            <Route path="/deliverables/new" element={<DeliverableEditor />} />
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }

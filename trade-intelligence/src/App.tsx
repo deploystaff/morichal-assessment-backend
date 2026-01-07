@@ -1,12 +1,15 @@
 import {
   MarketingHeader,
   HeroSection,
+  WhatIsSection,
+  TradeWorkflowSection,
+  LeadDiscoverySection,
+  IndustriesSection,
   ProblemSection,
   ComparisonSection,
   AgentsShowcase,
   ROISection,
   TrustSection,
-  CTASection,
   Footer,
 } from './components';
 
@@ -16,12 +19,15 @@ function App() {
       <MarketingHeader />
       <main>
         <HeroSection />
+        <WhatIsSection />
+        <TradeWorkflowSection />
+        <LeadDiscoverySection />
+        <IndustriesSection />
         <ProblemSection />
         <ComparisonSection />
         <AgentsShowcase />
         <ROISection />
         <TrustSection />
-        <CTASection />
       </main>
       <Footer />
     </div>

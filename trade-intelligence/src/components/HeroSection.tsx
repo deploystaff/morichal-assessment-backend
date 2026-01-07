@@ -1,5 +1,5 @@
-import { ArrowRight, CheckCircle, Zap } from 'lucide-react';
-import { Button, Badge } from './ui';
+import { Zap, Globe, Ship, Users } from 'lucide-react';
+import { Badge } from './ui';
 
 export function HeroSection() {
   return (
@@ -16,57 +16,58 @@ export function HeroSection() {
           <div className="inline-flex items-center gap-2 mb-6 animate-fade-in">
             <Badge variant="primary">
               <Zap className="w-3 h-3 mr-1" />
-              Powered by 10 AI Agents
+              Global Port Intelligence + 10 AI Agents
             </Badge>
           </div>
 
           {/* Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 animate-fade-in-up">
             Trade Intelligence:{' '}
-            <span className="gradient-text">AI That Works While You Sleep</span>
+            <span className="gradient-text">See Every Deal Before Your Competitors</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto animate-fade-in-up animate-delay-100">
-            10 AI agents handling email intake, document verification, supplier matching,
-            and compliance tracking. 24 hours a day. 365 days a year.
+          <p className="text-xl text-slate-600 mb-12 max-w-3xl mx-auto animate-fade-in-up animate-delay-100">
+            AI-powered trade operations platform with global port intelligence.
+            Know what landed, who bought it, and close deals faster.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in-up animate-delay-200">
-            <Button size="lg">
-              Book a Demo
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-            <a
-              href="https://dev.morichalai.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary font-semibold hover:text-primary-dark transition-colors flex items-center gap-2"
-            >
-              See the Platform
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
-
           {/* Trust Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-8 text-sm animate-fade-in-up animate-delay-300">
+          <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10 text-sm animate-fade-in-up animate-delay-200">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Ship className="w-5 h-5 text-primary" />
+              </div>
               <span className="text-slate-600">
-                <span className="font-bold text-slate-900">95%</span> Email extraction accuracy
+                <span className="font-bold text-2xl text-slate-900">2B+</span>
+                <span className="block text-xs">Shipments Tracked</span>
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Globe className="w-5 h-5 text-primary" />
+              </div>
               <span className="text-slate-600">
-                <span className="font-bold text-slate-900">45</span> Suppliers in database
+                <span className="font-bold text-2xl text-slate-900">200+</span>
+                <span className="block text-xs">Countries Covered</span>
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Users className="w-5 h-5 text-primary" />
+              </div>
               <span className="text-slate-600">
-                <span className="font-bold text-slate-900">13</span> Countries compliance
+                <span className="font-bold text-2xl text-slate-900">10M+</span>
+                <span className="block text-xs">Company Profiles</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-primary" />
+              </div>
+              <span className="text-slate-600">
+                <span className="font-bold text-2xl text-slate-900">10</span>
+                <span className="block text-xs">AI Agents</span>
               </span>
             </div>
           </div>
