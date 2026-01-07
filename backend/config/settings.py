@@ -124,7 +124,7 @@ REST_FRAMEWORK = {
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:5173,http://localhost:3000,https://morichalai-assessment.netlify.app'
+    'http://localhost:5173,http://localhost:3000,https://morichalai-assessment.netlify.app,https://clients-ds.netlify.app'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
 
@@ -134,7 +134,7 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_TRUSTED_ORIGINS = os.environ.get(
     'CSRF_TRUSTED_ORIGINS',
-    'http://localhost:5173,http://localhost:3000,https://morichalai-assessment.netlify.app'
+    'http://localhost:5173,http://localhost:3000,https://morichalai-assessment.netlify.app,https://clients-ds.netlify.app'
 ).split(',')
 
 # Celery Configuration
