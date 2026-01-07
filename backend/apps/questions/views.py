@@ -40,9 +40,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return context
 
     def perform_create(self, serializer):
-        client_slug = self.kwargs.get('client_slug')
-        client = get_object_or_404(Client, slug=client_slug)
-        serializer.save(client=client)
+        # Client is already set in serializer context and handled in create()
+        serializer.save()
 
     @action(detail=True, methods=['post'])
     def answer(self, request, client_slug=None, pk=None):
