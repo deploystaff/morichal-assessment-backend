@@ -70,5 +70,6 @@ urlpatterns = [
         path('', include('apps.suggestions.urls')),
         path('', include('apps.settings_app.urls')),
         path('', include('apps.sprints.urls')),
+        path('', include('apps.deliverables.urls')),
     ])),
 ]

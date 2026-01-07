@@ -12,7 +12,6 @@ class Client(models.Model):
 
     class Meta:
         db_table = 'clients'
-        managed = False  # Use existing table
 
     def __str__(self):
         return self.name

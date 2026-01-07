@@ -1,0 +1,9 @@
+export { MarketingHeader } from './MarketingHeader';
+export { HeroSection } from './HeroSection';
+export { ProblemSection } from './ProblemSection';
+export { ComparisonSection } from './ComparisonSection';
+export { AgentsShowcase } from './AgentsShowcase';
+export { ROISection } from './ROISection';
+export { TrustSection } from './TrustSection';
+export { CTASection } from './CTASection';
+export { Footer } from './Footer';

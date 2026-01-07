@@ -8,6 +8,11 @@ import type {
   AISuggestion,
   ClientSettings,
   Client,
+  ClientConfig,
+  ClientBranding,
+  DeliverablePage,
+  DeliverableSection,
+  ClientDocument,
   User,
   Update,
   Blocker,
@@ -391,5 +396,123 @@ export const sprintItems = {
     return data;
   },
 };
+
+// Client Configuration (includes branding)
+export const clientConfig = {
+  get: async () => {
+    const { data } = await api.get<ClientConfig>(`/${CLIENT_SLUG}/config/`);
+    return data;
+  },
+};
+
+// Client Branding
+export const branding = {
+  get: async () => {
+    const { data } = await api.get<ClientBranding>(`/${CLIENT_SLUG}/branding/`);
+    return data;
+  },
+  update: async (brandingData: Partial<ClientBranding>) => {
+    const { data } = await api.patch<ClientBranding>(`/${CLIENT_SLUG}/branding/`, brandingData);
+    return data;
+  },
+};
+
+// Deliverable Pages
+export const deliverables = {
+  list: async (params?: { published?: boolean; parent?: string | null }) => {
+    const queryParams: Record<string, string> = {};
+    if (params?.published !== undefined) queryParams.published = String(params.published);
+    if (params?.parent !== undefined) queryParams.parent = params.parent === null ? 'null' : params.parent;
+    const { data } = await api.get<DeliverablePage[]>(`/${CLIENT_SLUG}/deliverables/`, { params: queryParams });
+    return data;
+  },
+  get: async (id: string) => {
+    const { data } = await api.get<DeliverablePage>(`/${CLIENT_SLUG}/deliverables/${id}/`);
+    return data;
+  },
+  getBySlug: async (slug: string) => {
+    const { data } = await api.get<DeliverablePage>(`/${CLIENT_SLUG}/deliverables/by-slug/${slug}/`);
+    return data;
+  },
+  create: async (page: Partial<DeliverablePage>) => {
+    const { data } = await api.post<DeliverablePage>(`/${CLIENT_SLUG}/deliverables/`, page);
+    return data;
+  },
+  update: async (id: string, page: Partial<DeliverablePage>) => {
+    const { data } = await api.patch<DeliverablePage>(`/${CLIENT_SLUG}/deliverables/${id}/`, page);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/deliverables/${id}/`);
+  },
+  publish: async (id: string) => {
+    const { data } = await api.post<DeliverablePage>(`/${CLIENT_SLUG}/deliverables/${id}/publish/`);
+    return data;
+  },
+  unpublish: async (id: string) => {
+    const { data } = await api.post<DeliverablePage>(`/${CLIENT_SLUG}/deliverables/${id}/unpublish/`);
+    return data;
+  },
+};
+
+// Deliverable Sections
+export const deliverableSections = {
+  list: async (pageSlug: string) => {
+    const { data } = await api.get<DeliverableSection[]>(`/${CLIENT_SLUG}/deliverables/${pageSlug}/sections/`);
+    return data;
+  },
+  create: async (pageSlug: string, section: Partial<DeliverableSection>) => {
+    const { data } = await api.post<DeliverableSection>(`/${CLIENT_SLUG}/deliverables/${pageSlug}/sections/`, section);
+    return data;
+  },
+  update: async (pageSlug: string, id: string, section: Partial<DeliverableSection>) => {
+    const { data } = await api.patch<DeliverableSection>(`/${CLIENT_SLUG}/deliverables/${pageSlug}/sections/${id}/`, section);
+    return data;
+  },
+  delete: async (pageSlug: string, id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/deliverables/${pageSlug}/sections/${id}/`);
+  },
+  reorder: async (pageSlug: string, sectionIds: string[]) => {
+    const { data } = await api.post(`/${CLIENT_SLUG}/deliverables/${pageSlug}/sections/reorder/`, { section_ids: sectionIds });
+    return data;
+  },
+};
+
+// Client Documents (Knowledge Base)
+export const documents = {
+  list: async (params?: { category?: string; public?: boolean }) => {
+    const queryParams: Record<string, string> = {};
+    if (params?.category) queryParams.category = params.category;
+    if (params?.public !== undefined) queryParams.public = String(params.public);
+    const { data } = await api.get<ClientDocument[]>(`/${CLIENT_SLUG}/docs/`, { params: queryParams });
+    return data;
+  },
+  categories: async () => {
+    const { data } = await api.get<{ category: string; count: number }[]>(`/${CLIENT_SLUG}/docs/categories/`);
+    return data;
+  },
+  get: async (id: string) => {
+    const { data } = await api.get<ClientDocument>(`/${CLIENT_SLUG}/docs/${id}/`);
+    return data;
+  },
+  getBySlug: async (slug: string) => {
+    const { data } = await api.get<ClientDocument>(`/${CLIENT_SLUG}/docs/by-slug/${slug}/`);
+    return data;
+  },
+  create: async (doc: Partial<ClientDocument>) => {
+    const { data } = await api.post<ClientDocument>(`/${CLIENT_SLUG}/docs/`, doc);
+    return data;
+  },
+  update: async (id: string, doc: Partial<ClientDocument>) => {
+    const { data } = await api.patch<ClientDocument>(`/${CLIENT_SLUG}/docs/${id}/`, doc);
+    return data;
+  },
+  delete: async (id: string) => {
+    await api.delete(`/${CLIENT_SLUG}/docs/${id}/`);
+  },
+};
+
+// Export client slug for use in other parts of the app
+export const getClientSlug = () => CLIENT_SLUG;
 
 export default api;

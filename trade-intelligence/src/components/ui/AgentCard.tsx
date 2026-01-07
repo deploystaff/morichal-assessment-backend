@@ -6,9 +6,10 @@ interface AgentCardProps {
   description: string;
   number: number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function AgentCard({ icon, name, description, number, className = '' }: AgentCardProps) {
+export function AgentCard({ icon, name, description, number, className = '', style }: AgentCardProps) {
   return (
     <div
       className={`
@@ -17,6 +18,7 @@ export function AgentCard({ icon, name, description, number, className = '' }: A
         transition-all duration-300
         ${className}
       `}
+      style={style}
     >
       <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary text-white text-sm font-bold flex items-center justify-center shadow-lg">
         {number}

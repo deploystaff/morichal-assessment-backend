@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'apps.transcription',
     'apps.authentication',
     'apps.sprints',
+    'apps.deliverables',
 ]
 
 MIDDLEWARE = [

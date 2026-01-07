@@ -7,6 +7,76 @@ export interface Client {
   updated_at: string;
 }
 
+// Client Branding
+export interface ClientBranding {
+  id: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  logo_url: string | null;
+  favicon_url: string | null;
+  company_name: string;
+  tagline: string;
+  website: string | null;
+  features: Record<string, boolean>;
+  created_at: string;
+  updated_at: string;
+}
+
+// Client Configuration (includes branding)
+export interface ClientConfig {
+  id: string;
+  name: string;
+  slug: string;
+  branding: ClientBranding;
+}
+
+// Deliverable Page
+export interface DeliverablePage {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+  template: string;
+  meta: Record<string, unknown>;
+  is_published: boolean;
+  published_at: string | null;
+  order: number;
+  parent: string | null;
+  children: DeliverablePage[];
+  sections: DeliverableSection[];
+  created_at: string;
+  updated_at: string;
+}
+
+// Deliverable Section
+export interface DeliverableSection {
+  id: string;
+  section_type: 'hero' | 'features' | 'pricing' | 'timeline' | 'content' | 'table' | 'gallery' | 'cta' | 'custom';
+  title: string;
+  content: string;
+  meta: Record<string, unknown>;
+  order: number;
+  is_visible: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Client Document (Knowledge Base)
+export interface ClientDocument {
+  id: string;
+  slug: string;
+  category: 'architecture' | 'status' | 'changelog' | 'design' | 'ux' | 'api' | 'guide' | 'other';
+  title: string;
+  content: string;
+  is_public: boolean;
+  is_pinned: boolean;
+  version: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // Meeting
 export interface Meeting {
   id: string;

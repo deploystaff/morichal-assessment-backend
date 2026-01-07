@@ -1,9 +1,15 @@
 import { Settings, Wifi, WifiOff } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
+import { useCompanyName, useBranding } from '../../providers';
 
 export function Header() {
   const isOnline = useUIStore((s) => s.isOnline);
   const openModal = useUIStore((s) => s.openModal);
+  const companyName = useCompanyName();
+  const { branding } = useBranding();
+
+  // Get first letter of company name for logo
+  const logoLetter = companyName.charAt(0).toUpperCase();
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
@@ -11,12 +17,20 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
-            </div>
+            {branding?.logo_url ? (
+              <img
+                src={branding.logo_url}
+                alt={companyName}
+                className="w-8 h-8 object-contain"
+              />
+            ) : (
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">{logoLetter}</span>
+              </div>
+            )}
             <div>
-              <h1 className="text-lg font-semibold text-slate-900">Meeting Portal</h1>
-              <p className="text-xs text-slate-500">MorichalAI</p>
+              <h1 className="text-lg font-semibold text-slate-900">Assessment Portal</h1>
+              <p className="text-xs text-slate-500">{companyName}</p>
             </div>
           </div>
 
