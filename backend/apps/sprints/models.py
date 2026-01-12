@@ -63,6 +63,7 @@ class SprintItem(models.Model):
         ('feature', 'Feature'),
         ('task', 'Task'),
         ('bugfix', 'Bug Fix'),
+        ('milestone', 'Milestone'),
     ]
     STATUS_CHOICES = [
         ('planned', 'Planned'),

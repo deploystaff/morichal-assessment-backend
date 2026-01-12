@@ -50,17 +50,34 @@ class SprintViewSet(viewsets.ModelViewSet):
         """Get roadmap summary for presentations."""
         sprints = self.get_queryset()
 
-        # Calculate overall progress
-        total_items = SprintItem.objects.filter(
-            client__slug=client_slug
+        # Development item types (exclude milestones from main progress)
+        dev_types = ['agent', 'feature', 'task', 'bugfix']
+
+        # Calculate DEVELOPMENT progress only
+        dev_total = SprintItem.objects.filter(
+            client__slug=client_slug,
+            item_type__in=dev_types
         ).exclude(status='cancelled').count()
 
-        completed_items = SprintItem.objects.filter(
+        dev_completed = SprintItem.objects.filter(
             client__slug=client_slug,
+            item_type__in=dev_types,
             status='completed'
         ).count()
 
-        overall_progress = round((completed_items / total_items) * 100) if total_items > 0 else 0
+        dev_progress = round((dev_completed / dev_total) * 100) if dev_total > 0 else 0
+
+        # Calculate MILESTONE progress separately
+        milestone_total = SprintItem.objects.filter(
+            client__slug=client_slug,
+            item_type='milestone'
+        ).exclude(status='cancelled').count()
+
+        milestone_completed = SprintItem.objects.filter(
+            client__slug=client_slug,
+            item_type='milestone',
+            status='completed'
+        ).count()
 
         # Find current sprint (in_progress or the next planned one)
         current_sprint = sprints.filter(status='in_progress').first()
@@ -72,9 +89,13 @@ class SprintViewSet(viewsets.ModelViewSet):
 
         data = {
             'sprints': SprintSerializer(sprints, many=True).data,
-            'overall_progress': overall_progress,
-            'total_items': total_items,
-            'completed_items': completed_items,
+            # Development stats (main display)
+            'overall_progress': dev_progress,
+            'total_items': dev_total,
+            'completed_items': dev_completed,
+            # Milestone stats (secondary display)
+            'milestone_total': milestone_total,
+            'milestone_completed': milestone_completed,
             'current_sprint': SprintSummarySerializer(current_sprint).data if current_sprint else None
         }
 

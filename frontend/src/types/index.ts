@@ -277,7 +277,7 @@ export interface SprintItem {
   item_code: string;
   name: string;
   description: string | null;
-  item_type: 'agent' | 'feature' | 'task' | 'bugfix';
+  item_type: 'agent' | 'feature' | 'task' | 'bugfix' | 'milestone';
   status: 'planned' | 'in_progress' | 'completed' | 'blocked' | 'cancelled';
   priority: 'high' | 'medium' | 'low';
   order: number;
@@ -296,6 +296,8 @@ export interface RoadmapSummary {
   overall_progress: number;
   total_items: number;
   completed_items: number;
+  milestone_total: number;
+  milestone_completed: number;
   current_sprint: Omit<Sprint, 'items'> | null;
 }
 

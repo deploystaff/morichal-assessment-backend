@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  VITE_API_URL = "https://django-api-production-7177.up.railway.app/api"
 
 [[redirects]]
   from = "/*"

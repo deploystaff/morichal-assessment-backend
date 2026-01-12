@@ -142,9 +142,15 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
             <h2 className="text-2xl font-bold text-slate-800 mb-1">
               MorichalAI Development Roadmap
             </h2>
-            <p className="text-slate-600 mb-3">
-              {roadmap.completed_items} of {roadmap.total_items} items complete
+            <p className="text-slate-600 mb-1">
+              {roadmap.completed_items} of {roadmap.total_items} development items complete
             </p>
+            {/* Milestone indicator */}
+            {roadmap.milestone_total > 0 && (
+              <p className="text-sm text-slate-500 mb-2">
+                Plus {roadmap.milestone_completed} of {roadmap.milestone_total} launch milestones
+              </p>
+            )}
 
             {/* Current Sprint Badge */}
             {roadmap.current_sprint && (

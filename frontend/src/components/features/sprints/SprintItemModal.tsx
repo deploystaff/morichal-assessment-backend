@@ -18,6 +18,7 @@ const itemTypeOptions = [
   { value: 'feature', label: 'Feature' },
   { value: 'task', label: 'Task' },
   { value: 'bugfix', label: 'Bugfix' },
+  { value: 'milestone', label: 'Milestone' },
 ];
 
 const statusOptions = [

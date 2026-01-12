@@ -78,6 +78,8 @@ class RoadmapSerializer(serializers.Serializer):
     overall_progress = serializers.IntegerField()
     total_items = serializers.IntegerField()
     completed_items = serializers.IntegerField()
+    milestone_total = serializers.IntegerField()
+    milestone_completed = serializers.IntegerField()
     current_sprint = SprintSummarySerializer(allow_null=True)
 
 

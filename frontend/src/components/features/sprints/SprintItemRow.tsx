@@ -1,4 +1,4 @@
-import { Bot, Zap, CheckSquare, Bug, Check, Circle } from 'lucide-react';
+import { Bot, Zap, CheckSquare, Bug, Check, Circle, Flag } from 'lucide-react';
 import type { SprintItem } from '../../../types';
 
 interface SprintItemRowProps {
@@ -12,6 +12,7 @@ const itemTypeConfig = {
   feature: { icon: Zap, bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Feature' },
   task: { icon: CheckSquare, bg: 'bg-slate-100', text: 'text-slate-600', label: 'Task' },
   bugfix: { icon: Bug, bg: 'bg-amber-100', text: 'text-amber-700', label: 'Bugfix' },
+  milestone: { icon: Flag, bg: 'bg-purple-100', text: 'text-purple-700', label: 'Milestone' },
 };
 
 const statusConfig = {
