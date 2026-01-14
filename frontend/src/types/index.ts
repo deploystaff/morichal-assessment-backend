@@ -301,6 +301,23 @@ export interface RoadmapSummary {
   current_sprint: Omit<Sprint, 'items'> | null;
 }
 
+// Delivery Milestone (Project-level delivery events)
+export interface DeliveryMilestone {
+  id: string;
+  milestone_code: string;
+  name: string;
+  description: string | null;
+  milestone_type: 'deliverable' | 'period' | 'checkpoint';
+  start_date: string;
+  end_date: string | null;
+  status: 'upcoming' | 'in_progress' | 'completed' | 'delayed';
+  order: number;
+  color: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // All Data Response
 export interface AllDataResponse {
   version: string;

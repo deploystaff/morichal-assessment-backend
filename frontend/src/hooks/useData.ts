@@ -674,3 +674,62 @@ export function useReorderSprintItems() {
     },
   });
 }
+
+// Delivery Milestone hooks
+export function useDeliveryMilestones() {
+  return useQuery({
+    queryKey: ['deliveryMilestones'],
+    queryFn: api.deliveryMilestones.list,
+  });
+}
+
+export function useCreateDeliveryMilestone() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.deliveryMilestones.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deliveryMilestones'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useUpdateDeliveryMilestone() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof api.deliveryMilestones.update>[1] }) =>
+      api.deliveryMilestones.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deliveryMilestones'] });
+      triggerSave();
+    },
+  });
+}
+
+export function useDeleteDeliveryMilestone() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: api.deliveryMilestones.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deliveryMilestones'] });
+    },
+  });
+}
+
+export function useReorderDeliveryMilestones() {
+  const queryClient = useQueryClient();
+  const triggerSave = useUIStore((s) => s.triggerSaveIndicator);
+
+  return useMutation({
+    mutationFn: api.deliveryMilestones.reorder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['deliveryMilestones'] });
+      triggerSave();
+    },
+  });
+}

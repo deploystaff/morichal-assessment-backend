@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Sprint, SprintItem
+from .models import Sprint, SprintItem, DeliveryMilestone
 
 
 class SprintItemSerializer(serializers.ModelSerializer):
@@ -96,3 +96,27 @@ class MoveItemSerializer(serializers.Serializer):
     """Serializer for moving item to different sprint."""
     sprint_id = serializers.UUIDField()
     order = serializers.IntegerField(required=False, default=0)
+
+
+class DeliveryMilestoneSerializer(serializers.ModelSerializer):
+    """Full serializer for delivery milestones."""
+
+    class Meta:
+        model = DeliveryMilestone
+        fields = [
+            'id', 'client', 'milestone_code', 'name', 'description',
+            'milestone_type', 'start_date', 'end_date', 'status',
+            'order', 'color', 'notes', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'client', 'created_at', 'updated_at']
+
+
+class DeliveryMilestoneCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating delivery milestones."""
+
+    class Meta:
+        model = DeliveryMilestone
+        fields = [
+            'milestone_code', 'name', 'description', 'milestone_type',
+            'start_date', 'end_date', 'status', 'order', 'color', 'notes'
+        ]

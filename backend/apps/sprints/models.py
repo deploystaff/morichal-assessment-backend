@@ -114,3 +114,48 @@ class SprintItem(models.Model):
 
     def __str__(self):
         return f"{self.item_code}: {self.name}"
+
+
+class DeliveryMilestone(models.Model):
+    """Project-level delivery milestones, separate from sprint development items."""
+    STATUS_CHOICES = [
+        ('upcoming', 'Upcoming'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('delayed', 'Delayed'),
+    ]
+
+    MILESTONE_TYPE_CHOICES = [
+        ('deliverable', 'Deliverable'),
+        ('period', 'Period'),
+        ('checkpoint', 'Checkpoint'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client = models.ForeignKey(
+        'clients.Client',
+        on_delete=models.CASCADE,
+        related_name='delivery_milestones',
+        db_column='client_id'
+    )
+    milestone_code = models.CharField(max_length=50)
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    milestone_type = models.CharField(max_length=20, choices=MILESTONE_TYPE_CHOICES, default='deliverable')
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
+    order = models.IntegerField(default=0)
+    color = models.CharField(max_length=7, default='#6366F1')
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'delivery_milestones'
+        managed = False
+        ordering = ['order', 'start_date']
+        unique_together = [['client', 'milestone_code']]
+
+    def __str__(self):
+        return f"{self.milestone_code}: {self.name}"

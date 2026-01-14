@@ -3,11 +3,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
 from django.db.models import Count, Q
-from .models import Sprint, SprintItem
+from .models import Sprint, SprintItem, DeliveryMilestone
 from .serializers import (
     SprintSerializer, SprintCreateSerializer, SprintSummarySerializer,
     SprintItemSerializer, SprintItemCreateSerializer,
-    RoadmapSerializer, ReorderSerializer, MoveItemSerializer
+    RoadmapSerializer, ReorderSerializer, MoveItemSerializer,
+    DeliveryMilestoneSerializer, DeliveryMilestoneCreateSerializer
 )
 
 
@@ -178,5 +179,40 @@ class SprintItemViewSet(viewsets.ModelViewSet):
                 id=item_data['id'],
                 client__slug=client_slug
             ).update(**update_fields)
+
+        return Response({'status': 'reordered'})
+
+
+class DeliveryMilestoneViewSet(viewsets.ModelViewSet):
+    """ViewSet for DeliveryMilestone CRUD operations."""
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return DeliveryMilestoneCreateSerializer
+        return DeliveryMilestoneSerializer
+
+    def get_queryset(self):
+        client_slug = self.kwargs.get('client_slug')
+        return DeliveryMilestone.objects.filter(
+            client__slug=client_slug
+        ).order_by('order', 'start_date')
+
+    def perform_create(self, serializer):
+        from apps.clients.models import Client
+        client_slug = self.kwargs.get('client_slug')
+        client = Client.objects.get(slug=client_slug)
+        serializer.save(client=client)
+
+    @action(detail=False, methods=['post'])
+    def reorder(self, request, client_slug=None):
+        """Reorder delivery milestones."""
+        serializer = ReorderSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        for item in serializer.validated_data['items']:
+            DeliveryMilestone.objects.filter(
+                id=item['id'],
+                client__slug=client_slug
+            ).update(order=int(item['order']))
 
         return Response({'status': 'reordered'})

@@ -1,9 +1,24 @@
 import { useState } from 'react';
 import { Rocket, Plus, TrendingUp } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { SprintProgressRing } from './SprintProgressRing';
-import { SprintMilestoneCard } from './SprintMilestoneCard';
+import { SortableSprintCard } from './SortableSprintCard';
 import { SprintModal } from './SprintModal';
 import { SprintItemModal } from './SprintItemModal';
+import { DeliveryTimeline } from '../delivery';
 import {
   useCreateSprint,
   useUpdateSprint,
@@ -11,6 +26,8 @@ import {
   useCreateSprintItem,
   useUpdateSprintItem,
   useCompleteSprintItem,
+  useDeleteSprintItem,
+  useReorderSprints,
 } from '../../../hooks/useData';
 import type { RoadmapSummary, Sprint, SprintItem } from '../../../types';
 
@@ -34,6 +51,20 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
   const createSprintItem = useCreateSprintItem();
   const updateSprintItem = useUpdateSprintItem();
   const completeSprintItem = useCompleteSprintItem();
+  const deleteSprintItem = useDeleteSprintItem();
+  const reorderSprints = useReorderSprints();
+
+  // DnD sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Start drag after 8px movement
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Handlers
   const handleEditSprint = (sprint: Sprint) => {
@@ -93,6 +124,43 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
     }
   };
 
+  // Inline update handlers (for auto-save functionality)
+  const handleInlineSprintUpdate = async (id: string, data: Partial<Sprint>) => {
+    await updateSprint.mutateAsync({ id, data });
+  };
+
+  const handleInlineItemUpdate = async (id: string, data: Partial<SprintItem>) => {
+    await updateSprintItem.mutateAsync({ id, data });
+  };
+
+  const handleDeleteItem = (id: string) => {
+    if (confirm('Are you sure you want to delete this item?')) {
+      deleteSprintItem.mutate(id);
+    }
+  };
+
+  // Drag & Drop handler for sprints
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id && roadmap) {
+      const sortedSprints = [...roadmap.sprints].sort((a, b) => a.order - b.order);
+      const oldIndex = sortedSprints.findIndex((s) => s.id === active.id);
+      const newIndex = sortedSprints.findIndex((s) => s.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        // Calculate new order values
+        const reorderedSprints = arrayMove(sortedSprints, oldIndex, newIndex);
+        const orderUpdates = reorderedSprints.map((sprint, index) => ({
+          id: sprint.id,
+          order: index,
+        }));
+
+        reorderSprints.mutate(orderUpdates);
+      }
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -120,7 +188,8 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
     );
   }
 
-  const currentSprintIndex = roadmap.sprints.findIndex(
+  const sortedSprints = [...roadmap.sprints].sort((a, b) => a.order - b.order);
+  const currentSprintIndex = sortedSprints.findIndex(
     (s) => s.status === 'in_progress'
   );
 
@@ -177,24 +246,36 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
         </div>
       </div>
 
-      {/* Vertical Timeline */}
-      <div className="pl-4">
-        {roadmap.sprints
-          .sort((a, b) => a.order - b.order)
-          .map((sprint, index) => (
-            <SprintMilestoneCard
-              key={sprint.id}
-              sprint={sprint}
-              isCurrent={index === currentSprintIndex}
-              isLast={index === roadmap.sprints.length - 1}
-              onEditSprint={handleEditSprint}
-              onDeleteSprint={handleDeleteSprint}
-              onAddItem={handleAddItem}
-              onEditItem={handleEditItem}
-              onToggleItemComplete={handleToggleItemComplete}
-            />
-          ))}
-      </div>
+      {/* Vertical Timeline with Drag & Drop */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={sortedSprints.map((s) => s.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="pl-4">
+            {sortedSprints.map((sprint, index) => (
+              <SortableSprintCard
+                key={sprint.id}
+                sprint={sprint}
+                isCurrent={index === currentSprintIndex}
+                isLast={index === sortedSprints.length - 1}
+                onEditSprint={handleEditSprint}
+                onDeleteSprint={handleDeleteSprint}
+                onAddItem={handleAddItem}
+                onEditItem={handleEditItem}
+                onToggleItemComplete={handleToggleItemComplete}
+                onInlineSprintUpdate={handleInlineSprintUpdate}
+                onInlineItemUpdate={handleInlineItemUpdate}
+                onDeleteItem={handleDeleteItem}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {/* Add Sprint at Bottom */}
       <div className="flex justify-center">
@@ -206,6 +287,9 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
           Add Another Sprint
         </button>
       </div>
+
+      {/* Delivery Timeline - Project delivery milestones */}
+      <DeliveryTimeline className="mt-8" />
 
       {/* Modals */}
       <SprintModal
@@ -231,4 +315,12 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
       />
     </div>
   );
+}
+
+// Helper function to reorder array
+function arrayMove<T>(array: T[], from: number, to: number): T[] {
+  const newArray = [...array];
+  const [removed] = newArray.splice(from, 1);
+  newArray.splice(to, 0, removed);
+  return newArray;
 }
