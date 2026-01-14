@@ -47,6 +47,8 @@ export function SprintItemModal({ isOpen, onClose, item, sprintId, onSave }: Spr
     priority: 'medium' as SprintItem['priority'],
     assigned_to: '',
     estimated_hours: '',
+    start_date: '',
+    end_date: '',
     notes: '',
     order: 0,
   });
@@ -63,6 +65,8 @@ export function SprintItemModal({ isOpen, onClose, item, sprintId, onSave }: Spr
         priority: item.priority,
         assigned_to: item.assigned_to || '',
         estimated_hours: item.estimated_hours?.toString() || '',
+        start_date: item.start_date || '',
+        end_date: item.end_date || '',
         notes: item.notes || '',
         order: item.order,
       });
@@ -77,6 +81,8 @@ export function SprintItemModal({ isOpen, onClose, item, sprintId, onSave }: Spr
         priority: 'medium',
         assigned_to: '',
         estimated_hours: '',
+        start_date: '',
+        end_date: '',
         notes: '',
         order: 0,
       });
@@ -88,6 +94,8 @@ export function SprintItemModal({ isOpen, onClose, item, sprintId, onSave }: Spr
     onSave({
       ...formData,
       estimated_hours: formData.estimated_hours ? parseFloat(formData.estimated_hours) : null,
+      start_date: formData.start_date || null,
+      end_date: formData.end_date || null,
       sprint: sprintId,
     });
   };
@@ -230,6 +238,34 @@ export function SprintItemModal({ isOpen, onClose, item, sprintId, onSave }: Spr
               placeholder="e.g., 8"
               min={0}
               step={0.5}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            />
+          </div>
+        </div>
+
+        {/* Date Range */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Start Date
+            </label>
+            <input
+              type="date"
+              value={formData.start_date}
+              onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+              max={formData.end_date || undefined}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              End Date
+            </label>
+            <input
+              type="date"
+              value={formData.end_date}
+              onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+              min={formData.start_date || undefined}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
             />
           </div>

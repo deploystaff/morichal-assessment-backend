@@ -10,8 +10,8 @@ class SprintItemSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'client', 'sprint', 'item_code', 'name', 'description',
             'item_type', 'status', 'priority', 'order', 'assigned_to',
-            'estimated_hours', 'actual_hours', 'notes', 'completed_at',
-            'created_at', 'updated_at'
+            'estimated_hours', 'actual_hours', 'notes', 'start_date', 'end_date',
+            'completed_at', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'client', 'created_at', 'updated_at']
 
@@ -24,7 +24,7 @@ class SprintItemCreateSerializer(serializers.ModelSerializer):
         fields = [
             'sprint', 'item_code', 'name', 'description', 'item_type',
             'status', 'priority', 'order', 'assigned_to', 'estimated_hours',
-            'actual_hours', 'notes'
+            'actual_hours', 'notes', 'start_date', 'end_date'
         ]
 
 

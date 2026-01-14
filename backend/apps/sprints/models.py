@@ -102,6 +102,8 @@ class SprintItem(models.Model):
     estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     actual_hours = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     completed_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

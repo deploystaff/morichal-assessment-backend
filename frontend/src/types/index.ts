@@ -285,6 +285,8 @@ export interface SprintItem {
   estimated_hours: number | null;
   actual_hours: number | null;
   notes: string | null;
+  start_date: string | null;
+  end_date: string | null;
   completed_at: string | null;
   created_at: string;
   updated_at: string;

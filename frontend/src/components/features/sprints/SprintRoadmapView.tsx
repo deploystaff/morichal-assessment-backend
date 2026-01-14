@@ -18,7 +18,8 @@ import { SprintProgressRing } from './SprintProgressRing';
 import { SortableSprintCard } from './SortableSprintCard';
 import { SprintModal } from './SprintModal';
 import { SprintItemModal } from './SprintItemModal';
-import { DeliveryTimeline } from '../delivery';
+import { TaskCalendarView } from './TaskCalendarView';
+import { NextStepsTimeline } from '../delivery';
 import {
   useCreateSprint,
   useUpdateSprint,
@@ -143,7 +144,7 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id && roadmap) {
+    if (over && active.id !== over.id && roadmap && Array.isArray(roadmap.sprints)) {
       const sortedSprints = [...roadmap.sprints].sort((a, b) => a.order - b.order);
       const oldIndex = sortedSprints.findIndex((s) => s.id === active.id);
       const newIndex = sortedSprints.findIndex((s) => s.id === over.id);
@@ -171,7 +172,7 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
   }
 
   // Empty state
-  if (!roadmap || !roadmap.sprints || roadmap.sprints.length === 0) {
+  if (!roadmap || !roadmap.sprints || !Array.isArray(roadmap.sprints) || roadmap.sprints.length === 0) {
     return (
       <div className="text-center py-16">
         <Rocket className="w-16 h-16 text-slate-300 mx-auto mb-4" />
@@ -288,8 +289,11 @@ export function SprintRoadmapView({ roadmap, isLoading }: SprintRoadmapViewProps
         </button>
       </div>
 
-      {/* Delivery Timeline - Project delivery milestones */}
-      <DeliveryTimeline className="mt-8" />
+      {/* Task Calendar - Upcoming Schedule */}
+      <TaskCalendarView sprints={roadmap.sprints} className="mt-8" />
+
+      {/* Project Milestones - Next Steps Timeline */}
+      <NextStepsTimeline className="mt-8" />
 
       {/* Modals */}
       <SprintModal
