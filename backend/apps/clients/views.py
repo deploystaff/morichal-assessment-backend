@@ -41,3 +41,27 @@ class ClientViewSet(viewsets.ModelViewSet):
     def export(self, request, slug=None):
         """Export all client data as JSON."""
         return self.all(request, slug)
+
+    @action(detail=True, methods=['get'])
+    def config(self, request, slug=None):
+        """Get client configuration including branding."""
+        client = self.get_object()
+        return Response({
+            'id': str(client.id),
+            'slug': client.slug,
+            'name': client.name,
+            'branding': {
+                'id': str(client.id),
+                'primary_color': '#0f766e',
+                'secondary_color': '#1e293b',
+                'accent_color': '#f59e0b',
+                'logo_url': None,
+                'favicon_url': None,
+                'company_name': client.name,
+                'tagline': '',
+                'website': None,
+                'features': {},
+                'created_at': str(client.created_at),
+                'updated_at': str(client.updated_at),
+            }
+        })

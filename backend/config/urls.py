@@ -15,6 +15,35 @@ def health_check(request):
 
 
 @api_view(['GET'])
+def client_config(request, client_slug):
+    """Get client configuration including branding."""
+    from django.shortcuts import get_object_or_404
+    from apps.clients.models import Client
+
+    client = get_object_or_404(Client, slug=client_slug)
+
+    return Response({
+        'id': str(client.id),
+        'slug': client.slug,
+        'name': client.name,
+        'branding': {
+            'id': str(client.id),
+            'primary_color': '#0f766e',
+            'secondary_color': '#1e293b',
+            'accent_color': '#f59e0b',
+            'logo_url': None,
+            'favicon_url': None,
+            'company_name': client.name,
+            'tagline': '',
+            'website': None,
+            'features': {},
+            'created_at': str(client.created_at),
+            'updated_at': str(client.updated_at),
+        }
+    })
+
+
+@api_view(['GET'])
 def client_all_data(request, client_slug):
     """Get all data for a client (meetings, questions, etc.)."""
     from django.shortcuts import get_object_or_404
@@ -57,7 +86,8 @@ urlpatterns = [
     # Client-level endpoints (no slug)
     path('api/', include('apps.clients.urls')),
 
-    # Shortcut endpoint for getting all data
+    # Shortcut endpoints
+    path('api/<slug:client_slug>/config/', client_config, name='client-config'),
     path('api/<slug:client_slug>/all/', client_all_data, name='client-all'),
     path('api/<slug:client_slug>/export/', client_all_data, name='client-export'),
 
