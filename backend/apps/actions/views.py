@@ -40,9 +40,9 @@ class ActionItemViewSet(viewsets.ModelViewSet):
         return context
 
     def perform_create(self, serializer):
-        client_slug = self.kwargs.get('client_slug')
-        client = get_object_or_404(Client, slug=client_slug)
-        serializer.save(client=client)
+        # Client is already in serializer context (from get_serializer_context)
+        # Just call save() - the serializer's create() handles client
+        serializer.save()
 
     @action(detail=True, methods=['post'])
     def complete(self, request, client_slug=None, pk=None):

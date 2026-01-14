@@ -16,7 +16,7 @@ class ActionItemSerializer(serializers.ModelSerializer):
 class ActionItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionItem
-        fields = ['title', 'description', 'assigned_to', 'due_date', 'priority', 'from_meeting', 'notes']
+        fields = ['title', 'description', 'assigned_to', 'due_date', 'status', 'priority', 'from_meeting', 'notes']
 
     def create(self, validated_data):
         client = self.context['client']
