@@ -135,12 +135,27 @@ def run_transcript_analysis(meeting_id: str):
     from apps.meetings.models import Meeting, MeetingSummary
     from apps.questions.models import Question
     from apps.suggestions.models import AISuggestion
+    from apps.settings_app.models import ClientSettings
     import anthropic
 
     meeting = Meeting.objects.select_related('client').get(id=meeting_id)
 
     if not meeting.transcript_text:
         return {'error': 'No transcript available'}
+
+    # Get API key: first from client settings, then fall back to environment variable
+    api_key = None
+    try:
+        client_settings = ClientSettings.objects.get(client=meeting.client)
+        api_key = client_settings.anthropic_api_key
+    except ClientSettings.DoesNotExist:
+        pass
+
+    if not api_key:
+        api_key = settings.ANTHROPIC_API_KEY
+
+    if not api_key:
+        return {'error': 'Anthropic API key not configured. Please add your API key in Settings.'}
 
     # Get pending questions for context
     pending_questions = list(Question.objects.filter(
@@ -187,7 +202,7 @@ TRANSCRIPT:
 Return ONLY valid JSON, no other text."""
 
     # Call Claude API
-    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+    client = anthropic.Anthropic(api_key=api_key)
 
     message = client.messages.create(
         model='claude-sonnet-4-20250514',
