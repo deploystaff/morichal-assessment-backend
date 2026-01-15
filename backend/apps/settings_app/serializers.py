@@ -65,4 +65,8 @@ class ClientSettingsUpdateSerializer(serializers.ModelSerializer):
         if anthropic_key is not None and anthropic_key != '':
             instance.anthropic_api_key = anthropic_key
 
+        # Save API key changes explicitly (they were popped from validated_data)
+        if openai_key or anthropic_key:
+            instance.save(update_fields=['openai_api_key', 'anthropic_api_key'])
+
         return super().update(instance, validated_data)
