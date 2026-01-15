@@ -148,14 +148,23 @@ def run_transcript_analysis(meeting_id: str):
     try:
         client_settings = ClientSettings.objects.get(client=meeting.client)
         api_key = client_settings.anthropic_api_key
+        if api_key:
+            # Strip whitespace that might have been added
+            api_key = api_key.strip()
     except ClientSettings.DoesNotExist:
         pass
 
     if not api_key:
         api_key = settings.ANTHROPIC_API_KEY
+        if api_key:
+            api_key = api_key.strip()
 
     if not api_key:
         return {'error': 'Anthropic API key not configured. Please add your API key in Settings.'}
+
+    # Validate API key format
+    if not api_key.startswith('sk-ant-'):
+        return {'error': f'Invalid API key format. Key should start with sk-ant-. Got: {api_key[:10]}...'}
 
     # Get pending questions for context
     pending_questions = list(Question.objects.filter(
