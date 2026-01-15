@@ -11,7 +11,7 @@ from .serializers import AISuggestionSerializer, SuggestionActionSerializer
 class AISuggestionViewSet(viewsets.ModelViewSet):
     """ViewSet for AISuggestion operations."""
     serializer_class = AISuggestionSerializer
-    http_method_names = ['get', 'patch', 'delete']  # No create/put - suggestions come from AI
+    http_method_names = ['get', 'post', 'patch', 'delete']  # post for batch_approve action
 
     def get_queryset(self):
         client_slug = self.kwargs.get('client_slug')
@@ -104,3 +104,36 @@ class AISuggestionViewSet(viewsets.ModelViewSet):
                 made_in_meeting=suggestion.meeting,
                 made_by='AI Suggestion',
             )
+
+    @action(detail=False, methods=['post'])
+    def batch_approve(self, request, client_slug=None):
+        """Batch approve multiple suggestions at once."""
+        suggestion_ids = request.data.get('ids', [])
+        reviewed_by = request.data.get('reviewed_by', '')
+
+        if not suggestion_ids:
+            return Response(
+                {'error': 'No suggestion IDs provided'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Get pending suggestions for this client
+        suggestions = AISuggestion.objects.filter(
+            id__in=suggestion_ids,
+            client__slug=client_slug,
+            status='pending'
+        )
+
+        approved_count = 0
+        for suggestion in suggestions:
+            suggestion.status = 'approved'
+            suggestion.reviewed_at = timezone.now()
+            suggestion.reviewed_by = reviewed_by
+            suggestion.save()
+            self._apply_suggestion(suggestion)
+            approved_count += 1
+
+        return Response({
+            'success': True,
+            'approved_count': approved_count
+        })

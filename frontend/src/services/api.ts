@@ -219,6 +219,13 @@ export const suggestions = {
     });
     return data;
   },
+  batchApprove: async (ids: string[], reviewedBy?: string) => {
+    const { data } = await api.post<{ success: boolean; approved_count: number }>(
+      `/${getClientSlugInternal()}/suggestions/batch_approve/`,
+      { ids, reviewed_by: reviewedBy }
+    );
+    return data;
+  },
 };
 
 // Settings
@@ -320,9 +327,16 @@ export const attachments = {
 
 // Meeting Summary
 export const summary = {
-  get: async (meetingId: string) => {
-    const { data } = await api.get<MeetingSummary>(`/${getClientSlugInternal()}/meetings/${meetingId}/summary/`);
-    return data;
+  get: async (meetingId: string): Promise<MeetingSummary | null> => {
+    try {
+      const { data } = await api.get<MeetingSummary>(`/${getClientSlugInternal()}/meetings/${meetingId}/summary/`);
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
   },
   save: async (meetingId: string, summaryData: Partial<MeetingSummary>) => {
     const { data } = await api.post<MeetingSummary>(`/${getClientSlugInternal()}/meetings/${meetingId}/summary/`, summaryData);

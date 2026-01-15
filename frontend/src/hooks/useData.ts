@@ -76,6 +76,7 @@ export function useUploadTranscript() {
     mutationFn: ({ id, file }: { id: string; file: File }) => api.meetings.uploadTranscript(id, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['meetings'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
       triggerSave();
     },
   });
@@ -170,6 +171,9 @@ export function useCreateActionItem() {
       queryClient.invalidateQueries({ queryKey: ['allData'] });
       triggerSave();
     },
+    onError: (error) => {
+      console.error('Failed to create action item:', error);
+    },
   });
 }
 
@@ -184,6 +188,9 @@ export function useUpdateActionItem() {
       queryClient.invalidateQueries({ queryKey: ['actionItems'] });
       queryClient.invalidateQueries({ queryKey: ['allData'] });
       triggerSave();
+    },
+    onError: (error) => {
+      console.error('Failed to update action item:', error);
     },
   });
 }
@@ -297,6 +304,19 @@ export function useRejectSuggestion() {
   });
 }
 
+export function useBatchApproveSuggestions() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ ids, reviewedBy }: { ids: string[]; reviewedBy?: string }) =>
+      api.suggestions.batchApprove(ids, reviewedBy),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['suggestions'] });
+      queryClient.invalidateQueries({ queryKey: ['allData'] });
+    },
+  });
+}
+
 // Settings hooks
 export function useSettings() {
   return useQuery({
@@ -386,6 +406,9 @@ export function useCreateBlocker() {
       queryClient.invalidateQueries({ queryKey: ['allData'] });
       triggerSave();
     },
+    onError: (error) => {
+      console.error('Failed to create blocker:', error);
+    },
   });
 }
 
@@ -400,6 +423,9 @@ export function useUpdateBlocker() {
       queryClient.invalidateQueries({ queryKey: ['blockers'] });
       queryClient.invalidateQueries({ queryKey: ['allData'] });
       triggerSave();
+    },
+    onError: (error) => {
+      console.error('Failed to update blocker:', error);
     },
   });
 }

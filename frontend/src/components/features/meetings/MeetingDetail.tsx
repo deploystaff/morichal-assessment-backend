@@ -8,9 +8,11 @@ import {
   Play,
   Pause,
   CheckCircle,
+  CheckCheck,
   Sparkles,
   Loader2,
   Presentation,
+  Upload,
 } from 'lucide-react';
 import { Button, Card, CardHeader, CardBody, StatusBadge, Badge } from '../../common';
 import { QuestionList } from '../questions';
@@ -19,8 +21,12 @@ import { UpdateList } from '../updates';
 import { BlockerList } from '../blockers';
 import { AttachmentList } from '../attachments';
 import { MeetingSummaryView } from '../summary';
+import { RuleList } from '../rules';
+import { DecisionList } from '../decisions';
+import { InlineSuggestionsPanel } from '../suggestions';
 import { TranscriptUpload } from './TranscriptUpload';
-import type { Meeting, Question, ActionItem, Update, Blocker, Attachment, MeetingSummary } from '../../../types';
+import { MeetingReportView } from './MeetingReportView';
+import type { Meeting, Question, ActionItem, Update, Blocker, Attachment, MeetingSummary, BusinessRule, Decision, AISuggestion } from '../../../types';
 
 interface MeetingDetailProps {
   meeting: Meeting;
@@ -30,6 +36,9 @@ interface MeetingDetailProps {
   blockers: Blocker[];
   attachments: Attachment[];
   summary: MeetingSummary | null;
+  businessRules?: BusinessRule[];
+  decisions?: Decision[];
+  suggestions?: AISuggestion[];
   onBack: () => void;
   onStatusChange: (status: Meeting['status']) => void;
   onTranscriptUpload: (file: File) => Promise<void>;
@@ -48,15 +57,23 @@ interface MeetingDetailProps {
   onBlockerResolve: (id: string, resolution: string) => void;
   onAttachmentAdd: (data: Partial<Attachment>) => void;
   onAttachmentDelete: (id: string) => void;
+  onRuleAdd?: (data: Partial<BusinessRule>) => void;
+  onRuleUpdate?: (id: string, data: Partial<BusinessRule>) => void;
+  onRuleDelete?: (id: string) => void;
+  onDecisionAdd?: (data: Partial<Decision>) => void;
+  onDecisionUpdate?: (id: string, data: Partial<Decision>) => void;
+  onDecisionDelete?: (id: string) => void;
   onSummarySave: (data: Partial<MeetingSummary>) => void;
   onSummaryDelete: () => void;
   onAnalyze?: () => Promise<void>;
-  onViewSuggestions?: () => void;
+  onSuggestionApprove?: (id: string) => void;
+  onSuggestionReject?: (id: string) => void;
+  onSuggestionBatchApprove?: (ids: string[]) => void;
   onPresentationMode?: () => void;
   isUploading?: boolean;
   uploadProgress?: number;
   isAnalyzing?: boolean;
-  suggestionCount?: number;
+  isSuggestionProcessing?: boolean;
 }
 
 export function MeetingDetail({
@@ -67,6 +84,9 @@ export function MeetingDetail({
   blockers,
   attachments,
   summary,
+  businessRules = [],
+  decisions = [],
+  suggestions = [],
   onBack,
   onStatusChange,
   onTranscriptUpload,
@@ -85,19 +105,40 @@ export function MeetingDetail({
   onBlockerResolve,
   onAttachmentAdd,
   onAttachmentDelete,
+  onRuleAdd,
+  onRuleUpdate,
+  onRuleDelete,
+  onDecisionAdd,
+  onDecisionUpdate,
+  onDecisionDelete,
   onSummarySave,
   onSummaryDelete,
   onAnalyze,
-  onViewSuggestions,
+  onSuggestionApprove,
+  onSuggestionReject,
+  onSuggestionBatchApprove,
   onPresentationMode,
   isUploading,
   uploadProgress,
   isAnalyzing,
-  suggestionCount,
+  isSuggestionProcessing,
 }: MeetingDetailProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'questions' | 'actions' | 'updates' | 'blockers' | 'attachments' | 'transcript' | 'summary'>(
+  const [activeTab, setActiveTab] = useState<'overview' | 'questions' | 'actions' | 'rules' | 'decisions' | 'updates' | 'blockers' | 'attachments' | 'transcript' | 'summary' | 'report'>(
     'overview'
   );
+  const [isReplacingTranscript, setIsReplacingTranscript] = useState(false);
+
+  // Filter suggestions for this meeting
+  const meetingSuggestions = suggestions.filter((s) => s.meeting === meeting.id);
+  const pendingSuggestions = meetingSuggestions.filter((s) => s.status === 'pending');
+  const pendingSuggestionCount = pendingSuggestions.length;
+
+  // Handle approve all
+  const handleApproveAll = () => {
+    if (onSuggestionBatchApprove && pendingSuggestions.length > 0) {
+      onSuggestionBatchApprove(pendingSuggestions.map((s) => s.id));
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -120,6 +161,8 @@ export function MeetingDetail({
   const meetingUpdates = updates.filter((u) => u.meeting === meeting.id);
   const meetingBlockers = blockers.filter((b) => b.meeting === meeting.id);
   const meetingAttachments = attachments.filter((a) => a.meeting === meeting.id);
+  const meetingRules = businessRules.filter((r) => r.discovered_in_meeting === meeting.id);
+  const meetingDecisions = decisions.filter((d) => d.made_in_meeting === meeting.id);
   const openBlockers = meetingBlockers.filter((b) => b.status !== 'resolved');
   const hasTranscript = Boolean(meeting.transcript_text);
 
@@ -127,11 +170,14 @@ export function MeetingDetail({
     { id: 'overview', label: 'Overview' },
     { id: 'questions', label: `Questions (${meetingQuestions.length})` },
     { id: 'actions', label: `Actions (${meetingActions.length})` },
+    { id: 'rules', label: `Rules (${meetingRules.length})` },
+    { id: 'decisions', label: `Decisions (${meetingDecisions.length})` },
     { id: 'updates', label: `Updates (${meetingUpdates.length})` },
     { id: 'blockers', label: `Blockers (${openBlockers.length})`, highlight: openBlockers.length > 0 },
     { id: 'attachments', label: `Attachments (${meetingAttachments.length})` },
-    { id: 'transcript', label: 'Transcript' },
+    { id: 'transcript', label: 'Transcript', highlight: pendingSuggestionCount > 0 },
     { id: 'summary', label: 'Summary', highlight: Boolean(summary) },
+    { id: 'report', label: 'Report' },
   ];
 
   return (
@@ -160,6 +206,16 @@ export function MeetingDetail({
         </div>
 
         <div className="flex items-center gap-2">
+          {pendingSuggestionCount > 0 && onSuggestionBatchApprove && (
+            <Button onClick={handleApproveAll} disabled={isSuggestionProcessing}>
+              {isSuggestionProcessing ? (
+                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+              ) : (
+                <CheckCheck className="w-4 h-4 mr-1" />
+              )}
+              Approve All ({pendingSuggestionCount})
+            </Button>
+          )}
           {onPresentationMode && (
             <Button variant="secondary" onClick={onPresentationMode}>
               <Presentation className="w-4 h-4 mr-1" />
@@ -281,21 +337,99 @@ export function MeetingDetail({
       )}
 
       {activeTab === 'questions' && (
-        <QuestionList
-          questions={meetingQuestions}
-          onAdd={(data) => onQuestionAdd({ ...data, asked_in_meeting: meeting.id })}
-          onUpdate={onQuestionUpdate}
-          onDelete={onQuestionDelete}
-        />
+        <>
+          {onSuggestionApprove && onSuggestionReject && onSuggestionBatchApprove && (
+            <InlineSuggestionsPanel
+              suggestions={meetingSuggestions}
+              suggestionType="answer"
+              onApprove={onSuggestionApprove}
+              onReject={onSuggestionReject}
+              onApproveAll={onSuggestionBatchApprove}
+              isProcessing={isSuggestionProcessing}
+            />
+          )}
+          <QuestionList
+            questions={meetingQuestions}
+            onAdd={(data) => onQuestionAdd({ ...data, asked_in_meeting: meeting.id })}
+            onUpdate={onQuestionUpdate}
+            onDelete={onQuestionDelete}
+          />
+        </>
       )}
 
       {activeTab === 'actions' && (
-        <ActionList
-          actions={meetingActions}
-          onAdd={(data) => onActionAdd({ ...data, from_meeting: meeting.id })}
-          onUpdate={onActionUpdate}
-          onDelete={onActionDelete}
-        />
+        <>
+          {onSuggestionApprove && onSuggestionReject && onSuggestionBatchApprove && (
+            <InlineSuggestionsPanel
+              suggestions={meetingSuggestions}
+              suggestionType="action_item"
+              onApprove={onSuggestionApprove}
+              onReject={onSuggestionReject}
+              onApproveAll={onSuggestionBatchApprove}
+              isProcessing={isSuggestionProcessing}
+            />
+          )}
+          <ActionList
+            actions={meetingActions}
+            onAdd={(data) => onActionAdd({ ...data, from_meeting: meeting.id })}
+            onUpdate={onActionUpdate}
+            onDelete={onActionDelete}
+          />
+        </>
+      )}
+
+      {activeTab === 'rules' && (
+        <>
+          {onSuggestionApprove && onSuggestionReject && onSuggestionBatchApprove && (
+            <InlineSuggestionsPanel
+              suggestions={meetingSuggestions}
+              suggestionType="business_rule"
+              onApprove={onSuggestionApprove}
+              onReject={onSuggestionReject}
+              onApproveAll={onSuggestionBatchApprove}
+              isProcessing={isSuggestionProcessing}
+            />
+          )}
+          {onRuleAdd && onRuleUpdate && onRuleDelete ? (
+            <RuleList
+              rules={meetingRules}
+              onAdd={(data) => onRuleAdd({ ...data, discovered_in_meeting: meeting.id })}
+              onUpdate={onRuleUpdate}
+              onDelete={onRuleDelete}
+            />
+          ) : (
+            <div className="text-center py-8 text-slate-500">
+              No rules found for this meeting
+            </div>
+          )}
+        </>
+      )}
+
+      {activeTab === 'decisions' && (
+        <>
+          {onSuggestionApprove && onSuggestionReject && onSuggestionBatchApprove && (
+            <InlineSuggestionsPanel
+              suggestions={meetingSuggestions}
+              suggestionType="decision"
+              onApprove={onSuggestionApprove}
+              onReject={onSuggestionReject}
+              onApproveAll={onSuggestionBatchApprove}
+              isProcessing={isSuggestionProcessing}
+            />
+          )}
+          {onDecisionAdd && onDecisionUpdate && onDecisionDelete ? (
+            <DecisionList
+              decisions={meetingDecisions}
+              onAdd={(data) => onDecisionAdd({ ...data, made_in_meeting: meeting.id })}
+              onUpdate={onDecisionUpdate}
+              onDelete={onDecisionDelete}
+            />
+          ) : (
+            <div className="text-center py-8 text-slate-500">
+              No decisions found for this meeting
+            </div>
+          )}
+        </>
       )}
 
       {activeTab === 'updates' && (
@@ -337,71 +471,91 @@ export function MeetingDetail({
       )}
 
       {activeTab === 'transcript' && (
-        <Card>
-          <CardBody className="p-6">
-            {meeting.transcript_text ? (
-              <div className="space-y-4">
-                {/* Analyze Button */}
-                <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-medium text-slate-900">Transcript</h3>
-                    {suggestionCount !== undefined && suggestionCount > 0 && (
-                      <button
-                        onClick={onViewSuggestions}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-full hover:bg-amber-200 transition-colors"
-                      >
-                        <Sparkles className="w-3 h-3" />
-                        {suggestionCount} suggestion{suggestionCount !== 1 ? 's' : ''}
-                      </button>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {onViewSuggestions && suggestionCount !== undefined && suggestionCount > 0 && (
-                      <Button variant="secondary" size="sm" onClick={onViewSuggestions}>
-                        <Sparkles className="w-4 h-4 mr-1" />
-                        View Suggestions
-                      </Button>
-                    )}
-                    {onAnalyze && (
-                      <Button
-                        size="sm"
-                        onClick={onAnalyze}
-                        disabled={isAnalyzing}
-                      >
-                        {isAnalyzing ? (
-                          <>
-                            <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                            Analyzing...
-                          </>
-                        ) : (
-                          <>
-                            <Sparkles className="w-4 h-4 mr-1" />
-                            Analyze with AI
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                </div>
+        <div className="space-y-4">
+          {/* Inline suggestions panel for all types */}
+          {onSuggestionApprove && onSuggestionReject && onSuggestionBatchApprove && (
+            <InlineSuggestionsPanel
+              suggestions={meetingSuggestions}
+              showAllTypes
+              onApprove={onSuggestionApprove}
+              onReject={onSuggestionReject}
+              onApproveAll={onSuggestionBatchApprove}
+              isProcessing={isSuggestionProcessing}
+            />
+          )}
 
-                {/* Transcript Content */}
-                <div className="prose prose-slate max-w-none">
-                  <pre className="whitespace-pre-wrap text-sm bg-slate-50 p-4 rounded-lg">
-                    {meeting.transcript_text}
-                  </pre>
+          <Card>
+            <CardBody className="p-6">
+              {meeting.transcript_text && !isReplacingTranscript ? (
+                <div className="space-y-4">
+                  {/* Header with actions */}
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+                    <div className="flex items-center gap-3">
+                      <h3 className="font-medium text-slate-900">Transcript</h3>
+                      {pendingSuggestionCount > 0 && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-full">
+                          <Sparkles className="w-3 h-3" />
+                          {pendingSuggestionCount} pending
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="secondary" size="sm" onClick={() => setIsReplacingTranscript(true)}>
+                        <Upload className="w-4 h-4 mr-1" />
+                        Replace Transcript
+                      </Button>
+                      {onAnalyze && (
+                        <Button
+                          size="sm"
+                          onClick={onAnalyze}
+                          disabled={isAnalyzing}
+                        >
+                          {isAnalyzing ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                              Analyzing...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-1" />
+                              Analyze with AI
+                            </>
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Transcript Content */}
+                  <div className="prose prose-slate max-w-none">
+                    <pre className="whitespace-pre-wrap text-sm bg-slate-50 p-4 rounded-lg">
+                      {meeting.transcript_text}
+                    </pre>
+                  </div>
                 </div>
-              </div>
-            ) : (
+              ) : (
               <div className="space-y-6">
+                {meeting.transcript_text && (
+                  <div className="flex justify-end">
+                    <Button variant="ghost" size="sm" onClick={() => setIsReplacingTranscript(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                )}
                 <div className="text-center py-4">
                   <Mic className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-slate-900 mb-2">No Transcript Yet</h3>
+                  <h3 className="text-lg font-medium text-slate-900 mb-2">
+                    {meeting.transcript_text ? 'Replace Transcript' : 'No Transcript Yet'}
+                  </h3>
                   <p className="text-slate-500">
                     Upload an audio file or text transcript to enable AI analysis
                   </p>
                 </div>
                 <TranscriptUpload
-                  onUpload={onTranscriptUpload}
+                  onUpload={async (file) => {
+                    await onTranscriptUpload(file);
+                    setIsReplacingTranscript(false);
+                  }}
                   isUploading={isUploading}
                   uploadProgress={uploadProgress}
                 />
@@ -409,6 +563,18 @@ export function MeetingDetail({
             )}
           </CardBody>
         </Card>
+        </div>
+      )}
+
+      {activeTab === 'report' && (
+        <MeetingReportView
+          meeting={meeting}
+          questions={meetingQuestions}
+          actionItems={meetingActions}
+          blockers={meetingBlockers}
+          updates={meetingUpdates}
+          summary={summary}
+        />
       )}
     </div>
   );

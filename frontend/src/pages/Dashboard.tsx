@@ -5,7 +5,6 @@ import {
   MeetingDetail,
   RuleList,
   SettingsModal,
-  SuggestionsModal,
   PresentationView,
 } from '../components/features';
 import { Modal } from '../components/common';
@@ -29,6 +28,7 @@ import {
   useSuggestions,
   useApproveSuggestion,
   useRejectSuggestion,
+  useBatchApproveSuggestions,
   useSettings,
   useUpdateSettings,
   useCreateUpdate,
@@ -44,7 +44,7 @@ import {
   useSaveSummary,
   useDeleteSummary,
 } from '../hooks/useData';
-import type { Meeting, Question, ActionItem, BusinessRule, ClientSettings, Update, Blocker, Attachment, MeetingSummary } from '../types';
+import type { Meeting, Question, ActionItem, BusinessRule, Decision, ClientSettings, Update, Blocker, Attachment, MeetingSummary } from '../types';
 
 export function Dashboard() {
   const { data, isLoading } = useAllData();
@@ -93,6 +93,7 @@ export function Dashboard() {
   // Suggestions mutations
   const approveSuggestion = useApproveSuggestion();
   const rejectSuggestion = useRejectSuggestion();
+  const batchApproveSuggestions = useBatchApproveSuggestions();
 
   // Settings
   const { data: settings } = useSettings();
@@ -102,12 +103,11 @@ export function Dashboard() {
   const closeModal = useUIStore((s) => s.closeModal);
 
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [presentationMode, setPresentationMode] = useState(false);
 
   // Fetch suggestions for selected meeting
-  const { data: suggestions, isLoading: suggestionsLoading } = useSuggestions(selectedMeeting?.id || '');
+  const { data: suggestions } = useSuggestions(selectedMeeting?.id || '');
 
   // Fetch summary for selected meeting
   const { data: meetingSummary } = useMeetingSummary(selectedMeeting?.id || '');
@@ -150,7 +150,7 @@ export function Dashboard() {
   const handleAnalyze = async () => {
     if (selectedMeeting) {
       await analyzeTranscript.mutateAsync(selectedMeeting.id);
-      setShowSuggestions(true);
+      // Suggestions will appear inline in the meeting tabs
     }
   };
 
@@ -160,6 +160,27 @@ export function Dashboard() {
 
   const handleRejectSuggestion = (id: string) => {
     rejectSuggestion.mutate({ id });
+  };
+
+  const handleBatchApproveSuggestions = (ids: string[]) => {
+    batchApproveSuggestions.mutate({ ids });
+  };
+
+  // Decision handlers (using the same approach as rules, but decisions come from AI suggestions)
+  const handleAddDecision = (decisionData: Partial<Decision>) => {
+    // Decisions are created through AI suggestions approval
+    // This is a placeholder for manual decision creation if needed
+    console.log('Decision add:', decisionData);
+  };
+
+  const handleUpdateDecision = (id: string, decisionData: Partial<Decision>) => {
+    // TODO: Add decision update mutation if needed
+    console.log('Decision update:', id, decisionData);
+  };
+
+  const handleDeleteDecision = (id: string) => {
+    // TODO: Add decision delete mutation if needed
+    console.log('Decision delete:', id);
   };
 
   // Question handlers
@@ -354,6 +375,9 @@ export function Dashboard() {
                 blockers={data?.blockers || []}
                 attachments={data?.attachments || []}
                 summary={meetingSummary || null}
+                businessRules={data?.businessRules || []}
+                decisions={data?.decisions || []}
+                suggestions={suggestions || []}
                 onBack={() => setSelectedMeeting(null)}
                 onStatusChange={handleMeetingStatusChange}
                 onTranscriptUpload={handleTranscriptUpload}
@@ -372,14 +396,22 @@ export function Dashboard() {
                 onBlockerResolve={handleResolveBlocker}
                 onAttachmentAdd={handleAddAttachment}
                 onAttachmentDelete={handleDeleteAttachment}
+                onRuleAdd={handleAddRule}
+                onRuleUpdate={handleUpdateRule}
+                onRuleDelete={handleDeleteRule}
+                onDecisionAdd={handleAddDecision}
+                onDecisionUpdate={handleUpdateDecision}
+                onDecisionDelete={handleDeleteDecision}
                 onSummarySave={handleSaveSummary}
                 onSummaryDelete={handleDeleteSummary}
                 onAnalyze={handleAnalyze}
-                onViewSuggestions={() => setShowSuggestions(true)}
+                onSuggestionApprove={handleApproveSuggestion}
+                onSuggestionReject={handleRejectSuggestion}
+                onSuggestionBatchApprove={handleBatchApproveSuggestions}
                 onPresentationMode={handleEnterPresentationMode}
                 isUploading={uploadTranscript.isPending}
                 isAnalyzing={analyzeTranscript.isPending}
-                suggestionCount={suggestions?.length || 0}
+                isSuggestionProcessing={approveSuggestion.isPending || rejectSuggestion.isPending || batchApproveSuggestions.isPending}
               />
             ) : (
               <MeetingList
@@ -411,18 +443,6 @@ export function Dashboard() {
         settings={settings || null}
         onSave={handleSaveSettings}
         isSaving={updateSettings.isPending}
-      />
-
-      {/* Suggestions Modal */}
-      <SuggestionsModal
-        isOpen={showSuggestions}
-        onClose={() => setShowSuggestions(false)}
-        suggestions={suggestions || []}
-        meetingTitle={selectedMeeting?.title}
-        onApprove={handleApproveSuggestion}
-        onReject={handleRejectSuggestion}
-        isLoading={suggestionsLoading}
-        isProcessing={approveSuggestion.isPending || rejectSuggestion.isPending}
       />
 
       {/* Business Rules Modal */}
