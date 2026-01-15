@@ -143,6 +143,10 @@ def run_transcript_analysis(meeting_id: str):
     if not meeting.transcript_text:
         return {'error': 'No transcript available'}
 
+    # Debug: check if meeting has client
+    if not meeting.client:
+        return {'error': f'Meeting {meeting_id} has no client associated. Cannot retrieve API key.'}
+
     # Get API key: first from client settings, then fall back to environment variable
     api_key = None
     try:
