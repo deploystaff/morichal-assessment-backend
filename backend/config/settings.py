@@ -151,6 +151,15 @@ CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes max
 ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
 
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@morichalai.com')
+
 # File Upload
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400  # 25MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 26214400  # 25MB

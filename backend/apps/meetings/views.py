@@ -82,7 +82,9 @@ class MeetingViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def analyze(self, request, client_slug=None, pk=None):
-        """Analyze transcript with AI."""
+        """Analyze transcript with AI - runs synchronously."""
+        from apps.transcription.tasks import run_transcript_analysis
+
         meeting = self.get_object()
 
         if not meeting.transcript_text:
@@ -91,16 +93,22 @@ class MeetingViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Queue async analysis task
-        from apps.transcription.tasks import analyze_transcript_task
-        task = analyze_transcript_task.delay(str(meeting.id))
-
-        return Response({
-            'success': True,
-            'message': 'Analysis queued',
-            'task_id': task.id,
-            'meeting_id': str(meeting.id)
-        }, status=status.HTTP_202_ACCEPTED)
+        try:
+            # Run analysis synchronously (no Celery/Redis required)
+            result = run_transcript_analysis(str(meeting.id))
+            return Response({
+                'success': True,
+                'message': 'Analysis complete',
+                'meeting_id': str(meeting.id),
+                'answers_applied': result.get('answers_applied', 0),
+                'suggestions_created': result.get('suggestions_created', 0),
+                'summary_generated': result.get('summary_generated', False),
+            })
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     @action(detail=True, methods=['get'])
     def suggestions(self, request, client_slug=None, pk=None):
