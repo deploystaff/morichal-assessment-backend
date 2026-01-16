@@ -7,9 +7,10 @@ interface MeetingModalProps {
   onClose: () => void;
   onSubmit: (data: Partial<Meeting>) => void;
   meeting?: Meeting | null;
+  templateMeeting?: Meeting | null;  // For prefilling new meetings from previous meeting
 }
 
-export function MeetingModal({ isOpen, onClose, onSubmit, meeting }: MeetingModalProps) {
+export function MeetingModal({ isOpen, onClose, onSubmit, meeting, templateMeeting }: MeetingModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     agenda: '',
@@ -22,6 +23,7 @@ export function MeetingModal({ isOpen, onClose, onSubmit, meeting }: MeetingModa
 
   useEffect(() => {
     if (meeting) {
+      // Editing existing meeting
       const date = new Date(meeting.date);
       setFormData({
         title: meeting.title,
@@ -33,20 +35,21 @@ export function MeetingModal({ isOpen, onClose, onSubmit, meeting }: MeetingModa
         notes: meeting.notes || '',
       });
     } else {
+      // New meeting - prefill from template if available
       const now = new Date();
       now.setHours(now.getHours() + 1);
       now.setMinutes(0);
       setFormData({
-        title: '',
-        agenda: '',
-        date: now.toISOString().split('T')[0],
-        time: now.toTimeString().slice(0, 5),
-        status: 'scheduled',
-        attendees: '',
-        notes: '',
+        title: '',  // Always empty for new meetings
+        agenda: templateMeeting?.agenda || '',  // Copy from template
+        date: now.toISOString().split('T')[0],  // Fresh date
+        time: now.toTimeString().slice(0, 5),   // Fresh time
+        status: 'scheduled',  // Always scheduled for new
+        attendees: templateMeeting?.attendees?.join(', ') || '',  // Copy from template
+        notes: templateMeeting?.notes || '',  // Copy from template
       });
     }
-  }, [meeting, isOpen]);
+  }, [meeting, templateMeeting, isOpen]);
 
   const submitForm = () => {
     onSubmit({
@@ -142,7 +145,7 @@ export function MeetingModal({ isOpen, onClose, onSubmit, meeting }: MeetingModa
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" onClick={submitForm}>{meeting ? 'Update' : 'Schedule'} Meeting</Button>
+          <Button type="submit">{meeting ? 'Update' : 'Schedule'} Meeting</Button>
         </div>
       </form>
     </Modal>

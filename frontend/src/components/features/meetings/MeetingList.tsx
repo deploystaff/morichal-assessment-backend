@@ -39,6 +39,12 @@ export function MeetingList({ meetings, onAdd, onUpdate, onDelete, onSelect }: M
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [meetings, filter, searchQuery]);
 
+  // Get the most recent meeting for template (auto-fill when creating new)
+  const lastMeeting = useMemo(() => {
+    if (meetings.length === 0) return null;
+    return [...meetings].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+  }, [meetings]);
+
   const handleEdit = (meeting: Meeting) => {
     setEditingMeeting(meeting);
     setIsModalOpen(true);
@@ -129,6 +135,7 @@ export function MeetingList({ meetings, onAdd, onUpdate, onDelete, onSelect }: M
         onClose={handleCloseModal}
         onSubmit={handleSubmit}
         meeting={editingMeeting}
+        templateMeeting={!editingMeeting ? lastMeeting : null}
       />
     </div>
   );
