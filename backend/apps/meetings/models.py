@@ -209,7 +209,7 @@ class MeetingSummary(models.Model):
         related_name='summary',
         db_column='meeting_id'
     )
-    content = models.TextField()
+    content = models.TextField(blank=True)
     generated_by = models.CharField(max_length=20, choices=GENERATED_BY_CHOICES, default='manual')
     key_points = models.JSONField(default=list)
     created_at = models.DateTimeField(auto_now_add=True)
