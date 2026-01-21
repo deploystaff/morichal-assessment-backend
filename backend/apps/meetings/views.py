@@ -36,11 +36,6 @@ class MeetingViewSet(viewsets.ModelViewSet):
         context['client'] = get_object_or_404(Client, slug=client_slug)
         return context
 
-    def perform_create(self, serializer):
-        client_slug = self.kwargs.get('client_slug')
-        client = get_object_or_404(Client, slug=client_slug)
-        serializer.save(client=client)
-
     @action(detail=True, methods=['post'])
     def transcript(self, request, client_slug=None, pk=None):
         """Upload transcript for a meeting."""
